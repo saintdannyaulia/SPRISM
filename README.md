@@ -1,4 +1,4 @@
-# ⭐ StarLive Group — Platform Documentation
+# ⭐ StarLive Portfolio Repository Interactive Social Monitor
 
 > Multi-vertical digital platform untuk komunitas kreator, manajemen afiliasi, toko, galeri, dan sistem sosial terpadu — dibangun dalam satu file HTML mandiri.
 
