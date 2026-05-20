@@ -288,3 +288,7 @@ Proyek ini dikembangkan untuk keperluan internal **StarLive Group**. Seluruh hak
 ---
 
 <p align="center"><em>⭐ Light up every corner of the digital universe. ⭐</em></p>
+<p align="center">
+  <b>Pengembangan dari tim StarLive SAINT</b>
+</p>
+<p align="center">Danny Aulia · Said Hasan Hanafiah · Noah Von Nobelius · Arvian Raveindra Pradana</p>
