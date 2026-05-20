@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>StarLive Group</title>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div id="ls">
+  <div id="lstar">⭐</div>
+  <div style="font-size:24px;font-weight:700;color:#FAB715;letter-spacing:.18em;margin-bottom:5px">STARLIVE</div>
+  <div style="font-size:11px;color:#7a9cc8;letter-spacing:.22em;margin-bottom:32px">GROUP</div>
+  <div id="lbt"><div id="lbf"></div></div>
+  <div id="lpct" style="color:#7a9cc8;font-size:11px;margin-top:7px">Initializing... 0%</div>
+</div>
+<div id="app" style="display:none">
+  <div id="gbg"></div>
+  <canvas id="pcan" style="position:fixed;inset:0;pointer-events:none;z-index:1;display:none"></canvas>
+  <div id="sidebar">
+    <div id="sbl" style="padding:15px 13px 12px;border-bottom:1px solid transparent;display:flex;align-items:center;gap:9px;flex-shrink:0">
+      <div style="font-size:20px;flex-shrink:0">⭐</div>
+      <div id="lt"><div id="ln" style="font-size:13px;font-weight:800;letter-spacing:.1em">STARLIVE</div><div style="font-size:9px;letter-spacing:.16em;opacity:.6">GROUP</div></div>
+    </div>
+    <div id="map" style="padding:9px 10px 7px;border-bottom:1px solid transparent;cursor:pointer;flex-shrink:0" onclick="handleMyAcct()">
+      <div style="display:flex;align-items:center;gap:9px">
+        <div id="sav" style="width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;overflow:hidden;border:2px solid transparent"></div>
+        <div style="flex:1;min-width:0"><div id="sun" style="font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></div><div id="sur" style="font-size:9px;opacity:.7"></div></div>
+        <div id="sod" class="dot-s on" style="flex-shrink:0;display:none"></div>
+      </div>
+    </div>
+    <div id="aio" style="text-align:center;font-size:18px;padding:10px;display:none;cursor:pointer;border-bottom:1px solid transparent" onclick="handleMyAcct()">👤</div>
+    <button id="stgl" style="background:none;border:none;cursor:pointer;padding:7px 14px;text-align:left;font-size:14px;flex-shrink:0">◀</button>
+    <nav id="nav" style="flex:1;padding:5px;overflow-y:auto"></nav>
+    <div id="aarea" style="padding:9px;border-top:1px solid transparent;flex-shrink:0"><div id="afull"></div></div>
+  </div>
+  <main id="mc" onclick="onMC()">
+    <div id="page-home" class="page active"></div>
+    <div id="page-affiliation" class="page"></div>
+    <div id="page-creator" class="page"></div>
+    <div id="page-profile" class="page"></div>
+    <div id="page-project" class="page"></div>
+    <div id="page-gallery" class="page"></div>
+    <div id="page-store" class="page"></div>
+    <div id="page-social" class="page"></div>
+    <div id="page-dashboard" class="page"></div>
+    <div id="page-myaccount" class="page"></div>
+    <div id="page-userprofile" class="page"></div>
+    <div id="page-vault" class="page"></div>
+    <div id="page-fraction" class="page"></div>
+    <div id="page-challenge" class="page"></div>
+  </main>
+  <div id="cw"><div id="cwt" style="font-size:19px;font-weight:800;font-variant-numeric:tabular-nums"></div><div id="cwd" style="font-size:10px;opacity:.65"></div></div>
+  <div id="notifbar"></div>
+  <div id="sfab"><div id="spbox" style="display:none"></div><button class="fab" id="sfbtn" onclick="toggleS()">⚙️</button></div>
+  <div id="cfab"><div id="cpbox" style="display:none;flex-direction:column"></div><button class="fab" id="cfbtn" onclick="toggleC()">💬</button></div>
+  <input type="file" id="fi-bg" accept="image/*" style="display:none" onchange="onFiBg(event)"/>
+  <input type="file" id="fi-bgv" accept="video/*" style="display:none" onchange="onFiBgv(event)"/>
+  <input type="file" id="fi-cp" accept="image/*" style="display:none" onchange="onFiCp(event)"/>
+  <input type="file" id="fi-av" accept="image/*" style="display:none" onchange="onFiAv(event)"/>
+  <input type="file" id="fi-pimg" accept="image/*" style="display:none" onchange="onFiPimg(event)"/>
+  <input type="file" id="fi-cv" accept=".pdf,.doc,.docx" style="display:none" onchange="onFiCv(event)"/>
+  <input type="file" id="fi-cphoto" accept="image/*" style="display:none" onchange="onFiCphoto(event)"/>
+  <input type="file" id="fi-cimg" accept="image/*" style="display:none" onchange="onFiCimg(event)"/>
+  <input type="file" id="fi-gal" accept="image/*,video/*" style="display:none" onchange="onFiGal(event)"/>
+  <input type="file" id="fi-prod" accept="image/*" style="display:none" onchange="onFiProd(event)"/>
+</div>
+<div id="m-auth" class="modal" style="display:none" onclick="moc(event,'m-auth')"></div>
+<div id="m-gal" class="modal" style="display:none" onclick="moc(event,'m-gal')"></div>
+<div id="m-crop" class="modal" style="display:none"></div>
+<div id="m-challenge" class="modal" style="display:none" onclick="moc(event,'m-challenge')"></div>
+<div id="m-quiz" class="modal" style="display:none" onclick="moc(event,'m-quiz')"></div>
+<div id="m-fraction-exam" class="modal" style="display:none"></div>
+<div id="m-con" class="modal" style="display:none" onclick="moc(event,'m-con')"></div>
+<div id="m-co" class="modal" style="display:none" onclick="moc(event,'m-co')"></div>
+<div id="m-tu" class="modal" style="display:none" onclick="moc(event,'m-tu')"></div>
+<div id="m-ec" class="modal" style="display:none" onclick="moc(event,'m-ec')"></div>
+<div id="m-iv" class="modal" style="display:none" onclick="closeM('m-iv')"></div>
+<div id="m-vault" class="modal" style="display:none" onclick="moc(event,'m-vault')"></div>
+<div id="m-prod" class="modal" style="display:none" onclick="moc(event,'m-prod')"></div>
+<div id="m-uadmin" class="modal" style="display:none" onclick="moc(event,'m-uadmin')"></div>
+<script src="app.js"></script>
+</body>
+</html>
