@@ -1,6 +1,6 @@
-# ⭐ StarLive Group
+# ⭐ StarLive Platform, Repository, Intelligence & Social Matrix
 
-> **Platform web konglomerat digital multi-vertikal** — portal perusahaan, manajemen kreator, toko merchandise, sistem komunitas, dan dasbor admin dalam satu file HTML tanpa backend.
+> **Platform web digital multifungsi untuk informasi dan komunikasi StarLive Group** —  ...
 
 [![HTML](https://img.shields.io/badge/HTML-5-E34F26?style=flat-square&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![CSS](https://img.shields.io/badge/CSS-3-1572B6?style=flat-square&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
@@ -283,7 +283,7 @@ Semua data disimpan di browser menggunakan `localStorage` dengan prefix `sl5_`:
 
 ## Lisensi
 
-Proyek ini dikembangkan untuk keperluan internal **StarLive Group**. Seluruh hak cipta dilindungi.
+Proyek ini dikembangkan oleh tim StarLive SAINT untuk keperluan internal **StarLive Group**. Seluruh hak cipta dilindungi.
 
 ---
 
