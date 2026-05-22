@@ -1,3 +1,4 @@
+
 // ── TRANSLATIONS ──────────────────────────────────────────────
 const LANGS={
   English:{home:'Home',affiliation:'Affiliation',creator:'Creator',project:'Project',gallery:'Gallery',store:'Store',social:'Social',dashboard:'Dashboard',vault:'Vault',fraction:'Fraction',challenge:'Challenge',myAccount:'My Account',login:'Login',logout:'Logout',loginReg:'🔐 Login / Register',friends:'Friends',addFriend:'Add Friend',chat:'Chat',online:'Online',offline:'Offline',send:'Send',cancel:'Cancel',save:'Save',edit:'Edit',whoWeAre:'Who We Are',whoWeAreDesc:'StarLive Group is a multi-vertical technology and creative conglomerate operating at the intersection of media, technology, education, and culture.',ourMission:'Our five affiliates collaborate under one vision: to light up every corner of the digital universe.',creatorSub:'The minds behind StarLive.',affiliSub:'Our network of partner organizations.',projectSub:'Active initiatives shaping the future of StarLive.',gallerySub:'Visual stories from across the StarLive universe.',storeSub:'Official StarLive merchandise.',socialSub:'Join the StarLive community across all platforms.',loginRequired:'Login required',noFriends:'No friends yet.',startChat:'Start a conversation',complaints:'Complaints & Suggestions',directMsg:'Direct Message to Admin',welcome:'Welcome to StarLive Group!',search:'Search...',vaultTitle:'Vault — Secure Data Storage',vaultSub:'Admin-only access to confidential business data.'},
@@ -7,155 +8,410 @@ const LANGS={
   Korean:{home:'홈',affiliation:'제휴',creator:'크리에이터',project:'프로젝트',gallery:'갤러리',store:'스토어',social:'소셜',dashboard:'대시보드',vault:'금고',myAccount:'내 계정',login:'로그인',logout:'로그아웃',loginReg:'🔐 로그인 / 회원가입',friends:'친구',addFriend:'친구 추가',chat:'채팅',online:'온라인',offline:'오프라인',send:'전송',cancel:'취소',save:'저장',edit:'편집',whoWeAre:'회사 소개',whoWeAreDesc:'StarLive Group은 미디어, 기술, 교육, 문화의 교차점에서 운영되는 다각적 기술·창의 기업입니다.',ourMission:'5개의 계열사가 하나의 비전으로 협력합니다.',creatorSub:'StarLive를 이끄는 사람들.',affiliSub:'파트너 조직 네트워크.',projectSub:'StarLive의 미래를 형성하는 이니셔티브.',gallerySub:'StarLive 유니버스의 시각적 이야기.',storeSub:'StarLive 공식 상품.',socialSub:'모든 플랫폼에서 StarLive 커뮤니티에 참여하세요.',loginRequired:'로그인 필요',noFriends:'아직 친구가 없습니다.',startChat:'대화 시작',complaints:'불만 및 제안',directMsg:'관리자에게 직접 메시지',welcome:'StarLive Group에 오신 것을 환영합니다!',search:'검색...',vaultTitle:'금고 — 안전한 데이터 저장소',vaultSub:'관리자 전용 기밀 비즈니스 데이터 접근.'},
   German:{home:'Startseite',affiliation:'Partner',creator:'Ersteller',project:'Projekt',gallery:'Galerie',store:'Shop',social:'Sozial',dashboard:'Dashboard',vault:'Tresor',myAccount:'Mein Konto',login:'Anmelden',logout:'Abmelden',loginReg:'🔐 Anmelden / Registrieren',friends:'Freunde',addFriend:'Freund hinzufügen',chat:'Chat',online:'Online',offline:'Offline',send:'Senden',cancel:'Abbrechen',save:'Speichern',edit:'Bearbeiten',whoWeAre:'Über uns',whoWeAreDesc:'StarLive Group ist ein diversifizierter Technologie- und Kreativkonzern an der Schnittstelle von Medien, Technologie, Bildung und Kultur.',ourMission:'Unsere fünf Tochtergesellschaften arbeiten zusammen, um jeden Winkel des digitalen Universums zu erhellen.',creatorSub:'Die Köpfe hinter StarLive.',affiliSub:'Unser Netzwerk von Partnerorganisationen.',projectSub:'Aktive Initiativen, die die Zukunft von StarLive gestalten.',gallerySub:'Visuelle Geschichten aus dem StarLive-Universum.',storeSub:'Offizielle StarLive-Merchandise.',socialSub:'Treten Sie der StarLive-Community auf allen Plattformen bei.',loginRequired:'Anmeldung erforderlich',noFriends:'Noch keine Freunde.',startChat:'Gespräch beginnen',complaints:'Beschwerden & Vorschläge',directMsg:'Direktnachricht an Admin',welcome:'Willkommen bei StarLive Group!',search:'Suchen...',vaultTitle:'Tresor — Sicherer Datenspeicher',vaultSub:'Nur-Admin-Zugriff auf vertrauliche Geschäftsdaten.'},
 };
-function T(k){return (LANGS[S.lang]||LANGS.English)[k]||k;}
-// ── DB (localStorage) ─────────────────────────────────────────
-const K=k=>'sl5_'+k;
-const DB={
-  g(k,d=null){try{const v=localStorage.getItem(K(k));return v!=null?JSON.parse(v):d;}catch{return d;}},
-  s(k,v){try{localStorage.setItem(K(k),JSON.stringify(v));}catch{}},
-  getUsers(){return this.g('users',[]);},saveUsers(u){this.s('users',u);},
-  findUser(e,p){return this.getUsers().find(u=>u.email===e&&u.password===p)||null;},
-  byEmail(e){return this.getUsers().find(u=>u.email===e)||null;},
-  updUser(e,d){const us=this.getUsers();const i=us.findIndex(u=>u.email===e);if(i>-1){us[i]={...us[i],...d};this.saveUsers(us);}},
-  reg(e,p,n){const us=this.getUsers();if(us.find(u=>u.email===e))return{ok:false,msg:'Email already registered.'};const isAdmin=e==='admin@starlive.com'&&p==='admin123';const now=new Date().toISOString();const u={email:e,password:p,username:n,role:isAdmin?'admin':'user',wallet:0,avatar:null,cover:null,bio:'Hi! I just joined StarLive.',joinDate:now,friends:[],friendRequests:[],online:true,lastSeen:now};us.push(u);this.saveUsers(us);return{ok:true,user:u};},
-  getMsgs(room){return this.g('chat_'+room,[]);},saveMsgs(room,m){this.s('chat_'+room,m);},addMsg(room,msg){const m=this.getMsgs(room);m.push(msg);if(m.length>300)m.splice(0,m.length-300);this.saveMsgs(room,m);},
-  getAdminMsgs(){return this.g('adminmsgs',[]);},addAdminMsg(msg){const m=this.getAdminMsgs();m.push(msg);this.s('adminmsgs',m);},updAdminMsg(id,d){const m=this.getAdminMsgs();const i=m.findIndex(x=>x.id===id);if(i>-1){m[i]={...m[i],...d};this.s('adminmsgs',m);}},markAdminRead(email,isAdmin){const m=this.getAdminMsgs();let changed=false;m.forEach(msg=>{if(isAdmin&&!msg.read){msg.read=true;changed=true;}else if(!isAdmin&&msg.from===email&&msg.reply&&!msg.replyRead){msg.replyRead=true;changed=true;}});if(changed)this.s('adminmsgs',m);},
-  sendFR(from,to){const us=this.getUsers();const t=us.find(u=>u.email===to);if(!t)return false;if(!t.friendRequests)t.friendRequests=[];if(t.friendRequests.includes(from)||(t.friends||[]).includes(from))return false;t.friendRequests.push(from);this.saveUsers(us);return true;},
-  acceptFR(me,from){const us=this.getUsers();const a=us.find(u=>u.email===me),b=us.find(u=>u.email===from);if(!a||!b)return;if(!a.friends)a.friends=[];if(!b.friends)b.friends=[];if(!a.friends.includes(from))a.friends.push(from);if(!b.friends.includes(me))b.friends.push(me);a.friendRequests=(a.friendRequests||[]).filter(x=>x!==from);this.saveUsers(us);},
-  rejectFR(me,from){const us=this.getUsers();const a=us.find(u=>u.email===me);if(a){a.friendRequests=(a.friendRequests||[]).filter(x=>x!==from);this.saveUsers(us);}},
-  removeFriend(me,fe){const us=this.getUsers();const a=us.find(u=>u.email===me),b=us.find(u=>u.email===fe);if(a)a.friends=(a.friends||[]).filter(x=>x!==fe);if(b)b.friends=(b.friends||[]).filter(x=>x!==me);this.saveUsers(us);},
-  getCreators(){return this.g('creators')||JSON.parse(JSON.stringify(CDEF));},saveCreators(c){this.s('creators',c);},updCreator(id,d){const l=this.getCreators();const i=l.findIndex(c=>c.id===id);if(i>-1){l[i]={...l[i],...d};this.saveCreators(l);}},
-  getProjects(){return this.g('projects')||JSON.parse(JSON.stringify(PDEF));},saveProjects(p){this.s('projects',p);},updProject(id,d){const l=this.getProjects();const i=l.findIndex(p=>p.id===id);if(i>-1){l[i]={...l[i],...d};this.saveProjects(l);}},
-  getGallery(){return this.g('gallery')||JSON.parse(JSON.stringify(GALDEF));},saveGallery(g){this.s('gallery',g);},
-  getProducts(){return this.g('products')||JSON.parse(JSON.stringify(PRODDEF));},saveProducts(p){this.s('products',p);},updProduct(id,d){const l=this.getProducts();const i=l.findIndex(p=>p.id===id);if(i>-1){l[i]={...l[i],...d};this.saveProducts(l);}},
-  getTopUpReqs(){return this.g('topup_reqs',[]);},saveTopUpReqs(r){this.s('topup_reqs',r);},
-  addTopUpReq(req){const r=this.getTopUpReqs();req.id='TU'+Date.now();req.createdAt=new Date().toISOString();req.status='pending';r.push(req);this.saveTopUpReqs(r);return req;},
-  updTopUpReq(id,d){const r=this.getTopUpReqs();const i=r.findIndex(x=>x.id===id);if(i>-1){r[i]={...r[i],...d,updatedAt:new Date().toISOString()};this.saveTopUpReqs(r);}},
-  getPendingTopUps(){return this.getTopUpReqs().filter(r=>r.status==='pending');},
-  getChallenges(){return this.g('challenges')||[];},saveChallenges(c){this.s('challenges',c);},
-  addChallenge(c){const all=this.getChallenges();c.id='CH'+Date.now();c.createdAt=new Date().toISOString();c.status='pending';c.attempts=[];all.push(c);this.saveChallenges(all);return c;},
-  updChallenge(id,d){const all=this.getChallenges();const i=all.findIndex(x=>x.id===id);if(i>-1){all[i]={...all[i],...d};this.saveChallenges(all);}},
-  delChallenge(id){this.saveChallenges(this.getChallenges().filter(x=>x.id!==id));},
-  addAttempt(chId,attempt){const all=this.getChallenges();const i=all.findIndex(x=>x.id===chId);if(i>-1){if(!all[i].attempts)all[i].attempts=[];all[i].attempts.push(attempt);this.saveChallenges(all);}},
-  getPageViews(){return this.g('pageviews',{days:{},total:0,accessLog:[]});},
-  recordPageView(page){
-    const pv=this.getPageViews();
-    const today=new Date().toISOString().slice(0,10);
-    if(!pv.days)pv.days={};if(!pv.days[today])pv.days[today]={total:0,pages:{},users:{}};
-    pv.days[today].total++;
-    pv.days[today].pages[page]=(pv.days[today].pages[page]||0)+1;
-    // Track user
-    const uname=S.loggedIn&&S.user?S.user.username:'(tamu)';
-    if(!pv.days[today].users[uname])pv.days[today].users[uname]={total:0,pages:{}};
-    pv.days[today].users[uname].total++;
-    pv.days[today].users[uname].pages[page]=(pv.days[today].users[uname].pages[page]||0)+1;
-    pv.total=(pv.total||0)+1;
-    // Access log
-    if(!pv.accessLog)pv.accessLog=[];
-    pv.accessLog.push({time:new Date().toISOString(),user:uname,page});
-    if(pv.accessLog.length>500)pv.accessLog.splice(0,pv.accessLog.length-500);
-    this.s('pageviews',pv);
+async function T(k){return (LANGS[S.lang]||LANGS.English)[k]||k;}
+// ── SUPABASE CLIENT ───────────────────────────────────────────
+const SUPABASE_URL = 'https://MASUKKAN_URL.supabase.co';
+const SUPABASE_KEY = 'MASUKKAN_ANON_KEY';
+const supa = window.supabase ? supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+
+// ── SUPABASE STORAGE HELPERS ───────────────────────────────────
+async function uploadFile(bucket, path, file) {
+  if (!supa) return null;
+  const { error } = await supa.storage.from(bucket).upload(path, file, { upsert: true });
+  if (error) { console.error('Upload error:', error); return null; }
+  const { data } = supa.storage.from(bucket).getPublicUrl(path);
+  return data.publicUrl;
+}
+async function uploadAvatar(file) {
+  const ext = file.name.split('.').pop();
+  const path = `${S.user.id}/avatar.${ext}`;
+  return uploadFile('avatars', path, file);
+}
+async function uploadCover(file) {
+  const ext = file.name.split('.').pop();
+  const path = `${S.user.id}/cover.${ext}`;
+  return uploadFile('avatars', path, file);
+}
+async function uploadGalleryFile(file) {
+  const ext = file.name.split('.').pop();
+  const path = `${Date.now()}_${S.user?.id || 'anon'}.${ext}`;
+  return uploadFile('gallery', path, file);
+}
+async function uploadVaultFile(file, code) {
+  const ext = file.name.split('.').pop();
+  const path = `vault/${code}_${Date.now()}.${ext}`;
+  return uploadFile('vault', path, file);
+}
+
+// ── DB (Supabase) ──────────────────────────────────────────────
+const DB = {
+  // ── USERS / PROFILES ──────────────────────────────────────
+  async getUsers() {
+    if (!supa) return [];
+    const { data } = await supa.from('profiles').select('*');
+    return data || [];
   },
-  getStoreOrders(){return this.g('store_orders',[]);},addStoreOrder(o){const all=this.getStoreOrders();o.id='ORD'+Date.now();o.createdAt=new Date().toISOString();all.push(o);this.s('store_orders',all);},saveVault(v){this.s('vault',v);},
-  addVault(entry){const v=this.getVault();entry.id='V'+Date.now();entry.createdAt=new Date().toISOString();v.push(entry);this.saveVault(v);return entry;},
-  updVault(id,d){const v=this.getVault();const i=v.findIndex(x=>x.id===id);if(i>-1){v[i]={...v[i],...d,updatedAt:new Date().toISOString()};this.saveVault(v);}},
-  delVault(id){this.saveVault(this.getVault().filter(x=>x.id!==id));},
-  getVaultLogs(){return this.g('vault_logs',[]);},
-  addVaultLog(log){const l=this.getVaultLogs();log.time=new Date().toISOString();l.push(log);if(l.length>200)l.splice(0,l.length-200);this.s('vault_logs',l);},
-  getGlobalFracChat(){return this.g('frac_chat',[]);},
-  addFracChatMsg(msg){const c=this.getGlobalFracChat();msg.id='FC'+Date.now();c.push(msg);if(c.length>500)c.splice(0,c.length-500);this.s('frac_chat',c);},
+  async byId(id) {
+    if (!supa) return null;
+    const { data } = await supa.from('profiles').select('*').eq('id', id).single();
+    return data;
+  },
+  async byEmail(email) {
+    // For compatibility — look up via metadata stored in profile
+    if (!supa) return null;
+    const { data } = await supa.from('profiles').select('*').eq('email', email).maybeSingle();
+    return data;
+  },
+  async updUser(id, updates) {
+    if (!supa) return;
+    // Map old field names to new schema
+    const mapped = {};
+    if (updates.avatar !== undefined) mapped.avatar_url = updates.avatar;
+    if (updates.cover !== undefined) mapped.cover_url = updates.cover;
+    if (updates.online !== undefined) mapped.online = updates.online;
+    if (updates.lastSeen !== undefined) mapped.last_seen = updates.lastSeen;
+    if (updates.wallet !== undefined) mapped.wallet = updates.wallet;
+    if (updates.badges !== undefined) mapped.badges = updates.badges;
+    if (updates.friends !== undefined) mapped.friends = updates.friends;
+    if (updates.friendRequests !== undefined) mapped.friend_reqs = updates.friendRequests;
+    if (updates.bio !== undefined) mapped.bio = updates.bio;
+    if (updates.fraction !== undefined) mapped.fraction = updates.fraction;
+    if (updates.fracExamDone !== undefined) mapped.frac_exam_done = updates.fracExamDone;
+    if (updates.fracResult !== undefined) mapped.frac_result = updates.fracResult;
+    // Pass remaining fields directly
+    Object.keys(updates).forEach(k => {
+      if (!['avatar','cover','online','lastSeen','wallet','badges','friends','friendRequests','bio','fraction','fracExamDone','fracResult'].includes(k))
+        mapped[k] = updates[k];
+    });
+    const { error } = await supa.from('profiles').update(mapped).eq('id', id);
+    if (error) console.error('updUser:', error);
+    // Refresh S.user if updating self
+    if (S.user && S.user.id === id) {
+      Object.assign(S.user, updates);
+      if (updates.avatar) S.user.avatar_url = updates.avatar;
+      if (updates.cover) S.user.cover_url = updates.cover;
+    }
+  },
+
+  // ── CREATORS ──────────────────────────────────────────────
+  async getCreators() {
+    if (!supa) return JSON.parse(JSON.stringify(CDEF));
+    const { data } = await supa.from('creators').select('*').order('name');
+    return (data && data.length) ? data.map(c=>({...c,photo:c.photo_url,cover:c.cover_url})) : JSON.parse(JSON.stringify(CDEF));
+  },
+  async updCreator(id, updates) {
+    if (!supa) return;
+    const mapped = {...updates};
+    if (updates.photo) mapped.photo_url = updates.photo;
+    if (updates.cover) mapped.cover_url = updates.cover;
+    await supa.from('creators').update(mapped).eq('id', id);
+  },
+  async addCreator(creator) {
+    if (!supa) return;
+    const mapped = {...creator, photo_url: creator.photo, cover_url: creator.cover};
+    delete mapped.photo; delete mapped.cover;
+    const { data } = await supa.from('creators').insert(mapped).select().single();
+    return data;
+  },
+  async delCreator(id) {
+    if (!supa) return;
+    await supa.from('creators').delete().eq('id', id);
+  },
+
+  // ── PROJECTS ──────────────────────────────────────────────
+  async getProjects() {
+    if (!supa) return JSON.parse(JSON.stringify(PDEF));
+    const { data } = await supa.from('projects').select('*').order('created_at', {ascending:false});
+    return (data && data.length) ? data : JSON.parse(JSON.stringify(PDEF));
+  },
+  async updProject(id, updates) {
+    if (!supa) return;
+    await supa.from('projects').update(updates).eq('id', id);
+  },
+  async addProject(proj) {
+    if (!supa) return;
+    const { data } = await supa.from('projects').insert(proj).select().single();
+    return data;
+  },
+
+  // ── GALLERY ───────────────────────────────────────────────
+  async getGallery() {
+    if (!supa) return JSON.parse(JSON.stringify(GALDEF));
+    const { data } = await supa.from('gallery').select('*').order('created_at',{ascending:false});
+    return (data && data.length) ? data.map(g=>({...g,mediaUrl:g.url,type:g.type||'image',title:g.caption||'',cat:g.category||'Event'})) : JSON.parse(JSON.stringify(GALDEF));
+  },
+  async addGallery(item) {
+    if (!supa) return;
+    const row = {url:item.mediaUrl||item.url, type:item.type||'image', caption:item.title||item.caption||'', category:item.cat||'Event', uploader_id:S.user?.id};
+    const { data } = await supa.from('gallery').insert(row).select().single();
+    return data;
+  },
+  async deleteGallery(id) {
+    if (!supa) return;
+    await supa.from('gallery').delete().eq('id', id);
+  },
+  saveGallery(){}, // no-op (compatibility)
+
+  // ── PRODUCTS ──────────────────────────────────────────────
+  async getProducts() {
+    if (!supa) return JSON.parse(JSON.stringify(PRODDEF));
+    const { data } = await supa.from('products').select('*').order('name');
+    return (data && data.length) ? data.map(p=>({...p,image:p.image_url,desc:p.desc||p.description||''})) : JSON.parse(JSON.stringify(PRODDEF));
+  },
+  async updProduct(id, updates) {
+    if (!supa) return;
+    const mapped = {...updates};
+    if (updates.image) mapped.image_url = updates.image;
+    await supa.from('products').update(mapped).eq('id', id);
+  },
+  async addProduct(prod) {
+    if (!supa) return;
+    const row = {name:prod.name, price:prod.price, stock:prod.stock, category:prod.cat||prod.category, desc:prod.desc, image_url:prod.image||prod.imageUrl};
+    const { data } = await supa.from('products').insert(row).select().single();
+    return data;
+  },
+  async deleteProduct(id) {
+    if (!supa) return;
+    await supa.from('products').delete().eq('id', id);
+  },
+  saveProducts(){}, // no-op
+
+  // ── CHAT MESSAGES ─────────────────────────────────────────
+  async getMsgs(room, limit=100) {
+    if (!supa) return [];
+    const { data } = await supa.from('messages').select('*, sender:profiles(id,username,avatar_url)').eq('room', room).order('created_at',{ascending:true}).limit(limit);
+    return (data||[]).map(msg=>({...msg, text:msg.content, userEmail:msg.sender?.id, username:msg.sender?.username, avatar:msg.sender?.avatar_url, time:msg.created_at}));
+  },
+  async addMsg(room, msg) {
+    if (!supa) return;
+    await supa.from('messages').insert({room, sender_id: S.user.id, content: msg.text||msg.content});
+  },
+
+  // ── GLOBAL FRACTION CHAT ──────────────────────────────────
+  async getGlobalFracChat(limit=200) {
+    if (!supa) return [];
+    const { data } = await supa.from('messages').select('*, sender:profiles(id,username,avatar_url,fraction)').eq('room','global_fraction').order('created_at',{ascending:true}).limit(limit);
+    return (data||[]).map(msg=>({...msg, text:msg.content, userEmail:msg.sender?.id, username:msg.sender?.username, fraction:msg.sender?.fraction, time:msg.created_at}));
+  },
+  async addFracChatMsg(msg) {
+    if (!supa) return;
+    await supa.from('messages').insert({room:'global_fraction', sender_id:S.user.id, content:msg.text});
+  },
+
+  // ── ADMIN MESSAGES ────────────────────────────────────────
+  async getAdminMsgs() {
+    if (!supa) return [];
+    const { data } = await supa.from('admin_messages').select('*, from:profiles(username)').order('created_at',{ascending:false});
+    return (data||[]).map(m=>({...m, fromUsername:m.from?.username, text:m.content}));
+  },
+  async addAdminMsg(msg) {
+    if (!supa) return;
+    await supa.from('admin_messages').insert({from_id:S.user.id, type:msg.type||'complaint', content:msg.text||msg.content});
+  },
+  async updAdminMsg(id, updates) {
+    if (!supa) return;
+    await supa.from('admin_messages').update(updates).eq('id', id);
+  },
+
+  // ── TOP-UP REQUESTS ───────────────────────────────────────
+  async getTopUpReqs() {
+    if (!supa) return [];
+    const isAdmin = S.isAdmin;
+    let q = supa.from('topup_requests').select('*, user:profiles(username,wallet,id)').order('created_at',{ascending:false});
+    if (!isAdmin) q = q.eq('user_id', S.user?.id);
+    const { data } = await q;
+    return (data||[]).map(r=>({...r, userEmail:r.user?.id, userName:r.user?.username, amount:r.amount, status:r.status, note:r.note, createdAt:r.created_at, updatedAt:r.updated_at}));
+  },
+  async addTopUpReq(req) {
+    if (!supa) return;
+    await supa.from('topup_requests').insert({user_id:S.user.id, amount:req.amount, note:req.note||'', status:'pending'});
+  },
+  async updTopUpReq(id, updates) {
+    if (!supa) return;
+    await supa.from('topup_requests').update({...updates, updated_at:new Date().toISOString()}).eq('id', id);
+  },
+  async getPendingTopUps() {
+    if (!supa) return [];
+    const { data } = await supa.from('topup_requests').select('*, user:profiles(username,wallet)').eq('status','pending');
+    return (data||[]).map(r=>({...r, userEmail:r.user_id, userName:r.user?.username, amount:r.amount, createdAt:r.created_at}));
+  },
+
+  // ── CHALLENGES ────────────────────────────────────────────
+  async getChallenges() {
+    if (!supa) return [];
+    const { data } = await supa.from('challenges').select('*, attempts:challenge_attempts(*), creator:profiles(username)').order('created_at',{ascending:false});
+    return (data||[]).map(c=>({...c, questions:c.questions||[], attempts:c.attempts||[], createdByName:c.creator?.username||'', createdBy:c.created_by}));
+  },
+  async addChallenge(c) {
+    if (!supa) return;
+    await supa.from('challenges').insert({title:c.title, questions:c.questions, status:c.status||'pending', created_by:S.user.id, desc:c.desc||''});
+  },
+  async updChallenge(id, updates) {
+    if (!supa) return;
+    await supa.from('challenges').update(updates).eq('id', id);
+  },
+  async delChallenge(id) {
+    if (!supa) return;
+    await supa.from('challenges').delete().eq('id', id);
+  },
+  async addAttempt(chId, attempt) {
+    if (!supa) return;
+    await supa.from('challenge_attempts').insert({challenge_id:chId, user_id:S.user.id, score:attempt.score, passed:attempt.passed});
+  },
+
+  // ── FRIENDS ───────────────────────────────────────────────
+  async sendFR(fromId, toId) {
+    if (!supa) return false;
+    const { data: target } = await supa.from('profiles').select('friend_reqs').eq('id', toId).single();
+    if (!target) return false;
+    const reqs = [...new Set([...(target.friend_reqs||[]), fromId])];
+    await supa.from('profiles').update({friend_reqs:reqs}).eq('id', toId);
+    return true;
+  },
+  async acceptFR(meId, fromId) {
+    if (!supa) return;
+    const [{ data: me }, { data: from }] = await Promise.all([
+      supa.from('profiles').select('friends,friend_reqs').eq('id', meId).single(),
+      supa.from('profiles').select('friends').eq('id', fromId).single(),
+    ]);
+    const myFriends = [...new Set([...(me?.friends||[]), fromId])];
+    const myReqs = (me?.friend_reqs||[]).filter(x => x !== fromId);
+    const theirFriends = [...new Set([...(from?.friends||[]), meId])];
+    await Promise.all([
+      supa.from('profiles').update({friends:myFriends, friend_reqs:myReqs}).eq('id', meId),
+      supa.from('profiles').update({friends:theirFriends}).eq('id', fromId),
+    ]);
+  },
+  async rejectFR(meId, fromId) {
+    if (!supa) return;
+    const { data: me } = await supa.from('profiles').select('friend_reqs').eq('id', meId).single();
+    const reqs = (me?.friend_reqs||[]).filter(x => x !== fromId);
+    await supa.from('profiles').update({friend_reqs:reqs}).eq('id', meId);
+  },
+  async removeFriend(meId, friendId) {
+    if (!supa) return;
+    const [{ data: me }, { data: fr }] = await Promise.all([
+      supa.from('profiles').select('friends').eq('id', meId).single(),
+      supa.from('profiles').select('friends').eq('id', friendId).single(),
+    ]);
+    await Promise.all([
+      supa.from('profiles').update({friends:(me?.friends||[]).filter(x=>x!==friendId)}).eq('id', meId),
+      supa.from('profiles').update({friends:(fr?.friends||[]).filter(x=>x!==meId)}).eq('id', friendId),
+    ]);
+  },
+
+  // ── STORE ORDERS ──────────────────────────────────────────
+  async getStoreOrders() {
+    if (!supa) return [];
+    const { data } = await supa.from('store_orders').select('*, user:profiles(username)').order('created_at',{ascending:false});
+    return (data||[]).map(o=>({...o, userName:o.user?.username, createdAt:o.created_at}));
+  },
+  async addStoreOrder(o) {
+    if (!supa) return;
+    await supa.from('store_orders').insert({user_id:S.user.id, items:o.items, total:o.total, cart:o.cart||{}});
+  },
+
+  // ── PAGE VIEWS (analytics) ────────────────────────────────
+  async getPageViews() {
+    if (!supa) return {days:{}, total:0, accessLog:[]};
+    const { data } = await supa.from('page_views').select('*').order('created_at',{ascending:false}).limit(500);
+    // Aggregate into days format
+    const pv = {days:{}, total:data?.length||0, accessLog:[]};
+    (data||[]).forEach(row => {
+      const day = row.created_at?.slice(0,10)||'?';
+      if (!pv.days[day]) pv.days[day]={total:0,pages:{},users:{}};
+      pv.days[day].total++;
+      pv.days[day].pages[row.page]=(pv.days[day].pages[row.page]||0)+1;
+      const u=row.username||'(tamu)';
+      if (!pv.days[day].users[u]) pv.days[day].users[u]={total:0,pages:{}};
+      pv.days[day].users[u].total++;
+      pv.days[day].users[u].pages[row.page]=(pv.days[day].users[u].pages[row.page]||0)+1;
+      pv.accessLog.push({time:row.created_at, user:u, page:row.page});
+    });
+    return pv;
+  },
+  async recordPageView(page) {
+    if (!supa) return;
+    const uname = S.loggedIn&&S.user ? (S.user.username||S.user.email) : '(tamu)';
+    // Fire-and-forget — don't await to avoid slowing navigation
+    supa.from('page_views').insert({page, username:uname, user_id:S.user?.id||null}).then(()=>{}).catch(()=>{});
+  },
+
+  // ── VAULT ─────────────────────────────────────────────────
+  async getVault() {
+    if (!supa) return [];
+    const { data } = await supa.from('vault_entries').select('*').order('created_at',{ascending:false});
+    return (data||[]).map(v=>({...v, ownerCode:v.owner_code, imageData:v.image_url, imageName:v.image_name, fileData:v.file_url, fileName:v.file_name, fileType:v.file_type, createdAt:v.created_at, updatedAt:v.updated_at}));
+  },
+  async addVault(entry) {
+    if (!supa) return;
+    const row = {title:entry.title, category:entry.category, owner:entry.owner, owner_code:entry.ownerCode, content:entry.content, tags:entry.tags, image_url:entry.imageData, image_name:entry.imageName, file_url:entry.fileData, file_name:entry.fileName, file_type:entry.fileType, created_by:S.user?.id, uploaded:false};
+    await supa.from('vault_entries').insert(row);
+  },
+  async updVault(id, updates) {
+    if (!supa) return;
+    const mapped = {...updates};
+    if (updates.ownerCode !== undefined) mapped.owner_code = updates.ownerCode;
+    if (updates.imageData !== undefined) mapped.image_url = updates.imageData;
+    if (updates.imageName !== undefined) mapped.image_name = updates.imageName;
+    if (updates.fileData !== undefined) mapped.file_url = updates.fileData;
+    if (updates.fileName !== undefined) mapped.file_name = updates.fileName;
+    if (updates.fileType !== undefined) mapped.file_type = updates.fileType;
+    if (updates.uploadedAt !== undefined) mapped.uploaded_at = updates.uploadedAt;
+    await supa.from('vault_entries').update(mapped).eq('id', id);
+  },
+  delVault(){}, // vault entries are permanent by design
+
+  // ── VAULT LOG ─────────────────────────────────────────────
+  async getVaultLogs() {
+    if (!supa) return [];
+    const { data } = await supa.from('vault_logs').select('*').order('created_at',{ascending:false}).limit(200);
+    return (data||[]).map(l=>({...l, time:l.created_at}));
+  },
+  async addVaultLog(log) {
+    if (!supa) return;
+    supa.from('vault_logs').insert({action:log.action, title:log.title, code:log.code, by:log.by||S.user?.username}).then(()=>{}).catch(()=>{});
+  },
 };
-function initDB(){if(!DB.getUsers().length){DB.reg('admin@starlive.com','admin123','Admin StarLive');DB.reg('user@starlive.com','user123','Demo User');DB.updUser('admin@starlive.com',{wallet:500});DB.updUser('user@starlive.com',{wallet:100});}}
 
-// ── THEMES ────────────────────────────────────────────────────
-const TH={
-  cyber:{name:"Cyber Serenity",bg:"linear-gradient(135deg,#1a1208,#0d1a14,#0a1520)",sb:"rgba(0,255,200,0.15)",ac:"#00ffc8",as:"rgba(0,255,200,0.12)",tx:"#f0e8d8",tm:"#a89878",cb:"rgba(20,30,25,0.76)",bl:"blur(14px)",nab:"rgba(0,255,200,0.12)",nat:"#00ffc8",bb:"rgba(0,255,200,0.15)",bc:"#00ffc8",bt:"#00ffc8",ib:"rgba(0,255,200,0.06)",sh:"0 4px 22px rgba(0,255,200,0.07)",tb:"rgba(0,255,200,0.1)",tt:"#00ffc8",sur:"rgba(0,255,200,0.04)",mm:"rgba(0,255,200,0.18)",mo:"rgba(255,255,255,0.07)"},
-  inst:{name:"Institutional Future",bg:"linear-gradient(135deg,#001830,#002a5a,#001020)",sb:"rgba(250,183,21,0.26)",ac:"#FAB715",as:"rgba(250,183,21,0.12)",tx:"#e8f0ff",tm:"#7a9cc8",cb:"rgba(0,20,50,0.78)",bl:"blur(12px)",nab:"rgba(250,183,21,0.12)",nat:"#FAB715",bb:"rgba(250,183,21,0.14)",bc:"#FAB715",bt:"#FAB715",ib:"rgba(0,95,172,0.12)",sh:"0 4px 22px rgba(0,95,172,0.14)",tb:"rgba(250,183,21,0.1)",tt:"#FAB715",sur:"rgba(250,183,21,0.04)",mm:"rgba(250,183,21,0.18)",mo:"rgba(255,255,255,0.06)"},
-  gold:{name:"Golden Autumn",bg:"linear-gradient(135deg,#1a0f00,#2a1500,#0a1020)",sb:"rgba(250,183,21,0.2)",ac:"#FAB715",as:"rgba(250,183,21,0.13)",tx:"#fef0c8",tm:"#b8900a",cb:"rgba(25,15,0,0.78)",bl:"blur(14px)",nab:"rgba(250,183,21,0.13)",nat:"#FAB715",bb:"rgba(250,183,21,0.17)",bc:"#FAB715",bt:"#FAB715",ib:"rgba(250,183,21,0.07)",sh:"0 4px 22px rgba(250,183,21,0.07)",tb:"rgba(250,183,21,0.1)",tt:"#FAB715",sur:"rgba(250,183,21,0.05)",mm:"rgba(250,183,21,0.18)",mo:"rgba(255,255,255,0.05)"},
-};
-
-// ── STATE ─────────────────────────────────────────────────────
-const S={theme:'cyber',season:'Autumn',lang:'English',bgP:0,fx:false,loggedIn:false,isAdmin:false,user:null,page:'home',sopen:true,spopen:false,cpopen:false,crtSel:null,usrSel:null,cart:{},tuAmt:'',atab:'login',aerr:'',aform:{email:'',password:'',username:'',cp:''},stab:'theme',customBg:null,slidx:0,slTimer:null,dtab:'analytics',chatRoom:null,chatTarget:null,chatDraft:{},chatTab:'friends',vaultQ:'',vaultTab:'home',fracPageTab:'info',_cb:{},_pimgid:null,_ecid:null,_ecf:null,_prodEditId:null,fracExamAnswers:{},fracExamStep:0,challTab:'browse',challEditId:null,challTakeId:null,dashTab2:'users',pageViews:{}};
-
-// ── STATIC DATA ───────────────────────────────────────────────
-const CDEF=[
-  {id:1,name:"Aiden Voss",role:"Lead Developer",hobby:"Cyberpunk & synthwave",bio:"Full-stack architect with 8 years building scalable systems.",education:"B.Sc Computer Science — MIT (2015)\nM.Sc Software Engineering — Stanford (2017)",fraction:"Zenith Prime Labs",achievements:"🏆 Best Developer Award 2023\n🥇 Hackathon Champion — DevFest Asia\n📜 Google Cloud Certified",images:["👨‍💻"],tags:["React","Node.js","Rust"],photo:null,cvUrl:null,email:"aiden@starlive.com",phone:"+62 812 0001"},
-  {id:2,name:"Yuki Tanaka",role:"UI/UX Designer",hobby:"Watercolor & tea ceremony",bio:"Visual storyteller blending Japanese aesthetics with futuristic design.",education:"B.A Design — Kyoto University (2018)\nExchange — Parsons NYC (2019)",fraction:"Nova Creative Studio",achievements:"🎨 Red Dot Design Award 2023\n✨ UX Pioneer — Figma Community",images:["👩‍🎨"],tags:["Figma","Motion","3D"],photo:null,cvUrl:null,email:"yuki@starlive.com",phone:"+62 812 0002"},
-  {id:3,name:"Marcus Chen",role:"Backend Engineer",hobby:"Chess & astrophotography",bio:"Systems thinker who loves elegant algorithms.",education:"B.Sc IT — NUS (2016)\nM.Sc Data Science — HKUST (2018)",fraction:"Zenith Prime Labs",achievements:"♟️ National Chess Champion U-25\n🔭 Astrophotography Award",images:["👨‍🔬"],tags:["Python","Go","PostgreSQL"],photo:null,cvUrl:null,email:"marcus@starlive.com",phone:"+62 812 0003"},
-  {id:4,name:"Sora Kim",role:"Creative Director",hobby:"K-drama & digital illustration",bio:"Bridges the gap between art and strategy.",education:"B.F.A — Hongik University (2017)\nMBA — Seoul National University (2020)",fraction:"Nova Creative Studio",achievements:"🎬 Best Creative Director — MediaAsia 2023\n🌠 Cannes Lions 2022",images:["👩‍💼"],tags:["Branding","Art Direction","Video"],photo:null,cvUrl:null,email:"sora@starlive.com",phone:"+62 812 0004"},
-  {id:5,name:"Lena Richter",role:"Data Scientist",hobby:"Hiking & piano",bio:"Turns raw data into actionable insights.",education:"B.Sc Statistics — TU Munich (2017)\nPh.D ML — ETH Zurich (2021)",fraction:"Zenith Prime Labs",achievements:"🤖 Best ML Paper — NeurIPS 2022\n📊 Kaggle Winner ×3",images:["👩‍🔬"],tags:["Python","TensorFlow","D3.js"],photo:null,cvUrl:null,email:"lena@starlive.com",phone:"+62 812 0005"},
-];
-const PDEF=[
-  {id:1,name:"Project Aurora",desc:"Next-gen streaming infrastructure for real-time content delivery.",team:["Aiden Voss","Marcus Chen"],progress:78,budget:450000,status:"Active",tags:["Streaming","SE Asia"],image:null},
-  {id:2,name:"NeoCanvas",desc:"AI-powered creative suite for digital artists.",team:["Yuki Tanaka","Sora Kim"],progress:55,budget:280000,status:"In Development",tags:["AI","Creative"],image:null},
-  {id:3,name:"StarGrid Analytics",desc:"Unified analytics aggregating social media performance.",team:["Lena Richter","Marcus Chen"],progress:92,budget:180000,status:"Testing",tags:["Analytics","Data"],image:null},
-  {id:4,name:"Orbital Commerce",desc:"E-commerce backbone powering StarLive Store.",team:["Aiden Voss","Yuki Tanaka"],progress:40,budget:320000,status:"Planning",tags:["E-commerce","AR"],image:null},
-];
-const GALDEF=[
-  {id:1,type:"image",emoji:"🌌",title:"Nebula Conference 2025",cat:"Event",mediaUrl:null},
-  {id:2,type:"image",emoji:"🎨",title:"NeoCanvas Launch",cat:"Product",mediaUrl:null},
-  {id:3,type:"video",emoji:"🎬",title:"StarLive Documentary",cat:"Media",mediaUrl:null},
-  {id:4,type:"image",emoji:"🏙️",title:"Cyber Office Tour",cat:"BTS",mediaUrl:null},
-  {id:5,type:"image",emoji:"🌸",title:"Spring Festival 2025",cat:"Event",mediaUrl:null},
-  {id:6,type:"video",emoji:"🎵",title:"Creator Showcase Reel",cat:"Media",mediaUrl:null},
-];
-const PRODDEF=[
-  {id:1,name:"StarLive Hoodie",price:85,e:"👕",cat:"Apparel",desc:"Premium cyber-aesthetic hoodie",stock:50,image:null},
-  {id:2,name:"Creator Pack",price:149,e:"📦",cat:"Bundle",desc:"Complete digital creator toolkit",stock:30,image:null},
-  {id:3,name:"Neon Mug",price:28,e:"☕",cat:"Accessories",desc:"Heat-reactive constellation mug",stock:100,image:null},
-  {id:4,name:"StarPad Pro",price:220,e:"🖱️",cat:"Hardware",desc:"XL desk pad with wireless charging",stock:20,image:null},
-  {id:5,name:"Digital Zine Vol.1",price:12,e:"📕",cat:"Digital",desc:"Behind-the-scenes digital magazine",stock:999,image:null},
-  {id:6,name:"Galaxy Pin Set",price:35,e:"📌",cat:"Accessories",desc:"Set of 5 enamel affiliate pins",stock:75,image:null},
-];
-const AFFIL=[
-  {id:1,n:"Polaris Academy",ic:"⭐",d:"Elite training hub for creative professionals.",c:"#4fc3f7",url:"https://example.com/polaris"},
-  {id:2,n:"Zenith Prime Labs",ic:"🧪",d:"R&D wing focused on next-gen technology.",c:"#81c784",url:"https://example.com/zenith"},
-  {id:3,n:"Solstice Media Info",ic:"📡",d:"Media broadcasting and information platform.",c:"#ffb74d",url:"https://example.com/solstice"},
-  {id:4,n:"Nova Creative Studio",ic:"🎨",d:"Powerhouse for visual design and multimedia.",c:"#f06292",url:"https://example.com/nova"},
-  {id:5,n:"Stellaris Lounge",ic:"🛋️",d:"Community hub for collaboration.",c:"#ce93d8",url:"https://example.com/stellaris"},
-];
-const SLIDES=[{e:"🌌",l:"Nebula Conference 2025",bg:"linear-gradient(135deg,#0d0020,#1a0040)"},{e:"🎨",l:"NeoCanvas Launch",bg:"linear-gradient(135deg,#200010,#400030)"},{e:"🏙️",l:"StarLive Cyber HQ",bg:"linear-gradient(135deg,#001a20,#003040)"},{e:"🌸",l:"Spring Creator Festival",bg:"linear-gradient(135deg,#200a00,#402000)"},{e:"🤖",l:"AI Lab Grand Opening",bg:"linear-gradient(135deg,#001020,#002040)"},{e:"✨",l:"Awards Gala Night 2024",bg:"linear-gradient(135deg,#1a1000,#302000)"}];
-const NAV=[{id:"home",lk:"home",i:"🏠"},{id:"affiliation",lk:"affiliation",i:"🤝"},{id:"creator",lk:"creator",i:"👨‍💻"},{id:"project",lk:"project",i:"🚀"},{id:"gallery",lk:"gallery",i:"🖼️"},{id:"social",lk:"social",i:"🌐"},{id:"store",lk:"store",i:"🛒",locked:true},{id:"fraction",lk:"fraction",i:"🔱",locked:true},{id:"challenge",lk:"challenge",i:"🏆",locked:true},{id:"dashboard",lk:"dashboard",i:"📊",admin:true},{id:"vault",lk:"vault",i:"🔐",admin:true}];
-const DA=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-const MA=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const AX={};
-// ── HELPERS ───────────────────────────────────────────────────
-const t=()=>TH[S.theme];
-function el(tag,props={},...ch){const e=document.createElement(tag);for(const[k,v]of Object.entries(props)){if(k==='style'&&typeof v==='object')Object.assign(e.style,v);else if(k==='class')e.className=v;else if(k.startsWith('on'))e[k]=v;else e.setAttribute(k,v);}ch.flat().forEach(c=>{if(c==null||c===false)return;e.appendChild(typeof c==='string'||typeof c==='number'?document.createTextNode(String(c)):c);});return e;}
-function gc(sty={},...ch){const q=t();return el('div',{class:'gc',style:{background:q.cb,backdropFilter:q.bl,border:`1px solid ${q.sb}`,boxShadow:q.sh,...sty}},...ch);}
-function btn(tx,fn,ol=false,sty={}){const q=t();return el('button',{class:'btn',style:{background:ol?'transparent':q.bb,borderColor:q.bc,color:q.bt,...sty},onclick:fn},tx);}
-function tg(tx){const q=t();return el('span',{class:'tbadge',style:{background:q.tb,color:q.tt,borderColor:q.sb}},tx);}
-function pb(v){const q=t();const r=el('div',{class:'pt'});r.appendChild(el('div',{class:'pf',style:{width:v+'%',background:q.ac}}));return r;}
-function closeM(id){document.getElementById(id).style.display='none';}
-function moc(e,id){if(e.target===document.getElementById(id))closeM(id);}
-function rf(file){return new Promise(r=>{const rd=new FileReader();rd.onload=e=>r(e.target.result);rd.readAsDataURL(file);});}
-function ago(iso){const d=(Date.now()-new Date(iso).getTime())/1000;if(d<60)return 'just now';if(d<3600)return Math.floor(d/60)+'m ago';if(d<86400)return Math.floor(d/3600)+'h ago';return Math.floor(d/86400)+'d ago';}
-function fdate(iso){const d=new Date(iso);return `${d.getDate()} ${MA[d.getMonth()]} ${d.getFullYear()}`;}
-function roomId(a,b){return [a,b].sort().join('__');}
-function avEl(u,sz=38){const q=t();if(u&&u.avatar)return el('img',{src:u.avatar,style:{width:sz+'px',height:sz+'px',borderRadius:'50%',objectFit:'cover',border:`2px solid ${q.ac}`,flexShrink:'0'}});return el('div',{style:{width:sz+'px',height:sz+'px',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',fontSize:sz*.38+'px',background:q.as,border:`2px solid ${q.sb}`,flexShrink:'0',color:q.ac}},u?u.username[0].toUpperCase():'?');}
-
-// ── THEME ─────────────────────────────────────────────────────
-function applyTheme(){
-  const q=t();document.body.style.background=q.bg;document.body.style.color=q.tx;
-  const g=document.getElementById('gbg');g.style.cssText=`position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.2;background-image:linear-gradient(${q.sb} 1px,transparent 1px),linear-gradient(90deg,${q.sb} 1px,transparent 1px);background-size:40px 40px`;
-  const sb=document.getElementById('sidebar');sb.style.background=q.cb;sb.style.backdropFilter=q.bl;sb.style.borderRight=`1px solid ${q.sb}`;
-  ['sbl','map','aio','aarea'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.borderColor=q.sb;});
-  const ln=document.getElementById('ln');if(ln)ln.style.color=q.ac;
-  const st=document.getElementById('stgl');if(st)st.style.color=q.tm;
-  const sf=document.getElementById('sfbtn');if(sf){sf.style.background=q.cb;sf.style.backdropFilter=q.bl;sf.style.borderColor=q.ac;sf.style.boxShadow=`0 0 16px ${q.as}`;}
-  const cf=document.getElementById('cfbtn');if(cf){cf.style.background=q.cb;cf.style.backdropFilter=q.bl;cf.style.borderColor=q.sb;}
-  const cw=document.getElementById('cwt');if(cw)cw.style.color=q.ac;
-  updateSBAcct();renderNav();renderAuth();updateClock();
+// ── SUPABASE AUTH ──────────────────────────────────────────────
+async function doLogin(){
+  const{email,password}=S.aform;
+  if(!email||!password){S.aerr='Email & password required.';rAuthM();return;}
+  if(!supa){S.aerr='Supabase not configured. Set SUPABASE_URL and SUPABASE_KEY.';rAuthM();return;}
+  S.aerr='Loading...';rAuthM();
+  const{data,error}=await supa.auth.signInWithPassword({email,password});
+  if(error){S.aerr=error.message;rAuthM();return;}
+  const{data:profile}=await supa.from('profiles').select('*').eq('id',data.user.id).single();
+  if(!profile){S.aerr='Profile not found. Contact admin.';rAuthM();return;}
+  await supa.from('profiles').update({online:true,last_seen:new Date().toISOString()}).eq('id',data.user.id);
+  S.loggedIn=true;S.user={...profile,email,id:data.user.id,avatar:profile.avatar_url,cover:profile.cover_url};
+  S.isAdmin=profile.role==='admin';
+  S.aerr='';document.getElementById('m-auth').style.display='none';
+  applyTheme();rPage();renderNav();renderAuth();
+  notif('👋 Welcome back, '+profile.username+'!','success');
+  startChatBadgePoll();
 }
-function updateSBAcct(){
-  const q=t();const sav=document.getElementById('sav');const sun=document.getElementById('sun');const sur=document.getElementById('sur');const sod=document.getElementById('sod');
-  if(sav){sav.style.borderColor=q.ac;sav.style.background=q.as;sav.innerHTML='';}
-  if(S.loggedIn&&S.user){const u=DB.byEmail(S.user.email)||S.user;if(sav){if(u.avatar){const img=el('img',{src:u.avatar,style:{width:'100%',height:'100%',objectFit:'cover'}});sav.appendChild(img);}else{sav.textContent=u.username[0].toUpperCase();sav.style.color=q.ac;}}if(sun){sun.textContent=u.username;sun.style.color=q.tx;}if(sur){sur.textContent=S.isAdmin?'👑 Admin':'👤 User';sur.style.color=q.ac;}if(sod)sod.style.display='block';}
-  else{if(sav){sav.textContent='👤';sav.style.color=q.tm;}if(sun){sun.textContent='Not logged in';sun.style.color=q.tm;}if(sur){sur.textContent='Click to login';sur.style.color=q.ac;}if(sod)sod.style.display='none';}
+async function doReg(){
+  const{email,password,username,cp}=S.aform;
+  if(!username||!email||!password){S.aerr='All fields required.';rAuthM();return;}
+  const emailRx=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if(!emailRx.test(email)){S.aerr='Please enter a valid email address.';rAuthM();return;}
+  if(password!==cp){S.aerr='Passwords do not match.';rAuthM();return;}
+  if(password.length<6){S.aerr='Min 6 characters.';rAuthM();return;}
+  if(!supa){S.aerr='Supabase not configured.';rAuthM();return;}
+  S.aerr='Creating account...';rAuthM();
+  const{data,error}=await supa.auth.signUp({email,password});
+  if(error){S.aerr=error.message;rAuthM();return;}
+  const isAdmin=email==='admin@starlive.com';
+  const{error:pe}=await supa.from('profiles').insert({id:data.user.id,username,role:isAdmin?'admin':'user',email,online:true,wallet:0,badges:[],friends:[],friend_reqs:[]});
+  if(pe){S.aerr='Account created but profile setup failed: '+pe.message;rAuthM();return;}
+  S.atab='login';S.aform={email,password:'',username:'',cp:''};S.aerr='';rAuthM();
+  notif('✅ Account created! Please login.','success');
 }
-function handleMyAcct(){if(!S.loggedIn){openAuthM();return;}goTo('myaccount');}
 
-// ── NAV + AUTH ────────────────────────────────────────────────
+
+// ── NAV & AUTH UI ─────────────────────────────────────────────
 function renderNav(){
   const q=t();const nav=document.getElementById('nav');nav.innerHTML='';
   NAV.forEach(item=>{if(item.admin&&!S.isAdmin)return;const locked=item.locked&&!S.loggedIn;const active=S.page===item.id;nav.appendChild(el('div',{class:'nav-i',style:{background:active?q.nab:'transparent',color:active?q.nat:locked?q.tm+'88':q.tx,cursor:locked?'not-allowed':'pointer',opacity:locked?'.5':'1'},onclick:()=>{if(!locked)goTo(item.id);}},el('span',{style:{fontSize:'17px',flexShrink:'0'}},item.i),el('span',{class:'sl',style:{fontSize:'12px',fontWeight:active?'700':'400'}},T(item.lk)),locked?el('span',{class:'slk',style:{marginLeft:'auto',fontSize:'10px'}},'🔒'):null));});
@@ -164,7 +420,15 @@ function renderAuth(){
   const q=t();const af=document.getElementById('afull');af.innerHTML='';
   const collapsed=!S.sopen;
   if(S.loggedIn){
-    const lb=btn(collapsed?T('logout').slice(0,2):T('logout'),()=>{if(!confirm('Are you sure you want to logout?'))return;if(S.user)DB.updUser(S.user.email,{online:false,lastSeen:new Date().toISOString()});S.loggedIn=false;S.isAdmin=false;S.user=null;S.cart={};S.chatRoom=null;S.chatTarget=null;if(['myaccount','dashboard','vault'].includes(S.page))goTo('home');else{applyTheme();rPage();}notif('👋 Logged out.');},true,{width:'100%',fontSize:'11px',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'});
+    const lb=btn(collapsed?T('logout').slice(0,2):T('logout'),()=>{if(!confirm('Are you sure you want to logout?'))return;
+      (async()=>{
+        if(S.user&&supa){try{await supa.from('profiles').update({online:false,last_seen:new Date().toISOString()}).eq('id',S.user.id);}catch(e){}}
+        if(supa){try{await supa.auth.signOut();}catch(e){}}
+        unsubscribeChat();
+        S.loggedIn=false;S.isAdmin=false;S.user=null;S.cart={};S.chatRoom=null;S.chatTarget=null;S.fracPageTab='info';
+        if(['myaccount','dashboard','vault'].includes(S.page))goTo('home');else{applyTheme();rPage();}
+        renderNav();renderAuth();notif('👋 Logged out.');
+      })();},true,{width:'100%',fontSize:'11px',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'});
     af.appendChild(lb);
   } else {
     const loginBtn=el('button',{class:'btn',style:{width:'100%',fontSize:'11px',background:q.bb,borderColor:q.bc,color:q.bt,overflow:'hidden',display:'flex',alignItems:'center',justifyContent:'center',gap:'6px'},onclick:openAuthM});
@@ -173,8 +437,6 @@ function renderAuth(){
     af.appendChild(loginBtn);
   }
 }
-
-// ── AUTH MODAL ────────────────────────────────────────────────
 function openAuthM(){document.getElementById('m-auth').style.display='flex';rAuthM();}
 function rAuthM(){
   const q=t();const m=document.getElementById('m-auth');m.innerHTML='';
@@ -194,8 +456,36 @@ function rAuthM(){
   else card.appendChild(btn('✅ Register',doReg,false,{width:'100%',marginTop:'4px'}));
   m.appendChild(card);setTimeout(()=>{const i=card.querySelector('input');if(i)i.focus();},50);
 }
-function doLogin(){const{email,password}=S.aform;if(!email||!password){S.aerr='Email & password required.';rAuthM();return;}const u=DB.findUser(email,password);if(!u){S.aerr='Wrong email or password.';rAuthM();return;}DB.updUser(email,{online:true,lastSeen:new Date().toISOString()});S.loggedIn=true;S.isAdmin=u.role==='admin';S.user={...u,...DB.byEmail(email)};S.aform={email:'',password:'',username:'',cp:''};S.aerr='';closeM('m-auth');applyTheme();rPage();notif(`✨ ${T('welcome')} ${u.username}!`);}
-function doReg(){const{email,password,username,cp}=S.aform;if(!username||!email||!password){S.aerr='All fields required.';rAuthM();return;}const emailRx=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;if(!emailRx.test(email)){S.aerr='Please enter a valid email address.';rAuthM();return;}if(password!==cp){S.aerr='Passwords do not match.';rAuthM();return;}if(password.length<6){S.aerr='Min 6 characters.';rAuthM();return;}const res=DB.reg(email,password,username);if(!res.ok){S.aerr=res.msg;rAuthM();return;}S.atab='login';S.aform={email,password,username:'',cp:''};S.aerr='';rAuthM();notif('✅ Account created! Please login.','success');}
+
+// ── CHECK SESSION ON LOAD ──────────────────────────────────────
+async function checkSession(){
+  if(!supa)return;
+  const{data:{session}}=await supa.auth.getSession();
+  if(session){
+    const{data:profile}=await supa.from('profiles').select('*').eq('id',session.user.id).single();
+    if(profile){
+      S.loggedIn=true;
+      S.user={...profile,email:session.user.email,id:session.user.id,avatar:profile.avatar_url,cover:profile.cover_url};
+      S.isAdmin=profile.role==='admin';
+      await supa.from('profiles').update({online:true}).eq('id',session.user.id);
+    }
+  }
+}
+
+// ── REALTIME CHAT ──────────────────────────────────────────────
+let chatChannel=null;
+async function subscribeToRoom(room, onMessage){
+  if(!supa)return;
+  if(chatChannel)supa.removeChannel(chatChannel);
+  chatChannel=supa.channel('room:'+room)
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:'room=eq.'+room},
+      async(payload)=>{
+        const{data:sender}=await supa.from('profiles').select('username,avatar_url,fraction').eq('id',payload.new.sender_id).single();
+        onMessage({...payload.new,text:payload.new.content,username:sender?.username,avatar:sender?.avatar_url,fraction:sender?.fraction,userEmail:payload.new.sender_id,time:payload.new.created_at});
+      })
+    .subscribe();
+}
+function unsubscribeChat(){if(supa&&chatChannel){supa.removeChannel(chatChannel);chatChannel=null;}}
 
 // ── NOTIF ─────────────────────────────────────────────────────
 function notif(msg,type='info'){const q=t();const bar=document.getElementById('notifbar');const c={info:{bg:q.as,bc:q.ac,cl:q.ac},error:{bg:'rgba(255,60,60,.12)',bc:'#f44',cl:'#f88'},success:{bg:'rgba(80,220,80,.1)',bc:'#64dc64',cl:'#64dc64'}}[type]||{bg:q.as,bc:q.ac,cl:q.ac};const item=el('div',{class:'nitem',style:{background:c.bg,borderColor:c.bc,color:c.cl,backdropFilter:q.bl}},msg);bar.appendChild(item);setTimeout(()=>{item.style.opacity='0';item.style.transition='opacity .4s';setTimeout(()=>item.remove(),400);},3200);}
@@ -209,14 +499,14 @@ function goTo(pid){
   rPage();renderNav();closePanels();
 }
 function rPage(){
-  DB.recordPageView(S.page);
+  DB.recordPageView(S.page); // async fire-and-forget
   const map={home:rHome,affiliation:rAffil,creator:rCreators,profile:rProfile,project:rProjects,gallery:rGallery,store:rStore,social:rSocial,dashboard:rDash,myaccount:rMyAcct,userprofile:rUserProfile,vault:rVault,fraction:rFraction,challenge:rChallenge};
   const fn=map[S.page];if(fn)fn();
 }
 function closePanels(){S.spopen=false;S.cpopen=false;document.getElementById('spbox').style.display='none';document.getElementById('cpbox').style.display='none';}
 function onMC(){closePanels();}
 // ── HOME ──────────────────────────────────────────────────────
-function rHome(){
+async function rHome(){
   const q=t();const c=document.getElementById('page-home');c.innerHTML='';
   if(S.slTimer)clearInterval(S.slTimer);
   c.appendChild(el('div',{style:{textAlign:'center',padding:'32px 14px 22px'}},el('div',{style:{fontSize:'48px',marginBottom:'10px'}},'⭐'),el('h1',{style:{fontSize:'34px',fontWeight:'900',color:q.ac,letterSpacing:'.05em'}},'STARLIVE GROUP'),el('p',{style:{color:q.tm,fontSize:'13px',maxWidth:'520px',margin:'11px auto',lineHeight:'1.8'}},T('whoWeAreDesc')),el('div',{style:{display:'flex',gap:'7px',justifyContent:'center',flexWrap:'wrap',marginTop:'14px'}},tg('🌏 Pan-Asian'),tg('🤝 5 Affiliates'),tg('🚀 Since 2020'),tg('💡 Digital-First'))));
@@ -237,13 +527,13 @@ function rHome(){
 }
 
 // ── AFFILIATION ───────────────────────────────────────────────
-function rAffil(){const q=t();const c=document.getElementById('page-affiliation');c.innerHTML='';c.appendChild(el('h1',{style:{color:q.ac,fontSize:'24px',fontWeight:'800',marginBottom:'5px'}},T('affiliation')));c.appendChild(el('p',{style:{color:q.tm,marginBottom:'18px',fontSize:'12px'}},T('affiliSub')));const list=el('div',{style:{display:'flex',flexDirection:'column',gap:'12px'}});AFFIL.forEach(aff=>{const exp=AX[aff.id];const card=gc({padding:'20px',cursor:'pointer',border:`1px solid ${exp?aff.c:q.sb}`,transition:'border-color .2s'});card.appendChild(el('div',{style:{display:'flex',alignItems:'center',gap:'11px'}},el('div',{style:{fontSize:'26px',width:'48px',height:'48px',display:'flex',alignItems:'center',justifyContent:'center',background:`${aff.c}18`,borderRadius:'11px',flexShrink:'0'}},aff.ic),el('div',{style:{flex:'1'}},el('div',{style:{color:aff.c,fontWeight:'700',fontSize:'14px'}},aff.n),el('div',{style:{color:q.tm,fontSize:'11px',marginTop:'2px'}},aff.d)),el('div',{style:{color:q.tm,fontSize:'14px'}},exp?'▲':'▼')));if(exp){const va=el('a',{href:aff.url,target:'_blank',rel:'noopener',style:{textDecoration:'none',display:'inline-block'}});va.appendChild(btn('🌐 Visit Portal →',null,false));va.onclick=e=>e.stopPropagation();card.appendChild(el('div',{style:{marginTop:'12px',paddingTop:'12px',borderTop:`1px solid ${q.sb}`}},el('div',{style:{display:'flex',gap:'7px',flexWrap:'wrap',marginBottom:'9px'}},tg('🌐 Active'),tg('📊 Growing')),el('p',{style:{color:q.tx,fontSize:'12px',lineHeight:'1.7',marginBottom:'9px'}},`${aff.n} operates as an autonomous entity sharing resources within the StarLive ecosystem.`),va));}card.onclick=()=>{const wasOpen=AX[aff.id];Object.keys(AX).forEach(k=>AX[k]=false);AX[aff.id]=!wasOpen;rAffil();};list.appendChild(card);});c.appendChild(list);}
+async function rAffil(){const q=t();const c=document.getElementById('page-affiliation');c.innerHTML='';c.appendChild(el('h1',{style:{color:q.ac,fontSize:'24px',fontWeight:'800',marginBottom:'5px'}},T('affiliation')));c.appendChild(el('p',{style:{color:q.tm,marginBottom:'18px',fontSize:'12px'}},T('affiliSub')));const list=el('div',{style:{display:'flex',flexDirection:'column',gap:'12px'}});AFFIL.forEach(aff=>{const exp=AX[aff.id];const card=gc({padding:'20px',cursor:'pointer',border:`1px solid ${exp?aff.c:q.sb}`,transition:'border-color .2s'});card.appendChild(el('div',{style:{display:'flex',alignItems:'center',gap:'11px'}},el('div',{style:{fontSize:'26px',width:'48px',height:'48px',display:'flex',alignItems:'center',justifyContent:'center',background:`${aff.c}18`,borderRadius:'11px',flexShrink:'0'}},aff.ic),el('div',{style:{flex:'1'}},el('div',{style:{color:aff.c,fontWeight:'700',fontSize:'14px'}},aff.n),el('div',{style:{color:q.tm,fontSize:'11px',marginTop:'2px'}},aff.d)),el('div',{style:{color:q.tm,fontSize:'14px'}},exp?'▲':'▼')));if(exp){const va=el('a',{href:aff.url,target:'_blank',rel:'noopener',style:{textDecoration:'none',display:'inline-block'}});va.appendChild(btn('🌐 Visit Portal →',null,false));va.onclick=e=>e.stopPropagation();card.appendChild(el('div',{style:{marginTop:'12px',paddingTop:'12px',borderTop:`1px solid ${q.sb}`}},el('div',{style:{display:'flex',gap:'7px',flexWrap:'wrap',marginBottom:'9px'}},tg('🌐 Active'),tg('📊 Growing')),el('p',{style:{color:q.tx,fontSize:'12px',lineHeight:'1.7',marginBottom:'9px'}},`${aff.n} operates as an autonomous entity sharing resources within the StarLive ecosystem.`),va));}card.onclick=()=>{const wasOpen=AX[aff.id];Object.keys(AX).forEach(k=>AX[k]=false);AX[aff.id]=!wasOpen;rAffil();};list.appendChild(card);});c.appendChild(list);}
 
 // ── CREATORS ─────────────────────────────────────────────────
-function rCreators(){const q=t();const c=document.getElementById('page-creator');c.innerHTML='';c.appendChild(el('h1',{style:{color:q.ac,fontSize:'24px',fontWeight:'800',marginBottom:'5px'}},T('creator')));c.appendChild(el('p',{style:{color:q.tm,marginBottom:'18px',fontSize:'12px'}},T('creatorSub')));const creators=DB.getCreators();const grid=el('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(240px,1fr))',gap:'16px'}});creators.forEach(cr=>{const wrap=el('div',{style:{position:'relative'}});const card=gc({padding:'20px',cursor:'pointer'});if(cr.photo)card.appendChild(el('img',{src:cr.photo,style:{width:'56px',height:'56px',borderRadius:'50%',objectFit:'cover',marginBottom:'9px',border:`2px solid ${q.ac}`}}));else card.appendChild(el('div',{style:{fontSize:'40px',marginBottom:'9px'}},cr.images[0]));card.appendChild(el('div',{style:{color:q.ac,fontSize:'10px',fontWeight:'700',letterSpacing:'.09em'}},cr.role.toUpperCase()));card.appendChild(el('div',{style:{color:q.tx,fontSize:'16px',fontWeight:'700',margin:'3px 0'}},cr.name));card.appendChild(el('div',{style:{color:q.tm,fontSize:'10px',marginBottom:'7px'}},'📂 '+cr.fraction));card.appendChild(el('div',{style:{color:q.tm,fontSize:'11px',lineHeight:'1.6',marginBottom:'9px'}},cr.bio.slice(0,72)+'...'));card.appendChild(el('div',{style:{display:'flex',gap:'4px',flexWrap:'wrap'}},...(Array.isArray(cr.tags)?cr.tags:[]).map(x=>tg(x))));card.onclick=()=>{S.crtSel=cr;goTo('profile');};wrap.appendChild(card);if(S.isAdmin)wrap.appendChild(el('button',{style:{position:'absolute',top:'9px',right:'9px',background:q.as,border:`1px solid ${q.ac}`,color:q.ac,borderRadius:'6px',padding:'3px 7px',fontSize:'10px',cursor:'pointer'},onclick:e=>{e.stopPropagation();openEC(cr.id);}},T('edit')));grid.appendChild(wrap);});c.appendChild(grid);}
+async function rCreators(){const q=t();const c=document.getElementById('page-creator');c.innerHTML='';c.appendChild(el('h1',{style:{color:q.ac,fontSize:'24px',fontWeight:'800',marginBottom:'5px'}},T('creator')));c.appendChild(el('p',{style:{color:q.tm,marginBottom:'18px',fontSize:'12px'}},T('creatorSub')));const creators=await DB.getCreators();const grid=el('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(240px,1fr))',gap:'16px'}});creators.forEach(cr=>{const wrap=el('div',{style:{position:'relative'}});const card=gc({padding:'20px',cursor:'pointer'});if(cr.photo)card.appendChild(el('img',{src:cr.photo,style:{width:'56px',height:'56px',borderRadius:'50%',objectFit:'cover',marginBottom:'9px',border:`2px solid ${q.ac}`}}));else card.appendChild(el('div',{style:{fontSize:'40px',marginBottom:'9px'}},cr.images[0]));card.appendChild(el('div',{style:{color:q.ac,fontSize:'10px',fontWeight:'700',letterSpacing:'.09em'}},cr.role.toUpperCase()));card.appendChild(el('div',{style:{color:q.tx,fontSize:'16px',fontWeight:'700',margin:'3px 0'}},cr.name));card.appendChild(el('div',{style:{color:q.tm,fontSize:'10px',marginBottom:'7px'}},'📂 '+cr.fraction));card.appendChild(el('div',{style:{color:q.tm,fontSize:'11px',lineHeight:'1.6',marginBottom:'9px'}},cr.bio.slice(0,72)+'...'));card.appendChild(el('div',{style:{display:'flex',gap:'4px',flexWrap:'wrap'}},...(Array.isArray(cr.tags)?cr.tags:[]).map(x=>tg(x))));card.onclick=()=>{S.crtSel=cr;goTo('profile');};wrap.appendChild(card);if(S.isAdmin)wrap.appendChild(el('button',{style:{position:'absolute',top:'9px',right:'9px',background:q.as,border:`1px solid ${q.ac}`,color:q.ac,borderRadius:'6px',padding:'3px 7px',fontSize:'10px',cursor:'pointer'},onclick:e=>{e.stopPropagation();openEC(cr.id);}},T('edit')));grid.appendChild(wrap);});c.appendChild(grid);}
 
-function openEC(id){const l=DB.getCreators();const cr=l.find(x=>x.id===id);if(!cr)return;S._ecid=id;S._ecf={...cr};document.getElementById('m-ec').style.display='flex';rEC();}
-function rEC(){
+async function openEC(id){const l=await DB.getCreators();const cr=l.find(x=>x.id===id);if(!cr)return;S._ecid=id;S._ecf={...cr};document.getElementById('m-ec').style.display='flex';rEC();}
+async function rEC(){
   const q=t();const m=document.getElementById('m-ec');m.innerHTML='';const f=S._ecf;
   const card=gc({padding:'26px',width:'460px',maxWidth:'96vw',maxHeight:'88vh',overflowY:'auto',position:'relative',borderRadius:'18px'});
   card.appendChild(el('button',{style:{position:'absolute',top:'12px',right:'14px',background:'none',border:'none',color:q.tm,fontSize:'19px',cursor:'pointer'},onclick:()=>closeM('m-ec')},'✕'));
@@ -264,11 +554,11 @@ function rEC(){
   if(f.cvUrl){cvr.appendChild(el('span',{style:{color:q.ac,fontSize:'11px'}},'✅ CV ready'));cvr.appendChild(btn('✕',()=>{S._ecf.cvUrl=null;rEC();},true,{fontSize:'10px',borderColor:'#f44',color:'#f88'}));}
   else cvr.appendChild(btn('📄 Upload CV',()=>{S._cb['fi-cv']=async file=>{S._ecf.cvUrl=URL.createObjectURL(file);notif('CV uploaded!');rEC();};document.getElementById('fi-cv').click();},true,{fontSize:'10px'}));
   card.appendChild(cvr);
-  const br=el('div',{style:{display:'flex',gap:'7px',marginTop:'13px'}});br.appendChild(btn('💾 '+T('save'),()=>{const d={...S._ecf};if(typeof d.tags==='string')d.tags=d.tags.split(',').map(s=>s.trim()).filter(Boolean).slice(0,4);DB.updCreator(S._ecid,d);closeM('m-ec');rCreators();notif('✅ Creator updated!','success');},false));br.appendChild(btn(T('cancel'),()=>closeM('m-ec'),true));card.appendChild(br);m.appendChild(card);
+  const br=el('div',{style:{display:'flex',gap:'7px',marginTop:'13px'}});br.appendChild(btn('💾 '+T('save'),async ()=>{const d={...S._ecf};if(typeof d.tags==='string')d.tags=d.tags.split(',').map(s=>s.trim()).filter(Boolean).slice(0,4);await DB.updCreator(S._ecid,d);closeM('m-ec');rCreators();notif('✅ Creator updated!','success');},false));br.appendChild(btn(T('cancel'),()=>closeM('m-ec'),true));card.appendChild(br);m.appendChild(card);
 }
-function onFiCphoto(e){const f=e.target.files[0];if(!f)return;openCreatorCropModal(f,S._ecid);e.target.value='';}
+async function onFiCphoto(e){const f=e.target.files[0];if(!f)return;openCreatorCropModal(f,S._ecid);e.target.value='';}
 
-function openCreatorCropModal(file,creatorId){
+async function openCreatorCropModal(file,creatorId){
   const q=t();const url=URL.createObjectURL(file);
   const m=document.getElementById('m-gal');m.style.display='flex';m.innerHTML='';
   let cropX=0,cropY=0,cropW=0,cropH=0,dragging=false,resizing=false,resSide='',dragSX=0,dragSY=0;
@@ -289,16 +579,16 @@ function openCreatorCropModal(file,creatorId){
   function mv(e){if(!dragging&&!resizing)return;const dx=e.clientX-dragSX,dy=e.clientY-dragSY;dragSX=e.clientX;dragSY=e.clientY;const iw=imgEl.offsetWidth,ih=imgEl.offsetHeight;const mn=30;if(dragging){cropX=clamp(cropX+dx,0,iw-cropW);cropY=clamp(cropY+dy,0,ih-cropH);}else{if(resSide==='se'){cropW=clamp(cropW+dx,mn,iw-cropX);cropH=cropW;}else if(resSide==='nw'){const nw=clamp(cropW-dx,mn,cropX+cropW);cropX=cropX+cropW-nw;cropY=cropY+cropH-nw;cropW=nw;cropH=nw;}else if(resSide==='ne'){cropW=clamp(cropW+dx,mn,iw-cropX);const nh=clamp(cropH-dy,mn,cropY+cropH);cropY=cropY+cropH-nh;cropH=nh;}else if(resSide==='sw'){const nw=clamp(cropW-dx,mn,cropX+cropW);cropX=cropX+cropW-nw;cropW=nw;cropH=clamp(cropH+dy,mn,ih-cropY);}}updSel();}
   function mu(){dragging=false;resizing=false;}
   const brow=el('div',{style:{display:'flex',gap:'8px',marginTop:'14px'}});
-  brow.appendChild(btn('✅ Apply',()=>{const canvas=document.createElement('canvas');const sx=imgEl.naturalWidth/imgEl.offsetWidth,sy=imgEl.naturalHeight/imgEl.offsetHeight;canvas.width=300;canvas.height=300;const ctx=canvas.getContext('2d');ctx.beginPath();ctx.arc(150,150,150,0,Math.PI*2);ctx.clip();ctx.drawImage(imgEl,cropX*sx,cropY*sy,cropW*sx,cropH*sy,0,0,300,300);const d=canvas.toDataURL('image/jpeg',0.88);DB.updCreator(creatorId,{photo:d});URL.revokeObjectURL(url);closeM('m-gal');if(S.page==='creator')rCreators();if(S.page==='profile')rProfile();notif('✅ Creator photo updated!','success');document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',mu);},false,{fontSize:'11px'}));
+  brow.appendChild(btn('✅ Apply',async ()=>{const canvas=document.createElement('canvas');const sx=imgEl.naturalWidth/imgEl.offsetWidth,sy=imgEl.naturalHeight/imgEl.offsetHeight;canvas.width=300;canvas.height=300;const ctx=canvas.getContext('2d');ctx.beginPath();ctx.arc(150,150,150,0,Math.PI*2);ctx.clip();ctx.drawImage(imgEl,cropX*sx,cropY*sy,cropW*sx,cropH*sy,0,0,300,300);const d=canvas.toDataURL('image/jpeg',0.88);await DB.updCreator(creatorId,{photo:d});URL.revokeObjectURL(url);closeM('m-gal');if(S.page==='creator')rCreators();if(S.page==='profile')rProfile();notif('✅ Creator photo updated!','success');document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',mu);},false,{fontSize:'11px'}));
   brow.appendChild(btn('Cancel',()=>{URL.revokeObjectURL(url);closeM('m-gal');document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',mu);},true,{fontSize:'11px'}));
   card.appendChild(brow);m.appendChild(card);
 }
-function onFiCv(e){const f=e.target.files[0];if(!f)return;if(S._cb['fi-cv'])S._cb['fi-cv'](f);e.target.value='';}
+async function onFiCv(e){const f=e.target.files[0];if(!f)return;if(S._cb['fi-cv'])S._cb['fi-cv'](f);e.target.value='';}
 
 // ── PROFILE PAGE ──────────────────────────────────────────────
-function rProfile(){
+async function rProfile(){
   const q=t();const c=document.getElementById('page-profile');c.innerHTML='';
-  const crs=DB.getCreators();const cr=crs.find(x=>x.id===S.crtSel?.id)||S.crtSel;
+  const crs=await DB.getCreators();const cr=crs.find(x=>x.id===S.crtSel?.id)||S.crtSel;
   if(!cr){c.appendChild(el('div',{style:{textAlign:'center',padding:'60px',color:q.tm}},'No creator selected'));return;}
   c.appendChild(btn('← Back',()=>goTo('creator'),true,{marginBottom:'18px'}));
   const card=gc({padding:'28px'});
@@ -318,21 +608,21 @@ function rProfile(){
   info.appendChild(btns);
   card.appendChild(el('div',{style:{display:'flex',gap:'22px',flexWrap:'wrap',alignItems:'flex-start'}},el('div',{},ph),info));c.appendChild(card);
 }
-function openConM(cr){const q=t();const m=document.getElementById('m-con');m.style.display='flex';m.innerHTML='';const card=gc({padding:'26px',width:'340px',maxWidth:'94vw',position:'relative',borderRadius:'18px'});card.appendChild(el('button',{style:{position:'absolute',top:'11px',right:'13px',background:'none',border:'none',color:q.tm,fontSize:'18px',cursor:'pointer'},onclick:()=>closeM('m-con')},'✕'));if(cr.photo)card.appendChild(el('img',{src:cr.photo,style:{width:'64px',height:'64px',borderRadius:'50%',objectFit:'cover',border:`2px solid ${q.ac}`,display:'block',margin:'0 auto 9px'}}));else card.appendChild(el('div',{style:{fontSize:'48px',textAlign:'center',marginBottom:'9px'}},cr.images[0]));card.appendChild(el('h3',{style:{color:q.ac,textAlign:'center',marginBottom:'2px',fontSize:'16px'}},cr.name));card.appendChild(el('div',{style:{color:q.tm,textAlign:'center',fontSize:'11px',marginBottom:'14px'}},cr.role+' · '+cr.fraction));card.appendChild(el('div',{style:{background:q.sur,borderRadius:'9px',padding:'12px',border:`1px solid ${q.sb}`,display:'flex',flexDirection:'column',gap:'9px'}},el('div',{style:{display:'flex',alignItems:'center',gap:'9px'}},el('span',{style:{fontSize:'15px'}},'📧'),el('div',{},el('div',{style:{color:q.tm,fontSize:'9px'}},'EMAIL'),el('a',{href:`mailto:${cr.email}`,style:{color:q.ac,fontSize:'12px',textDecoration:'none'}},cr.email))),el('div',{style:{display:'flex',alignItems:'center',gap:'9px'}},el('span',{style:{fontSize:'15px'}},'📞'),el('div',{},el('div',{style:{color:q.tm,fontSize:'9px'}},'PHONE'),el('div',{style:{color:q.tx,fontSize:'12px'}},cr.phone||'-')))));m.appendChild(card);}
+async function openConM(cr){const q=t();const m=document.getElementById('m-con');m.style.display='flex';m.innerHTML='';const card=gc({padding:'26px',width:'340px',maxWidth:'94vw',position:'relative',borderRadius:'18px'});card.appendChild(el('button',{style:{position:'absolute',top:'11px',right:'13px',background:'none',border:'none',color:q.tm,fontSize:'18px',cursor:'pointer'},onclick:()=>closeM('m-con')},'✕'));if(cr.photo)card.appendChild(el('img',{src:cr.photo,style:{width:'64px',height:'64px',borderRadius:'50%',objectFit:'cover',border:`2px solid ${q.ac}`,display:'block',margin:'0 auto 9px'}}));else card.appendChild(el('div',{style:{fontSize:'48px',textAlign:'center',marginBottom:'9px'}},cr.images[0]));card.appendChild(el('h3',{style:{color:q.ac,textAlign:'center',marginBottom:'2px',fontSize:'16px'}},cr.name));card.appendChild(el('div',{style:{color:q.tm,textAlign:'center',fontSize:'11px',marginBottom:'14px'}},cr.role+' · '+cr.fraction));card.appendChild(el('div',{style:{background:q.sur,borderRadius:'9px',padding:'12px',border:`1px solid ${q.sb}`,display:'flex',flexDirection:'column',gap:'9px'}},el('div',{style:{display:'flex',alignItems:'center',gap:'9px'}},el('span',{style:{fontSize:'15px'}},'📧'),el('div',{},el('div',{style:{color:q.tm,fontSize:'9px'}},'EMAIL'),el('a',{href:`mailto:${cr.email}`,style:{color:q.ac,fontSize:'12px',textDecoration:'none'}},cr.email))),el('div',{style:{display:'flex',alignItems:'center',gap:'9px'}},el('span',{style:{fontSize:'15px'}},'📞'),el('div',{},el('div',{style:{color:q.tm,fontSize:'9px'}},'PHONE'),el('div',{style:{color:q.tx,fontSize:'12px'}},cr.phone||'-')))));m.appendChild(card);}
 
 // ── PROJECTS ──────────────────────────────────────────────────
-function rProjects(){
+async function rProjects(){
   const q=t();const c=document.getElementById('page-project');c.innerHTML='';
   const sc={Active:"#4fc3f7","In Development":"#ffb74d",Testing:"#81c784",Planning:"#ce93d8"};
   c.appendChild(el('h1',{style:{color:q.ac,fontSize:'24px',fontWeight:'800',marginBottom:'5px'}},T('project')));
   c.appendChild(el('p',{style:{color:q.tm,marginBottom:'18px',fontSize:'12px'}},T('projectSub')));
   const list=el('div',{style:{display:'flex',flexDirection:'column',gap:'16px'}});
-  DB.getProjects().forEach(p=>{const s=sc[p.status]||'#fff';let ie=null;if(p.image)ie=el('img',{src:p.image,style:{width:'100%',height:'140px',objectFit:'cover',borderRadius:'9px',marginBottom:'12px',border:`1px solid ${q.sb}`}});else if(S.isAdmin)ie=el('div',{style:{width:'100%',height:'70px',border:`2px dashed ${q.sb}`,borderRadius:'9px',marginBottom:'12px',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',color:q.tm,fontSize:'11px'},onclick:()=>{S._pimgid=p.id;document.getElementById('fi-pimg').click();}},'📷 Upload project image');list.appendChild(gc({padding:'22px'},ie,el('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'flex-start',flexWrap:'wrap',gap:'7px',marginBottom:'10px'}},el('div',{},el('h2',{style:{color:q.tx,fontSize:'17px',fontWeight:'800',marginBottom:'3px'}},p.name),el('p',{style:{color:q.tm,fontSize:'11px'}},p.desc)),el('span',{style:{background:`${s}22`,color:s,border:`1px solid ${s}44`,borderRadius:'20px',padding:'2px 10px',fontSize:'10px',fontWeight:'700'}},p.status)),el('div',{style:{display:'flex',gap:'5px',flexWrap:'wrap',marginBottom:'12px'}},...p.tags.map(x=>tg(x))),el('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'14px',marginBottom:'12px'}},el('div',{},el('div',{style:{color:q.tm,fontSize:'10px',marginBottom:'2px'}},'TEAM'),...p.team.map(n=>el('div',{style:{color:q.tx,fontSize:'11px',marginBottom:'1px'}},'• '+n))),el('div',{},el('div',{style:{color:q.tm,fontSize:'10px',marginBottom:'2px'}},'BUDGET'),el('div',{style:{color:q.ac,fontSize:'16px',fontWeight:'900'}},'$'+p.budget.toLocaleString()))),el('div',{},el('div',{style:{display:'flex',justifyContent:'space-between',fontSize:'10px',color:q.tm,marginBottom:'4px'}},el('span',{},'PROGRESS'),el('span',{style:{color:q.ac,fontWeight:'700'}},p.progress+'%')),pb(p.progress))));});
+  (await DB.getProjects()).forEach(p=>{const s=sc[p.status]||'#fff';let ie=null;if(p.image)ie=el('img',{src:p.image,style:{width:'100%',height:'140px',objectFit:'cover',borderRadius:'9px',marginBottom:'12px',border:`1px solid ${q.sb}`}});else if(S.isAdmin)ie=el('div',{style:{width:'100%',height:'70px',border:`2px dashed ${q.sb}`,borderRadius:'9px',marginBottom:'12px',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',color:q.tm,fontSize:'11px'},onclick:()=>{S._pimgid=p.id;document.getElementById('fi-pimg').click();}},'📷 Upload project image');list.appendChild(gc({padding:'22px'},ie,el('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'flex-start',flexWrap:'wrap',gap:'7px',marginBottom:'10px'}},el('div',{},el('h2',{style:{color:q.tx,fontSize:'17px',fontWeight:'800',marginBottom:'3px'}},p.name),el('p',{style:{color:q.tm,fontSize:'11px'}},p.desc)),el('span',{style:{background:`${s}22`,color:s,border:`1px solid ${s}44`,borderRadius:'20px',padding:'2px 10px',fontSize:'10px',fontWeight:'700'}},p.status)),el('div',{style:{display:'flex',gap:'5px',flexWrap:'wrap',marginBottom:'12px'}},...p.tags.map(x=>tg(x))),el('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'14px',marginBottom:'12px'}},el('div',{},el('div',{style:{color:q.tm,fontSize:'10px',marginBottom:'2px'}},'TEAM'),...p.team.map(n=>el('div',{style:{color:q.tx,fontSize:'11px',marginBottom:'1px'}},'• '+n))),el('div',{},el('div',{style:{color:q.tm,fontSize:'10px',marginBottom:'2px'}},'BUDGET'),el('div',{style:{color:q.ac,fontSize:'16px',fontWeight:'900'}},'$'+p.budget.toLocaleString()))),el('div',{},el('div',{style:{display:'flex',justifyContent:'space-between',fontSize:'10px',color:q.tm,marginBottom:'4px'}},el('span',{},'PROGRESS'),el('span',{style:{color:q.ac,fontWeight:'700'}},p.progress+'%')),pb(p.progress))));});
   c.appendChild(list);
 }
-function onFiPimg(e){const f=e.target.files[0];if(!f)return;rf(f).then(d=>{DB.updProject(S._pimgid,{image:d});rProjects();notif('✅ Image uploaded!','success');});e.target.value='';}
+async function onFiPimg(e){const f=e.target.files[0];if(!f)return;rf(f).then(d=>{DB.updProject(S._pimgid,{image:d});rProjects();notif('✅ Image uploaded!','success');});e.target.value='';}
 // ── GALLERY (Admin upload) ────────────────────────────────────
-function rGallery(){
+async function rGallery(){
   const q=t();const c=document.getElementById('page-gallery');c.innerHTML='';
   c.appendChild(el('h1',{style:{color:q.ac,fontSize:'24px',fontWeight:'800',marginBottom:'5px'}},T('gallery')));
   c.appendChild(el('p',{style:{color:q.tm,marginBottom:'14px',fontSize:'12px'}},T('gallerySub')));
@@ -343,7 +633,7 @@ function rGallery(){
     row.appendChild(el('span',{style:{color:q.tm,fontSize:'11px'}},'Admin: add media to gallery'));
     c.appendChild(row);
   }
-  const gal=DB.getGallery();
+  const gal=await DB.getGallery();
   const grid=el('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(180px,1fr))',gap:'13px'}});
   gal.forEach(item=>{
     const card=gc({overflow:'hidden',cursor:'pointer',position:'relative'});
@@ -409,10 +699,10 @@ function onFiGal(e){
 }
 
 // ── STORE (Admin edit: stock, price, photo) ───────────────────
-function rStore(){
+async function rStore(){
   const q=t();const c=document.getElementById('page-store');c.innerHTML='';
   if(!S.loggedIn){c.appendChild(el('div',{style:{textAlign:'center',padding:'70px'}},el('div',{style:{fontSize:'56px',marginBottom:'12px'}},'🔒'),el('div',{style:{color:q.tx,fontSize:'16px',fontWeight:'700',marginBottom:'8px'}},T('loginRequired')),btn('🔐 '+T('login'),openAuthM)));return;}
-  const prods=DB.getProducts();
+  const prods=await DB.getProducts();
   const tot=prods.reduce((s,p)=>s+(S.cart[p.id]||0)*p.price,0);const cnt=Object.values(S.cart).reduce((a,b)=>a+b,0);
   const hdr=el('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'20px',flexWrap:'wrap',gap:'9px'}},el('div',{},el('h1',{style:{color:q.ac,fontSize:'24px',fontWeight:'800',marginBottom:'3px'}},T('store')),el('p',{style:{color:q.tm,fontSize:'12px'}},T('storeSub'))));
   const hdrRight=el('div',{style:{display:'flex',gap:'8px',alignItems:'center'}});
@@ -438,7 +728,7 @@ function rStore(){
   });
   c.appendChild(grid);
 }
-function openProdNew(){
+async function openProdNew(){
   const q=t();const m=document.getElementById('m-prod');m.style.display='flex';
   const form={name:'',price:0,stock:0,desc:'',cat:'Apparel',e:'📦',image:null};
   const render=()=>{
@@ -449,7 +739,7 @@ function openProdNew(){
     const is={background:q.ib,borderColor:q.sb,color:q.tx};const lb=tx=>el('div',{style:{color:q.tm,fontSize:'10px',fontWeight:'700',marginBottom:'2px'}},tx);
     const imgRow=el('div',{style:{display:'flex',alignItems:'center',gap:'10px',marginBottom:'12px'}});
     imgRow.appendChild(el('div',{style:{width:'52px',height:'52px',borderRadius:'8px',border:`1px solid ${q.sb}`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:'28px'}},form.image?el('img',{src:form.image,style:{width:'52px',height:'52px',objectFit:'cover',borderRadius:'8px'}}):form.e));
-    imgRow.appendChild(btn('📷 Photo',()=>{S._cb['fi-prod']=async file=>{const d=await rf(file);form.image=d;render();};document.getElementById('fi-prod').click();},true,{fontSize:'10px'}));
+    imgRow.appendChild(btn('📷 Photo',async ()=>{S._cb['fi-prod']=async file=>{const d=await rf(file);form.image=d;render();};document.getElementById('fi-prod').click();},true,{fontSize:'10px'}));
     if(form.image)imgRow.appendChild(btn('✕',()=>{form.image=null;render();},true,{fontSize:'10px',borderColor:'#f44',color:'#f88'}));
     card.appendChild(imgRow);
     lb('EMOJI (icon)');card.appendChild(lb('EMOJI'));const ei=el('input',{class:'inf',style:is,placeholder:'📦'});ei.value=form.e;ei.oninput=e=>{form.e=e.target.value;};card.appendChild(ei);
@@ -459,12 +749,12 @@ function openProdNew(){
     card.appendChild(lb('STOCK'));const si=el('input',{type:'number',class:'inf',style:is,placeholder:'0'});si.value=form.stock;si.oninput=e=>{form.stock=parseInt(e.target.value)||0;};card.appendChild(si);
     card.appendChild(lb('DESCRIPTION'));const di=el('textarea',{class:'inf',rows:'3',style:{...is,resize:'vertical'},placeholder:'Product description'});di.oninput=e=>{form.desc=e.target.value;};card.appendChild(di);
     const br=el('div',{style:{display:'flex',gap:'7px'}});
-    br.appendChild(btn('➕ Add Product',()=>{if(!form.name){notif('Name required!','error');return;}const prods=DB.getProducts();const newId=Math.max(0,...prods.map(x=>x.id))+1;prods.push({id:newId,name:form.name,price:form.price,stock:form.stock,desc:form.desc,cat:form.cat,e:form.e,image:form.image});DB.saveProducts(prods);closeM('m-prod');rStore();notif('✅ Product added!','success');},false));
+    br.appendChild(btn('➕ Add Product',async ()=>{if(!form.name){notif('Name required!','error');return;}const prods=await DB.getProducts();const newId=Math.max(0,...prods.map(x=>x.id))+1;prods.push({id:newId,name:form.name,price:form.price,stock:form.stock,desc:form.desc,cat:form.cat,e:form.e,image:form.image});DB.saveProducts(prods);closeM('m-prod');rStore();notif('✅ Product added!','success');},false));
     br.appendChild(btn('Cancel',()=>closeM('m-prod'),true));card.appendChild(br);m.appendChild(card);
   };render();
 }
-function openProdEdit(id){
-  const prods=DB.getProducts();const p=prods.find(x=>x.id===id);if(!p)return;
+async function openProdEdit(id){
+  const prods=await DB.getProducts();const p=prods.find(x=>x.id===id);if(!p)return;
   const q=t();const m=document.getElementById('m-prod');m.style.display='flex';
   const form={name:p.name,price:p.price,stock:p.stock,desc:p.desc,image:p.image};
   const render=()=>{
@@ -476,7 +766,7 @@ function openProdEdit(id){
     const imgRow=el('div',{style:{display:'flex',alignItems:'center',gap:'10px',marginBottom:'12px'}});
     if(form.image)imgRow.appendChild(el('img',{src:form.image,style:{width:'52px',height:'52px',objectFit:'cover',borderRadius:'8px',border:`1px solid ${q.sb}`}}));
     else imgRow.appendChild(el('div',{style:{fontSize:'38px'}},p.e));
-    imgRow.appendChild(btn('📷 Product Photo',()=>{S._cb['fi-prod']=async file=>{const d=await rf(file);form.image=d;render();};document.getElementById('fi-prod').click();},true,{fontSize:'10px'}));
+    imgRow.appendChild(btn('📷 Product Photo',async ()=>{S._cb['fi-prod']=async file=>{const d=await rf(file);form.image=d;render();};document.getElementById('fi-prod').click();},true,{fontSize:'10px'}));
     if(form.image)imgRow.appendChild(btn('✕ Remove',()=>{form.image=null;render();},true,{fontSize:'10px',borderColor:'#f44',color:'#f88'}));
     card.appendChild(imgRow);
     card.appendChild(lb('PRODUCT NAME'));const ni=el('input',{class:'inf',style:is});ni.value=form.name;ni.oninput=e=>{form.name=e.target.value;};card.appendChild(ni);
@@ -484,14 +774,14 @@ function openProdEdit(id){
     card.appendChild(lb('STOCK'));const si=el('input',{type:'number',class:'inf',style:is});si.value=form.stock;si.oninput=e=>{form.stock=parseInt(e.target.value)||0;};card.appendChild(si);
     card.appendChild(lb('DESCRIPTION'));const di=el('textarea',{class:'inf',rows:'3',style:{...is,resize:'vertical'}});di.textContent=form.desc;di.oninput=e=>{form.desc=e.target.value;};card.appendChild(di);
     card.appendChild(gc({padding:'10px',marginBottom:'12px',display:'flex',justifyContent:'space-between'},el('span',{style:{color:q.tm,fontSize:'11px'}},'$'+form.price+' · Stock: '+form.stock),el('span',{style:{color:form.stock===0?'#f88':form.stock<5?'#ffb74d':q.ac,fontSize:'11px',fontWeight:'700'}},form.stock===0?'❌ Out':form.stock<5?'⚠️ Low':'✅ Available')));
-    const br=el('div',{style:{display:'flex',gap:'7px'}});br.appendChild(btn('💾 '+T('save'),()=>{DB.updProduct(id,{name:form.name,price:form.price,stock:form.stock,desc:form.desc,image:form.image});closeM('m-prod');rStore();notif('✅ Product updated!','success');},false));br.appendChild(btn(T('cancel'),()=>closeM('m-prod'),true));card.appendChild(br);m.appendChild(card);
+    const br=el('div',{style:{display:'flex',gap:'7px'}});br.appendChild(btn('💾 '+T('save'),async ()=>{await DB.updProduct(id,{name:form.name,price:form.price,stock:form.stock,desc:form.desc,image:form.image});closeM('m-prod');rStore();notif('✅ Product updated!','success');},false));br.appendChild(btn(T('cancel'),()=>closeM('m-prod'),true));card.appendChild(br);m.appendChild(card);
   };render();
 }
-function onFiProd(e){const f=e.target.files[0];if(!f)return;if(S._cb['fi-prod'])S._cb['fi-prod'](f);e.target.value='';}
-function openCO(){
+async function onFiProd(e){const f=e.target.files[0];if(!f)return;if(S._cb['fi-prod'])S._cb['fi-prod'](f);e.target.value='';}
+async function openCO(){
   const q=t();const m=document.getElementById('m-co');m.style.display='flex';m.innerHTML='';
-  const prods=DB.getProducts();const items=prods.filter(p=>S.cart[p.id]);const tot=items.reduce((s,p)=>s+S.cart[p.id]*p.price,0);
-  const u=DB.byEmail(S.user.email);const wal=u?u.wallet:0;const suf=wal>=tot;
+  const prods=await DB.getProducts();const items=prods.filter(p=>S.cart[p.id]);const tot=items.reduce((s,p)=>s+S.cart[p.id]*p.price,0);
+  const u=await DB.byId(S.user.id);const wal=u?u.wallet:0;const suf=wal>=tot;
   const card=gc({padding:'26px',width:'400px',maxWidth:'96vw',position:'relative',borderRadius:'18px'});
   card.appendChild(el('button',{style:{position:'absolute',top:'11px',right:'13px',background:'none',border:'none',color:q.tm,fontSize:'18px',cursor:'pointer'},onclick:()=>closeM('m-co')},'✕'));
   card.appendChild(el('h2',{style:{color:q.ac,marginBottom:'14px',fontSize:'16px'}},'🛒 Checkout — StarLive E-Wallet'));
@@ -501,14 +791,14 @@ function openCO(){
   card.appendChild(id);
   card.appendChild(gc({padding:'11px',marginBottom:'12px',border:`1px solid ${suf?q.ac:'#f44'}`,background:suf?q.as:'rgba(255,60,60,.08)',display:'flex',justifyContent:'space-between',alignItems:'center'},el('div',{},el('div',{style:{color:q.ac,fontSize:'9px',fontWeight:'700'}},'⭐ STARLIVE E-WALLET'),el('div',{style:{color:q.tx,fontSize:'17px',fontWeight:'900'}},'$'+wal.toFixed(2))),el('span',{style:{color:suf?'#64dc64':'#f88',fontWeight:'700',fontSize:'11px'}},suf?'✅ Sufficient':'❌ Insufficient')));
   if(!suf){card.appendChild(el('div',{style:{color:q.tm,fontSize:'11px',marginBottom:'11px',textAlign:'center'}},'Need $'+(tot-wal).toFixed(2)+' more'));const br=el('div',{style:{display:'flex',gap:'7px'}});br.appendChild(btn('💳 Top-Up',()=>{closeM('m-co');openTopUp();},false,{flex:'1'}));br.appendChild(btn(T('cancel'),()=>closeM('m-co'),true,{flex:'1'}));card.appendChild(br);}
-  else{card.appendChild(el('div',{style:{color:q.tm,fontSize:'11px',marginBottom:'11px',textAlign:'center'}},'Balance after: $'+(wal-tot).toFixed(2)));const br=el('div',{style:{display:'flex',gap:'7px'}});br.appendChild(btn('✅ Pay Now',()=>{const prs=DB.getProducts();items.forEach(p=>{const st=prs.find(x=>x.id===p.id)?.stock||0;DB.updProduct(p.id,{stock:Math.max(0,st-S.cart[p.id])});});DB.updUser(S.user.email,{wallet:wal-tot});S.cart={};closeM('m-co');rStore();notif('🎉 Payment successful!','success');},false,{flex:'1'}));br.appendChild(btn(T('cancel'),()=>closeM('m-co'),true,{flex:'1'}));card.appendChild(br);}
+  else{card.appendChild(el('div',{style:{color:q.tm,fontSize:'11px',marginBottom:'11px',textAlign:'center'}},'Balance after: $'+(wal-tot).toFixed(2)));const br=el('div',{style:{display:'flex',gap:'7px'}});br.appendChild(btn('✅ Pay Now',async ()=>{const prs=DB.getProducts();items.forEach(p=>{const st=prs.find(x=>x.id===p.id)?.stock||0;DB.updProduct(p.id,{stock:Math.max(0,st-S.cart[p.id])});});DB.updUser(S.user.id,{wallet:wal-tot});S.cart={};closeM('m-co');rStore();notif('🎉 Payment successful!','success');},false,{flex:'1'}));br.appendChild(btn(T('cancel'),()=>closeM('m-co'),true,{flex:'1'}));card.appendChild(br);}
   m.appendChild(card);
 }
 
 // ── SOCIAL ────────────────────────────────────────────────────
-function rSocial(){const q=t();const c=document.getElementById('page-social');c.innerHTML='';const sc=[{n:"Instagram",h:"@starlivegroup",c:"#E1306C",e:"📸",f:"48.2K"},{n:"Facebook",h:"StarLive Group",c:"#1877F2",e:"📘",f:"31.5K"},{n:"Twitter/X",h:"@StarLiveGrp",c:"#1DA1F2",e:"🐦",f:"22.8K"},{n:"YouTube",h:"StarLive Official",c:"#FF0000",e:"▶️",f:"15.3K"},{n:"TikTok",h:"@starliveofficial",c:"#69C9D0",e:"🎵",f:"67.1K"}];c.appendChild(el('h1',{style:{color:q.ac,fontSize:'24px',fontWeight:'800',marginBottom:'5px'}},T('social')));c.appendChild(el('p',{style:{color:q.tm,marginBottom:'18px',fontSize:'12px'}},T('socialSub')));const grid=el('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(230px,1fr))',gap:'16px'}});sc.forEach(s=>grid.appendChild(gc({padding:'22px',border:`1px solid ${s.c}44`},el('div',{style:{display:'flex',alignItems:'center',gap:'11px',marginBottom:'12px'}},el('div',{style:{fontSize:'28px',width:'48px',height:'48px',display:'flex',alignItems:'center',justifyContent:'center',background:`${s.c}18`,borderRadius:'11px'}},s.e),el('div',{},el('div',{style:{color:s.c,fontWeight:'800',fontSize:'14px'}},s.n),el('div',{style:{color:q.tm,fontSize:'11px'}},s.h))),el('div',{style:{color:q.tx,fontSize:'20px',fontWeight:'900',marginBottom:'3px'}},s.f),el('div',{style:{color:q.tm,fontSize:'10px',marginBottom:'13px'}},'followers'),btn('Follow →',()=>{},false,{width:'100%',borderColor:s.c,color:s.c,background:`${s.c}18`}))));c.appendChild(grid);}
+async function rSocial(){const q=t();const c=document.getElementById('page-social');c.innerHTML='';const sc=[{n:"Instagram",h:"@starlivegroup",c:"#E1306C",e:"📸",f:"48.2K"},{n:"Facebook",h:"StarLive Group",c:"#1877F2",e:"📘",f:"31.5K"},{n:"Twitter/X",h:"@StarLiveGrp",c:"#1DA1F2",e:"🐦",f:"22.8K"},{n:"YouTube",h:"StarLive Official",c:"#FF0000",e:"▶️",f:"15.3K"},{n:"TikTok",h:"@starliveofficial",c:"#69C9D0",e:"🎵",f:"67.1K"}];c.appendChild(el('h1',{style:{color:q.ac,fontSize:'24px',fontWeight:'800',marginBottom:'5px'}},T('social')));c.appendChild(el('p',{style:{color:q.tm,marginBottom:'18px',fontSize:'12px'}},T('socialSub')));const grid=el('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(230px,1fr))',gap:'16px'}});sc.forEach(s=>grid.appendChild(gc({padding:'22px',border:`1px solid ${s.c}44`},el('div',{style:{display:'flex',alignItems:'center',gap:'11px',marginBottom:'12px'}},el('div',{style:{fontSize:'28px',width:'48px',height:'48px',display:'flex',alignItems:'center',justifyContent:'center',background:`${s.c}18`,borderRadius:'11px'}},s.e),el('div',{},el('div',{style:{color:s.c,fontWeight:'800',fontSize:'14px'}},s.n),el('div',{style:{color:q.tm,fontSize:'11px'}},s.h))),el('div',{style:{color:q.tx,fontSize:'20px',fontWeight:'900',marginBottom:'3px'}},s.f),el('div',{style:{color:q.tm,fontSize:'10px',marginBottom:'13px'}},'followers'),btn('Follow →',()=>{},false,{width:'100%',borderColor:s.c,color:s.c,background:`${s.c}18`}))));c.appendChild(grid);}
 // ── DASHBOARD (Admin only — full monitoring) ──────────────────
-function rDash(){
+async function rDash(){
   const q=t();const c=document.getElementById('page-dashboard');c.innerHTML='';
   if(!S.isAdmin){c.appendChild(el('div',{style:{textAlign:'center',padding:'70px'}},el('div',{style:{fontSize:'56px',marginBottom:'12px'}},'🔒'),el('div',{style:{color:q.tx,fontSize:'16px',fontWeight:'700'}},'Admin Access Only')));return;}
   c.appendChild(el('h1',{style:{color:q.ac,fontSize:'22px',fontWeight:'800',marginBottom:'14px'}},'📊 Dashboard'));
@@ -518,7 +808,7 @@ function rDash(){
   c.appendChild(tr);
 
   if(S.dtab==='users'){
-    const us=DB.getUsers();
+    const us=await DB.getUsers();
     c.appendChild(el('div',{style:{color:q.ac,fontSize:'12px',fontWeight:'700',marginBottom:'12px'}},'👥 Registered Users ('+us.length+')'));
     const grid=el('div',{style:{display:'flex',flexDirection:'column',gap:'10px'}});
     us.forEach(u=>{
@@ -538,8 +828,8 @@ function rDash(){
     const walletC=el('div',{});rWalletAdmin(walletC);c.appendChild(walletC);
 
   } else if(S.dtab==='store'){
-    const orders=DB.getStoreOrders().sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
-    const topReqs=DB.getTopUpReqs().filter(r=>r.status==='approved');
+    const orders=await DB.getStoreOrders().sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+    const topReqs=(await DB.getTopUpReqs()).filter(r=>r.status==='approved');
     const totalRev=orders.reduce((s,o)=>s+o.total,0);
     const row=el('div',{style:{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'10px',marginBottom:'16px'}});
     [[orders.length,'📦 Total Orders','#4fc3f7'],['$'+totalRev.toFixed(2),'💰 Revenue','#81c784'],[DB.getProducts().filter(p=>p.stock===0).length,'❌ Out of Stock','#f44']].forEach(([v,l,c2])=>row.appendChild(gc({padding:'14px',textAlign:'center',border:`1px solid ${c2}44`},el('div',{style:{fontSize:'20px',fontWeight:'900',color:c2}},v),el('div',{style:{color:q.tm,fontSize:'10px',marginTop:'3px'}},l))));
@@ -571,29 +861,33 @@ function rDash(){
     else c.appendChild(el('div',{style:{color:q.tm,fontSize:'12px',textAlign:'center',padding:'20px'}},'No page view data for today yet.'));
 
   } else if(S.dtab==='challenges'){
-    const chs=DB.getChallenges();
+    const chs=await DB.getChallenges();
     c.appendChild(el('div',{style:{color:q.ac,fontSize:'12px',fontWeight:'700',marginBottom:'10px'}},'🏆 Challenge Management'));
     const pending=chs.filter(x=>x.status==='pending');
     if(pending.length){
       c.appendChild(el('div',{style:{color:'#ffb74d',fontSize:'11px',fontWeight:'700',marginBottom:'8px'}},'⏳ Pending Approval ('+pending.length+')'));
-      pending.forEach(ch=>{
+      for(const ch of pending){
+
         const card=gc({padding:'14px',marginBottom:'8px',border:'1px solid rgba(255,183,21,.3)'});
         card.appendChild(el('div',{style:{color:q.tx,fontSize:'13px',fontWeight:'700',marginBottom:'3px'}},ch.title));
         card.appendChild(el('div',{style:{color:q.tm,fontSize:'10px',marginBottom:'8px'}},'By: '+ch.createdByName+' · '+ch.questions.length+' questions'));
         const brow=el('div',{style:{display:'flex',gap:'6px'}});
-        brow.appendChild(btn('✅ Approve',()=>{DB.updChallenge(ch.id,{status:'approved'});notif('✅ Challenge approved!','success');rDash();},false,{fontSize:'10px',padding:'4px 10px'}));
-        brow.appendChild(btn('✕ Reject',()=>{DB.updChallenge(ch.id,{status:'rejected'});notif('Challenge rejected.','error');rDash();},true,{fontSize:'10px',padding:'4px 8px',borderColor:'#f44',color:'#f88'}));
+        brow.appendChild(btn('✅ Approve',async ()=>{await DB.updChallenge(ch.id,{status:'approved'});notif('✅ Challenge approved!','success');rDash();},false,{fontSize:'10px',padding:'4px 10px'}));
+        brow.appendChild(btn('✕ Reject',async ()=>{await DB.updChallenge(ch.id,{status:'rejected'});notif('Challenge rejected.','error');rDash();},true,{fontSize:'10px',padding:'4px 8px',borderColor:'#f44',color:'#f88'}));
         card.appendChild(brow);c.appendChild(card);
-      });
+      
+}
     }
     c.appendChild(el('div',{style:{color:q.ac,fontSize:'11px',fontWeight:'700',marginBottom:'8px',marginTop:'14px'}},'📋 All Challenges ('+chs.length+')'));
-    chs.forEach(ch=>{
+    for(const ch of chs){
+
       const SC={pending:'#ffb74d',approved:'#64dc64',rejected:'#f44'};const sc=SC[ch.status]||'#aaa';
       const attempts=(ch.attempts||[]).length;
-      c.appendChild(gc({padding:'12px',marginBottom:'6px',border:`1px solid ${sc}33`},el('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center'}},el('div',{},el('div',{style:{color:q.tx,fontSize:'12px',fontWeight:'700'}},ch.title),el('div',{style:{color:q.tm,fontSize:'10px'}},ch.type+' · '+ch.questions.length+' Q · '+attempts+' attempts')),el('div',{style:{display:'flex',alignItems:'center',gap:'6px'}},el('span',{style:{background:`${sc}18`,color:sc,borderRadius:'20px',padding:'2px 8px',fontSize:'9px',fontWeight:'700'}},ch.status.toUpperCase()),btn('✕',()=>{if(confirm('Delete this challenge?')){DB.delChallenge(ch.id);rDash();}},true,{fontSize:'10px',padding:'2px 6px',borderColor:'#f44',color:'#f88'})))));
-    });
+      c.appendChild(gc({padding:'12px',marginBottom:'6px',border:`1px solid ${sc}33`},el('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center'}},el('div',{},el('div',{style:{color:q.tx,fontSize:'12px',fontWeight:'700'}},ch.title),el('div',{style:{color:q.tm,fontSize:'10px'}},ch.type+' · '+ch.questions.length+' Q · '+attempts+' attempts')),el('div',{style:{display:'flex',alignItems:'center',gap:'6px'}},el('span',{style:{background:`${sc}18`,color:sc,borderRadius:'20px',padding:'2px 8px',fontSize:'9px',fontWeight:'700'}},ch.status.toUpperCase()),btn('✕',async ()=>{if(confirm('Delete this challenge?')){await DB.delChallenge(ch.id);rDash();}},true,{fontSize:'10px',padding:'2px 6px',borderColor:'#f44',color:'#f88'})))));
+    
+}
   } else if(S.dtab==='log'){
-    const pv2=DB.getPageViews();const ords2=DB.getStoreOrders();const rqs2=DB.getTopUpReqs();const chs3=DB.getChallenges();
+    const pv2=DB.getPageViews();const ords2=await DB.getStoreOrders();const rqs2=await DB.getTopUpReqs();const chs3=await DB.getChallenges();
     c.appendChild(el('div',{style:{color:q.ac,fontSize:'12px',fontWeight:'700',marginBottom:'4px'}},'📋 Activity Log & Timeline'));
     c.appendChild(el('div',{style:{color:q.tm,fontSize:'10px',marginBottom:'12px'}},'Menampilkan semua aktivitas termasuk siapa user yang mengakses setiap halaman.'));
     // User access summary for today
@@ -621,7 +915,7 @@ function rDash(){
     ords2.forEach(o=>evs.push({time:o.createdAt,type:'order',msg:`${o.userName} beli ${o.items} item — $${o.total.toFixed(2)}`,icon:'🛒'}));
     rqs2.forEach(r=>{evs.push({time:r.createdAt,type:'topup',msg:`${r.userName} request top-up $${r.amount.toFixed(2)}`,icon:'💳'});if(r.updatedAt)evs.push({time:r.updatedAt,type:'tupd',msg:`Top-up ${r.userName} → ${r.status.toUpperCase()}`,icon:r.status==='approved'?'✅':'❌'});});
     chs3.forEach(ch=>{evs.push({time:ch.createdAt,type:'chal',msg:`${ch.createdByName} submit Challenge "${ch.title}" [${ch.status.toUpperCase()}]`,icon:'🏆'});(ch.attempts||[]).forEach(a=>evs.push({time:a.date,type:'att',msg:`${a.userName} attempt "${ch.title}" — ${a.score}% ${a.passed?'✅':'❌'}`,icon:'📝'}));});
-    DB.getUsers().forEach(u2=>{if(u2.joinDate)evs.push({time:u2.joinDate,type:'reg',msg:`${u2.username} mendaftar`,icon:'👤'});});
+    (await DB.getUsers()).forEach(u2=>{if(u2.joinDate)evs.push({time:u2.joinDate,type:'reg',msg:`${u2.username} mendaftar`,icon:'👤'});});
     evs.sort((a,b)=>new Date(b.time)-new Date(a.time));
     c.appendChild(el('div',{style:{color:q.ac,fontSize:'10px',fontWeight:'700',marginBottom:'9px'}},'⏱️ Timeline Lengkap'));
     const TC2={pv:'#4fc3f7',order:'#81c784',topup:'#ffb74d',tupd:'#ffb74d',chal:'#FAB715',att:'#ce93d8',reg:'#64dc64'};
@@ -643,7 +937,7 @@ function rDash(){
     c.appendChild(gc({padding:'14px'},tl2));
   }
 }
-function openUserAdmin(u){
+async function openUserAdmin(u){
   const q=t();const m=document.getElementById('m-uadmin');m.style.display='flex';m.innerHTML='';
   const card=gc({padding:'28px',width:'420px',maxWidth:'96vw',maxHeight:'88vh',overflowY:'auto',position:'relative',borderRadius:'18px'});
   card.appendChild(el('button',{style:{position:'absolute',top:'12px',right:'14px',background:'none',border:'none',color:q.tm,fontSize:'19px',cursor:'pointer'},onclick:()=>closeM('m-uadmin')},'✕'));
@@ -657,9 +951,9 @@ function openUserAdmin(u){
   if(S.user&&u.email!==S.user.email){
     card.appendChild(el('div',{style:{color:q.ac,fontSize:'10px',fontWeight:'700',marginBottom:'8px'}},'⚡ ADMIN ACTIONS'));
     const acts=el('div',{style:{display:'flex',gap:'7px',flexWrap:'wrap'}});
-    acts.appendChild(btn('💳 Adjust Wallet',()=>{const amt=parseFloat(prompt('Set wallet to:',u.wallet||0));if(isNaN(amt))return;DB.updUser(u.email,{wallet:amt});closeM('m-uadmin');rDash();notif('✅ Wallet adjusted!','success');},true,{fontSize:'11px'}));
-    if(u.role!=='admin')acts.appendChild(btn('👑 Make Admin',()=>{if(confirm('Make '+u.username+' admin?')){DB.updUser(u.email,{role:'admin'});closeM('m-uadmin');rDash();notif('✅ Role updated.','success');}},true,{fontSize:'11px'}));
-    else acts.appendChild(btn('👤 Remove Admin',()=>{if(confirm('Remove admin from '+u.username+'?')){DB.updUser(u.email,{role:'user'});closeM('m-uadmin');rDash();notif('✅ Role updated.','success');}},true,{fontSize:'11px'}));
+    acts.appendChild(btn('💳 Adjust Wallet',async ()=>{const amt=parseFloat(prompt('Set wallet to:',u.wallet||0));if(isNaN(amt))return;await DB.updUser(u.email,{wallet:amt});closeM('m-uadmin');rDash();notif('✅ Wallet adjusted!','success');},true,{fontSize:'11px'}));
+    if(u.role!=='admin')acts.appendChild(btn('👑 Make Admin',async ()=>{if(confirm('Make '+u.username+' admin?')){await DB.updUser(u.email,{role:'admin'});closeM('m-uadmin');rDash();notif('✅ Role updated.','success');}},true,{fontSize:'11px'}));
+    else acts.appendChild(btn('👤 Remove Admin',async ()=>{if(confirm('Remove admin from '+u.username+'?')){await DB.updUser(u.email,{role:'user'});closeM('m-uadmin');rDash();notif('✅ Role updated.','success');}},true,{fontSize:'11px'}));
     // Badge grant
     const BADGE_DEFS2=[
       {id:'web_contributor',em:'🛠️',name:'Web Contributor'},{id:'news_contributor',em:'📰',name:'News Contributor'},
@@ -672,25 +966,29 @@ function openUserAdmin(u){
     const bdgGrid=el('div',{style:{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:'5px'}});
     function renderBdg(){
       bdgGrid.innerHTML='';const cur=freshU();
-      BADGE_DEFS2.forEach(bd=>{
+      for(const bd of BADGE_DEFS2){
+
         const has=(cur.badges||[]).includes(bd.id);
-        const bcard2=el('div',{style:{display:'flex',alignItems:'center',gap:'7px',padding:'5px 7px',borderRadius:'7px',border:`1px solid ${has?q.ac:q.sb}`,background:has?q.as:'transparent',cursor:'pointer',transition:'all .15s'},onclick:()=>{const nb=has?(cur.badges||[]).filter(x=>x!==bd.id):[...(cur.badges||[]),bd.id];DB.updUser(u.email,{badges:nb});renderBdg();notif((has?'❌ Removed ':'✅ Granted ')+bd.name,'success');}},el('span',{style:{fontSize:'14px'}},bd.em),el('span',{style:{color:has?q.ac:q.tm,fontSize:'10px',fontWeight:has?'700':'400'}},bd.name),has?el('span',{style:{color:q.ac,fontSize:'9px',marginLeft:'auto'}},'✓'):'');
+        const bcard2=el('div',{style:{display:'flex',alignItems:'center',gap:'7px',padding:'5px 7px',borderRadius:'7px',border:`1px solid ${has?q.ac:q.sb}`,background:has?q.as:'transparent',cursor:'pointer',transition:'all .15s'},onclick:async ()=>{const nb=has?(cur.badges||[]).filter(x=>x!==bd.id):[...(cur.badges||[]),bd.id];await DB.updUser(u.email,{badges:nb});renderBdg();notif((has?'❌ Removed ':'✅ Granted ')+bd.name,'success');}},el('span',{style:{fontSize:'14px'}},bd.em),el('span',{style:{color:has?q.ac:q.tm,fontSize:'10px',fontWeight:has?'700':'400'}},bd.name),has?el('span',{style:{color:q.ac,fontSize:'9px',marginLeft:'auto'}},'✓'):'');
         bdgGrid.appendChild(bcard2);
-      });
+      
+}
     }
     renderBdg();card.appendChild(bdgGrid);
     const FRACTIONS2=['Singularity Nexus','Protocol Zero','Shadow Syntax'];
     const FRACTION_INFO2={'Singularity Nexus':{em:'🌀',color:'#00ffc8'},'Protocol Zero':{em:'⚡',color:'#FAB715'},'Shadow Syntax':{em:'🕶️',color:'#ce93d8'}};
     card.appendChild(el('div',{style:{color:q.ac,fontSize:'10px',fontWeight:'700',margin:'12px 0 7px'}},'🔱 ASSIGN FRACTION'));
     const frRow2=el('div',{style:{display:'flex',flexDirection:'column',gap:'5px'}});
-    FRACTIONS2.forEach(fr=>{const fi=FRACTION_INFO2[fr];const active=u.fraction===fr;frRow2.appendChild(el('div',{style:{display:'flex',alignItems:'center',gap:'9px',padding:'7px 10px',borderRadius:'7px',border:`1px solid ${active?fi.color:q.sb}`,background:active?`${fi.color}12`:'rgba(255,255,255,.03)',cursor:'pointer',transition:'all .15s'},onclick:()=>{const newFrac=active?null:fr;DB.updUser(u.email,{fraction:newFrac});notif((newFrac?'✅ Assigned '+newFrac:'❌ Removed fraction'),'success');closeM('m-uadmin');rDash();}},el('div',{style:{fontSize:'18px'}},fi.em),el('div',{style:{color:active?fi.color:q.tx,fontSize:'11px',fontWeight:active?'700':'400',flex:'1'}},fr),active?el('span',{style:{color:fi.color,fontSize:'10px',fontWeight:'700'}},'✓'):null));});
+    for(const fr of FRACTIONS2){
+const fi=FRACTION_INFO2[fr];const active=u.fraction===fr;frRow2.appendChild(el('div',{style:{display:'flex',alignItems:'center',gap:'9px',padding:'7px 10px',borderRadius:'7px',border:`1px solid ${active?fi.color:q.sb}`,background:active?`${fi.color}12`:'rgba(255,255,255,.03)',cursor:'pointer',transition:'all .15s'},onclick:async ()=>{const newFrac=active?null:fr;await DB.updUser(u.email,{fraction:newFrac});notif((newFrac?'✅ Assigned '+newFrac:'❌ Removed fraction'),'success');closeM('m-uadmin');rDash();}},el('div',{style:{fontSize:'18px'}},fi.em),el('div',{style:{color:active?fi.color:q.tx,fontSize:'11px',fontWeight:active?'700':'400',flex:'1'}},fr),active?el('span',{style:{color:fi.color,fontSize:'10px',fontWeight:'700'}},'✓'):null));
+}
     card.appendChild(frRow2);
   }
   m.appendChild(card);
 }
 
 // ── VAULT (Admin only) ────────────────────────────────────────
-function rVault(){
+async function rVault(){
   const q=t();const c=document.getElementById('page-vault');c.innerHTML='';
   if(!S.isAdmin){c.appendChild(el('div',{style:{textAlign:'center',padding:'70px'}},el('div',{style:{fontSize:'56px',marginBottom:'12px'}},'\uD83D\uDD10'),el('div',{style:{color:q.tx,fontSize:'16px',fontWeight:'700'}},'Admin Access Only')));return;}
   // Vault tabs: home, pegawai, transaksi, umum
@@ -702,7 +1000,7 @@ function rVault(){
   c.appendChild(vtabs);
   if(S.vaultTab==='home'){
     // Beranda: history/timeline only, no entries shown
-    const logs=DB.getVaultLogs();
+    const logs=await DB.getVaultLogs();
     c.appendChild(el('div',{style:{color:q.ac,fontSize:'11px',fontWeight:'700',marginBottom:'12px'}},'📋 Vault Activity'));
     if(!logs.length){c.appendChild(el('div',{style:{textAlign:'center',padding:'40px',color:q.tm}},'Belum ada aktivitas vault.'));return;}
     const tl=el('div',{style:{position:'relative',paddingLeft:'22px'}});
@@ -722,7 +1020,7 @@ function rVault(){
   const si=el('input',{type:'text',placeholder:'Cari judul, pemilik, atau kode SLV-...',class:'inf',style:{background:q.ib,borderColor:q.sb,color:q.tx,flex:'1',marginBottom:'0'}});
   si.value=S.vaultQ||'';si.oninput=e=>{S.vaultQ=e.target.value;rVault();};
   cr.appendChild(si);cr.appendChild(btn('➕ Tambah Entri',()=>openVaultM(null,cat),false,{fontSize:'12px',flexShrink:'0'}));c.appendChild(cr);
-  let entries=(DB.getVault()||[]).filter(e=>e.category===cat);
+  let entries=(await DB.getVault()||[]).filter(e=>e.category===cat);
   if((S.vaultQ||'').trim()){const qv=S.vaultQ.toLowerCase();entries=entries.filter(e=>(e.title||'').toLowerCase().includes(qv)||(e.owner||'').toLowerCase().includes(qv)||(e.ownerCode||'').toLowerCase().includes(qv));}
   if(!entries.length){c.appendChild(el('div',{style:{textAlign:'center',padding:'40px',color:q.tm}},'Belum ada data di kategori ini.'));return;}
   const grid=el('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))',gap:'14px'}});
@@ -848,22 +1146,22 @@ function openVaultM(existing,catForce){
     }
     card.appendChild(fileRow);
     const br=el('div',{style:{display:'flex',gap:'8px',marginTop:'16px'}});
-    br.appendChild(btn('\uD83D\uDCBE Simpan Entri',()=>{
+    br.appendChild(btn('\uD83D\uDCBE Simpan Entri',async ()=>{
       if(!form.title.trim()){notif('Judul wajib diisi!','error');return;}
       if(!SLV_RX.test(form.ownerCode)){
         notif('\u274C Kode tidak valid! Wajib format SLV- diikuti tepat 6 digit angka. Contoh: SLV-123456','error');
         codeWarn.style.display='block';return;
       }
       if(!isEdit){
-        const dup=DB.getVault().find(v=>v.ownerCode===form.ownerCode);
+        const _vaultAll=await DB.getVault();const dup=_vaultAll.find(v=>v.ownerCode===form.ownerCode);
         if(dup){notif('\u274C Kode '+form.ownerCode+' sudah dipakai entri lain!','error');return;}
       }
       const payload={title:form.title.trim(),category:form.category,owner:form.owner.trim(),
         ownerCode:form.ownerCode,content:form.content,tags:form.tags,
         fileData:form.fileData,fileName:form.fileName,fileType:form.fileType,
         imageData:form.imageData,imageName:form.imageName};
-      if(isEdit){DB.updVault(existing.id,payload);DB.addVaultLog({action:'Edit',title:form.title,code:form.ownerCode,by:S.user?.username||'Admin'});}
-      else{DB.addVault({...payload,createdBy:S.user?.email,uploaded:false});DB.addVaultLog({action:'Tambah',title:form.title,code:form.ownerCode,by:S.user?.username||'Admin'});}
+      if(isEdit){await DB.updVault(existing.id,payload);await DB.addVaultLog({action:'Edit',title:form.title,code:form.ownerCode,by:S.user?.username||'Admin'});}
+      else{await DB.addVault({...payload,createdBy:S.user?.email,uploaded:false});await DB.addVaultLog({action:'Tambah',title:form.title,code:form.ownerCode,by:S.user?.username||'Admin'});}
       const catTab={'Data Informasi Pegawai':'pegawai','Data Informasi Transaksi':'transaksi','Data Informasi Umum':'umum'};
       S.vaultTab=catTab[form.category]||'pegawai';
       closeM('m-vault');rVault();notif('\u2705 Entri vault disimpan!','success');
@@ -874,7 +1172,7 @@ function openVaultM(existing,catForce){
 }
 
 
-function downloadVaultPDF(entry){
+async function downloadVaultPDF(entry){
   const lines=[
     'STARLIVE GROUP — VAULT ENTRY',
     '='.repeat(40),
@@ -901,33 +1199,18 @@ function downloadVaultPDF(entry){
   const a=document.createElement('a');a.href=url;a.download='VAULT_'+entry.ownerCode+'.txt';a.click();
   setTimeout(()=>URL.revokeObjectURL(url),2000);
   notif('📄 File vault diunduh (TXT)','success');
-  DB.addVaultLog({action:'Unduh',title:entry.title,code:entry.ownerCode,by:S.user.username});
-}
-
-const SUPABASE_URL='https://YOUR_SUPABASE_URL.supabase.co';
-const SUPABASE_ANON='YOUR_SUPABASE_ANON_KEY';
-async function uploadToSupabase(entry){
-  notif('☁️ Mengupload ke Supabase...','info');
-  try{
-    const fileName=`vault/${entry.ownerCode}_${Date.now()}.txt`;
-    const body=JSON.stringify({ownerCode:entry.ownerCode,category:entry.category,title:entry.title,owner:entry.owner,content:entry.content,tags:entry.tags,uploadedAt:new Date().toISOString()});
-    const res=await fetch(`${SUPABASE_URL}/storage/v1/object/${fileName}`,{method:'POST',headers:{'Authorization':'Bearer '+SUPABASE_ANON,'Content-Type':'application/json','x-upsert':'true'},body});
-    if(res.ok||res.status===200||res.status===200){DB.updVault(entry.id,{uploaded:true,uploadedAt:new Date().toISOString()});DB.addVaultLog({action:'Upload',title:entry.title,code:entry.ownerCode,by:S.user.username});rVault();notif('✅ Upload berhasil!','success');}
-    else{// Still mark for demo since Supabase not configured
-      DB.updVault(entry.id,{uploaded:true,uploadedAt:new Date().toISOString()});DB.addVaultLog({action:'Upload',title:entry.title,code:entry.ownerCode,by:S.user.username});rVault();notif('✅ Dicatat sebagai terupload (konfigurasi Supabase diperlukan untuk upload nyata)','success');
-    }
-  }catch(e){DB.updVault(entry.id,{uploaded:true,uploadedAt:new Date().toISOString()});DB.addVaultLog({action:'Upload',title:entry.title,code:entry.ownerCode,by:S.user.username});rVault();notif('✅ Status upload dicatat (konfigurasi Supabase diperlukan)','success');}
+  await DB.addVaultLog({action:'Unduh',title:entry.title,code:entry.ownerCode,by:S.user.username});
 }
 // Fix: ol was used instead of el in dashboard analytics
-function ol(tag,props={},...ch){return el(tag,props,...ch);}
+async function ol(tag,props={},...ch){return el(tag,props,...ch);}
 // ── MY ACCOUNT ────────────────────────────────────────────────
-function rMyAcct(){
+async function rMyAcct(){
   const q=t();const c=document.getElementById('page-myaccount');c.innerHTML='';
   if(!S.loggedIn){c.appendChild(el('div',{style:{textAlign:'center',padding:'70px'}},el('div',{style:{fontSize:'56px',marginBottom:'12px'}},'🔒'),el('div',{style:{color:q.tx,fontSize:'16px',fontWeight:'700',marginBottom:'8px'}},T('loginRequired')),btn('🔐 '+T('login'),openAuthM)));return;}
-  const u=DB.byEmail(S.user.email);if(!u)return;
+  const u=await DB.byId(S.user.id);if(!u)return;
   const friends=(u.friends||[]).map(e=>DB.byEmail(e)).filter(Boolean);
   const requests=(u.friendRequests||[]).map(e=>DB.byEmail(e)).filter(Boolean);
-  const allUsers=DB.getUsers().filter(x=>x.email!==u.email);
+  const allUsers=(await DB.getUsers()).filter(x=>x.email!==u.email);
   // Cover
   const cv=el('div',{class:'cover',style:{marginBottom:'0'}});
   if(u.cover){cv.style.backgroundImage=`url(${u.cover})`;cv.style.backgroundSize='cover';cv.style.backgroundPosition='center';}
@@ -944,12 +1227,12 @@ function rMyAcct(){
   const infoRow=el('div',{style:{padding:'0 20px 18px'}});infoRow.appendChild(aWrap);
   const nd=el('div',{style:{display:'flex',alignItems:'center',gap:'7px',marginTop:'10px'}});
   nd.appendChild(el('div',{style:{color:q.tx,fontSize:'20px',fontWeight:'800'}},u.username));
-  nd.appendChild(el('button',{style:{background:'none',border:'none',color:q.ac,cursor:'pointer',fontSize:'13px'},onclick:()=>{const nn=prompt('New name:',u.username);if(!nn||nn.trim()===u.username)return;DB.updUser(u.email,{username:nn.trim()});S.user={...S.user,username:nn.trim()};applyTheme();rMyAcct();notif('✅ Name updated!','success');}},'✏️'));
+  nd.appendChild(el('button',{style:{background:'none',border:'none',color:q.ac,cursor:'pointer',fontSize:'13px'},onclick:async ()=>{const nn=prompt('New name:',u.username);if(!nn||nn.trim()===u.username)return;await DB.updUser(u.email,{username:nn.trim()});S.user={...S.user,username:nn.trim()};applyTheme();rMyAcct();notif('✅ Name updated!','success');}},'✏️'));
   infoRow.appendChild(nd);
   infoRow.appendChild(el('div',{style:{color:S.isAdmin?q.ac:q.tm,fontSize:'11px',marginTop:'2px'}},S.isAdmin?'👑 Admin':'👤 User'));
   const bd=el('div',{style:{display:'flex',alignItems:'flex-start',gap:'6px',marginTop:'7px'}});
   bd.appendChild(el('div',{style:{color:q.tm,fontSize:'12px',lineHeight:'1.6',flex:'1'}},u.bio||'No bio yet.'));
-  bd.appendChild(el('button',{style:{background:'none',border:'none',color:q.ac,cursor:'pointer',fontSize:'11px'},onclick:()=>{const nb=prompt('New bio:',u.bio||'');if(nb===null)return;DB.updUser(u.email,{bio:nb});rMyAcct();notif('✅ Bio updated!','success');}},'✏️'));
+  bd.appendChild(el('button',{style:{background:'none',border:'none',color:q.ac,cursor:'pointer',fontSize:'11px'},onclick:async ()=>{const nb=prompt('New bio:',u.bio||'');if(nb===null)return;await DB.updUser(u.email,{bio:nb});rMyAcct();notif('✅ Bio updated!','success');}},'✏️'));
   infoRow.appendChild(bd);hCard.appendChild(infoRow);c.appendChild(hCard);
   // Stats row - wallet clickable for topup
   const sr=el('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(105px,1fr))',gap:'10px',marginBottom:'16px'}});
@@ -957,7 +1240,7 @@ function rMyAcct(){
   walCard.onmouseenter=()=>walCard.style.borderColor=q.ac;walCard.onmouseleave=()=>walCard.style.borderColor=q.sb;
   walCard.appendChild(el('div',{style:{fontSize:'16px',fontWeight:'900',color:q.ac}},'$'+(u.wallet||0).toFixed(2)));
   walCard.appendChild(el('div',{style:{color:q.tm,fontSize:'9px',marginTop:'2px'}},'💳 Wallet'));
-  const myPending=DB.getTopUpReqs().filter(r=>r.userEmail===u.email&&r.status==='pending');
+  const myPending=(await DB.getTopUpReqs()).filter(r=>r.userEmail===u.email&&r.status==='pending');
   if(myPending.length)walCard.appendChild(el('div',{style:{color:'#ffb74d',fontSize:'8px',marginTop:'2px'}},'⏳ '+myPending.length+' request pending'));
   else walCard.appendChild(el('div',{style:{color:q.ac,fontSize:'8px',marginTop:'2px'}},'tap to request top-up'));
   walCard.onclick=()=>openTopUp();
@@ -985,7 +1268,9 @@ function rMyAcct(){
   if(S.isAdmin){
     frcSection.appendChild(el('div',{style:{color:q.tm,fontSize:'10px',marginBottom:'8px'}},'Assign fraction to yourself:'));
     const frRow=el('div',{style:{display:'flex',flexDirection:'column',gap:'6px'}});
-    FRACTIONS.forEach(fr=>{const fi2=FRACTION_INFO[fr];const active=u.fraction===fr;frRow.appendChild(el('div',{style:{display:'flex',alignItems:'center',gap:'10px',padding:'9px 11px',borderRadius:'8px',border:`1px solid ${active?fi2.color:q.sb}`,background:active?`${fi2.color}12`:'rgba(255,255,255,.03)',cursor:'pointer',transition:'all .18s'},onclick:()=>{DB.updUser(u.email,{fraction:active?null:fr});S.user={...S.user,fraction:active?null:fr};rMyAcct();notif((active?'❌ Left ':'✅ Joined ')+fr,'success');}},el('div',{style:{fontSize:'22px'}},fi2.em),el('div',{style:{flex:'1'}},el('div',{style:{color:active?fi2.color:q.tx,fontWeight:active?'700':'400',fontSize:'12px'}},fr),el('div',{style:{color:q.tm,fontSize:'10px',marginTop:'1px'}},fi2.desc)),active?el('span',{style:{color:fi2.color,fontSize:'11px',fontWeight:'700'}},'✓'):null));});
+    for(const fr of FRACTIONS){
+const fi2=FRACTION_INFO[fr];const active=u.fraction===fr;frRow.appendChild(el('div',{style:{display:'flex',alignItems:'center',gap:'10px',padding:'9px 11px',borderRadius:'8px',border:`1px solid ${active?fi2.color:q.sb}`,background:active?`${fi2.color}12`:'rgba(255,255,255,.03)',cursor:'pointer',transition:'all .18s'},onclick:async ()=>{await DB.updUser(u.email,{fraction:active?null:fr});S.user={...S.user,fraction:active?null:fr};rMyAcct();notif((active?'❌ Left ':'✅ Joined ')+fr,'success');}},el('div',{style:{fontSize:'22px'}},fi2.em),el('div',{style:{flex:'1'}},el('div',{style:{color:active?fi2.color:q.tx,fontWeight:active?'700':'400',fontSize:'12px'}},fr),el('div',{style:{color:q.tm,fontSize:'10px',marginTop:'1px'}},fi2.desc)),active?el('span',{style:{color:fi2.color,fontSize:'11px',fontWeight:'700'}},'✓'):null));
+}
     frcSection.appendChild(frRow);
   } else {
     if(userFraction&&fi){
@@ -1001,13 +1286,17 @@ function rMyAcct(){
   // Friend Requests
   if(requests.length>0){
     const rc=gc({padding:'18px',marginBottom:'14px'});rc.appendChild(el('div',{style:{color:q.ac,fontSize:'11px',fontWeight:'700',marginBottom:'10px'}},'🔔 Friend Requests ('+requests.length+')'));
-    requests.forEach(fr=>{const row=el('div',{style:{display:'flex',alignItems:'center',gap:'9px',padding:'7px 0',borderBottom:`1px solid ${q.sb}`}});row.appendChild(avEl(fr,33));row.appendChild(el('div',{style:{flex:'1'}},el('div',{style:{color:q.tx,fontSize:'12px',fontWeight:'600'}},fr.username),el('div',{style:{color:q.tm,fontSize:'10px'}},fr.email)));row.appendChild(el('div',{style:{display:'flex',gap:'5px'}},btn('✅',()=>{DB.acceptFR(u.email,fr.email);rMyAcct();notif('✅ '+fr.username+' added!','success');},false,{fontSize:'11px',padding:'3px 9px'}),btn('✕',()=>{DB.rejectFR(u.email,fr.email);rMyAcct();},true,{fontSize:'11px',padding:'3px 7px',borderColor:'#f44',color:'#f88'})));rc.appendChild(row);});
+    for(const fr of requests){
+const row=el('div',{style:{display:'flex',alignItems:'center',gap:'9px',padding:'7px 0',borderBottom:`1px solid ${q.sb}`}});row.appendChild(avEl(fr,33));row.appendChild(el('div',{style:{flex:'1'}},el('div',{style:{color:q.tx,fontSize:'12px',fontWeight:'600'}},fr.username),el('div',{style:{color:q.tm,fontSize:'10px'}},fr.email)));row.appendChild(el('div',{style:{display:'flex',gap:'5px'}},btn('✅',async ()=>{await DB.acceptFR(u.email,fr.email);rMyAcct();notif('✅ '+fr.username+' added!','success');},false,{fontSize:'11px',padding:'3px 9px'}),btn('✕',async ()=>{await DB.rejectFR(u.email,fr.email);rMyAcct();},true,{fontSize:'11px',padding:'3px 7px',borderColor:'#f44',color:'#f88'})));rc.appendChild(row);
+}
     c.appendChild(rc);
   }
   // Friends
   const fc=gc({padding:'18px',marginBottom:'14px'});fc.appendChild(el('div',{style:{color:q.ac,fontSize:'11px',fontWeight:'700',marginBottom:'10px'}},'👥 '+T('friends')+' ('+friends.length+')'));
   if(!friends.length)fc.appendChild(el('div',{style:{color:q.tm,fontSize:'12px',textAlign:'center',padding:'14px'}},T('noFriends')));
-  friends.forEach(f=>{const row=el('div',{style:{display:'flex',alignItems:'center',gap:'9px',padding:'7px 0',borderBottom:`1px solid ${q.sb}`}});row.appendChild(el('div',{style:{position:'relative',flexShrink:'0'}},avEl(f,33),el('div',{class:'dot-s '+(f.online?'on':'off'),style:{position:'absolute',bottom:'0',right:'0',border:`2px solid ${q.cb}`}})));row.appendChild(el('div',{style:{flex:'1'}},el('div',{style:{color:q.tx,fontSize:'12px',fontWeight:'600'}},f.username),el('div',{style:{color:f.online?'#64dc64':q.tm,fontSize:'10px'}},f.online?T('online'):ago(f.lastSeen||new Date().toISOString()))));row.appendChild(el('div',{style:{display:'flex',gap:'4px',flexWrap:'wrap'}},btn('💬',()=>openChatWith(f),false,{fontSize:'11px',padding:'3px 7px'}),btn('👤',()=>{S.usrSel=f;goTo('userprofile');},true,{fontSize:'11px',padding:'3px 7px'}),btn('✕',()=>{if(confirm('Remove '+f.username+'?')){DB.removeFriend(u.email,f.email);rMyAcct();}},true,{fontSize:'11px',padding:'3px 6px',borderColor:'#f44',color:'#f88'})));fc.appendChild(row);});
+  for(const f of friends){
+const row=el('div',{style:{display:'flex',alignItems:'center',gap:'9px',padding:'7px 0',borderBottom:`1px solid ${q.sb}`}});row.appendChild(el('div',{style:{position:'relative',flexShrink:'0'}},avEl(f,33),el('div',{class:'dot-s '+(f.online?'on':'off'),style:{position:'absolute',bottom:'0',right:'0',border:`2px solid ${q.cb}`}})));row.appendChild(el('div',{style:{flex:'1'}},el('div',{style:{color:q.tx,fontSize:'12px',fontWeight:'600'}},f.username),el('div',{style:{color:f.online?'#64dc64':q.tm,fontSize:'10px'}},f.online?T('online'):ago(f.lastSeen||new Date().toISOString()))));row.appendChild(el('div',{style:{display:'flex',gap:'4px',flexWrap:'wrap'}},btn('💬',()=>openChatWith(f),false,{fontSize:'11px',padding:'3px 7px'}),btn('👤',()=>{S.usrSel=f;goTo('userprofile');},true,{fontSize:'11px',padding:'3px 7px'}),btn('✕',async ()=>{if(confirm('Remove '+f.username+'?')){await DB.removeFriend(u.email,f.email);rMyAcct();}},true,{fontSize:'11px',padding:'3px 6px',borderColor:'#f44',color:'#f88'})));fc.appendChild(row);
+}
   c.appendChild(fc);
   // ── BADGE COLLECTION ──────────────────────────────────────────
   const BADGE_CATS=[
@@ -1043,51 +1332,55 @@ function rMyAcct(){
     {id:'event_participant',cat:'general',em:'🎪',name:'Event Participant',desc:'Berpartisipasi dalam event/hiburan StarLive',color:'#f06292'},
   ];
   const joinYears=u.joinDate?((Date.now()-new Date(u.joinDate))/31536e6):0;
-  function autoCheckBadges(usr){
+  async function autoCheckBadges(usr){
     const badges=new Set(usr.badges||[]);
     if(joinYears>=1)badges.add('member_1y');
     if(joinYears>=2)badges.add('member_2y');
     if(joinYears>=5)badges.add('member_5y');
     if(joinYears>=10)badges.add('member_10y');
-    const won=(DB.getChallenges().flatMap(ch=>ch.attempts||[])).filter(a=>a.userEmail===usr.email&&a.passed).length;
+    const _chs=await DB.getChallenges();const won=_chs.flatMap(ch=>ch.attempts||[]).filter(a=>a.userEmail===usr.email&&a.passed).length;
     if(won>0)badges.add('challenge_taker');
-    const arr=Array.from(badges);if(JSON.stringify(arr.sort())!==JSON.stringify((usr.badges||[]).sort())){DB.updUser(usr.email,{badges:arr});}
+    const arr=Array.from(badges);if(JSON.stringify(arr.sort())!==JSON.stringify((usr.badges||[]).sort())){await DB.updUser(usr.email,{badges:arr});}
     return arr;
   }
-  const earned=autoCheckBadges(u);
+  const earned=await autoCheckBadges(u);
   const bc=gc({padding:'18px',marginBottom:'14px'});
   bc.appendChild(el('div',{style:{color:q.ac,fontSize:'11px',fontWeight:'700',marginBottom:'12px'}},'🏅 BADGE COLLECTION ('+earned.length+'/'+BADGE_DEFS.length+')'));
-  BADGE_CATS.forEach(cat=>{
+  for(const cat of BADGE_CATS){
+
     const catBadges=BADGE_DEFS.filter(b=>b.cat===cat.id);
     const catEarned=catBadges.filter(b=>earned.includes(b.id)).length;
     const catSec=el('div',{style:{marginBottom:'14px'}});
     catSec.appendChild(el('div',{style:{color:cat.color,fontSize:'10px',fontWeight:'700',marginBottom:'7px',display:'flex',alignItems:'center',gap:'6px'}},cat.label,el('span',{style:{color:q.tm,fontWeight:'400'}},`(${catEarned}/${catBadges.length})`)));
     const bgrid=el('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(120px,1fr))',gap:'6px'}});
-    catBadges.forEach(bd=>{
+    for(const bd of catBadges){
+
       const has=earned.includes(bd.id);
       const bcard=el('div',{style:{padding:'9px 7px',borderRadius:'9px',textAlign:'center',border:`1px solid ${has?bd.color:q.sb}`,background:has?`${bd.color}15`:'rgba(255,255,255,.02)',opacity:has?'1':'0.42',position:'relative',transition:'all .2s'}});
       bcard.appendChild(el('div',{style:{fontSize:'20px',marginBottom:'3px'}},bd.em));
       bcard.appendChild(el('div',{style:{color:has?bd.color:q.tm,fontSize:'9px',fontWeight:'700',lineHeight:'1.3'}},bd.name));
       bcard.appendChild(el('div',{style:{color:q.tm,fontSize:'8px',marginTop:'2px',lineHeight:'1.4'}},bd.desc));
       if(!has)bcard.appendChild(el('div',{style:{position:'absolute',top:'4px',right:'4px',fontSize:'8px',color:q.tm}},'🔒'));
-      if(has&&S.isAdmin){bcard.appendChild(el('button',{style:{position:'absolute',top:'2px',right:'2px',background:'none',border:'none',color:'#f44',cursor:'pointer',fontSize:'9px'},onclick:(e)=>{e.stopPropagation();const nb=earned.filter(x=>x!==bd.id);DB.updUser(u.email,{badges:nb});rMyAcct();}},'✕'));}
+      if(has&&S.isAdmin){bcard.appendChild(el('button',{style:{position:'absolute',top:'2px',right:'2px',background:'none',border:'none',color:'#f44',cursor:'pointer',fontSize:'9px'},onclick:async (e)=>{e.stopPropagation();const nb=earned.filter(x=>x!==bd.id);await DB.updUser(u.email,{badges:nb});rMyAcct();}},'✕'));}
       bgrid.appendChild(bcard);
-    });
+    
+}
     catSec.appendChild(bgrid);bc.appendChild(catSec);
-  });
+  
+}
   if(S.isAdmin)bc.appendChild(el('div',{style:{color:q.tm,fontSize:'9px',marginTop:'4px'}},'Admin: Grant badge manual via User Admin panel.'));
   c.appendChild(bc);
   // Find Users
   const nc=gc({padding:'18px'});nc.appendChild(el('div',{style:{color:q.ac,fontSize:'11px',fontWeight:'700',marginBottom:'10px'}},'🔍 Find Users'));
-  allUsers.forEach(user=>{const isF=friends.some(f=>f.email===user.email);const sentR=(DB.byEmail(user.email)?.friendRequests||[]).includes(u.email);const row=el('div',{style:{display:'flex',alignItems:'center',gap:'9px',padding:'7px 0',borderBottom:`1px solid ${q.sb}`}});row.appendChild(avEl(user,32));row.appendChild(el('div',{style:{flex:'1'}},el('div',{style:{color:q.tx,fontSize:'12px',fontWeight:'600'}},user.username),el('div',{style:{color:q.tm,fontSize:'10px'}},user.email)));let ab;if(isF)ab=btn('✅ Friends',null,true,{fontSize:'10px',padding:'3px 8px',cursor:'default',opacity:'.6'});else if(sentR)ab=btn('⏳ Sent',null,true,{fontSize:'10px',padding:'3px 8px',cursor:'default',opacity:'.6'});else ab=btn('➕ '+T('addFriend'),()=>{const ok=DB.sendFR(u.email,user.email);notif(ok?'✅ Request sent!':'⚠️ Already sent.',ok?'success':'error');rMyAcct();},false,{fontSize:'10px',padding:'3px 8px'});row.appendChild(el('div',{style:{display:'flex',gap:'4px'}},btn('👤',()=>{S.usrSel=user;goTo('userprofile');},true,{fontSize:'10px',padding:'3px 7px'}),ab));nc.appendChild(row);});
+  for(const user of allUsers){const isF=friends.some(f=>f.email===user.email);const sentR=false;const row=el('div',{style:{display:'flex',alignItems:'center',gap:'9px',padding:'7px 0',borderBottom:`1px solid ${q.sb}`}});row.appendChild(avEl(user,32));row.appendChild(el('div',{style:{flex:'1'}},el('div',{style:{color:q.tx,fontSize:'12px',fontWeight:'600'}},user.username),el('div',{style:{color:q.tm,fontSize:'10px'}},user.email)));let ab;if(isF)ab=btn('✅ Friends',null,true,{fontSize:'10px',padding:'3px 8px',cursor:'default',opacity:'.6'});else if(sentR)ab=btn('⏳ Sent',null,true,{fontSize:'10px',padding:'3px 8px',cursor:'default',opacity:'.6'});else ab=btn('➕ '+T('addFriend'),async ()=>{const ok=await DB.sendFR(u.email,user.email);notif(ok?'✅ Request sent!':'⚠️ Already sent.',ok?'success':'error');rMyAcct();},false,{fontSize:'10px',padding:'3px 8px'});row.appendChild(el('div',{style:{display:'flex',gap:'4px'}},btn('👤',()=>{S.usrSel=user;goTo('userprofile');},true,{fontSize:'10px',padding:'3px 7px'}),ab));nc.appendChild(row);}
   c.appendChild(nc);
 }
 
 // ── WALLET TOP-UP (Requires Admin Approval) ───────────────────
-function openTopUp(){
+async function openTopUp(){
   const q=t();const m=document.getElementById('m-tu');m.style.display='flex';m.innerHTML='';
-  const u=DB.byEmail(S.user.email);let topupAmt='';let topupNote='';
-  const myReqs=DB.getTopUpReqs().filter(r=>r.userEmail===S.user.email).sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt)).slice(0,5);
+  const u=await DB.byId(S.user.id);let topupAmt='';let topupNote='';
+  const myReqs=(await DB.getTopUpReqs()).filter(r=>r.userEmail===S.user.email).sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt)).slice(0,5);
   const render=()=>{
     m.innerHTML='';
     const card=gc({padding:'28px',width:'380px',maxWidth:'94vw',position:'relative',borderRadius:'18px',maxHeight:'90vh',overflowY:'auto'});
@@ -1108,10 +1401,10 @@ function openTopUp(){
     noteI.value=topupNote;noteI.oninput=e=>{topupNote=e.target.value;};card.appendChild(noteI);
     const total=parseFloat(topupAmt)||0;
     if(total>0)card.appendChild(gc({padding:'10px',margin:'10px 0',display:'flex',justifyContent:'space-between',alignItems:'center'},el('span',{style:{color:q.tm,fontSize:'12px'}},'Requesting'),el('span',{style:{color:q.ac,fontWeight:'900',fontSize:'18px'}},'$'+total.toFixed(2))));
-    card.appendChild(btn('📩 Submit Request',()=>{
+    card.appendChild(btn('📩 Submit Request',async ()=>{
       const amt=parseFloat(inp.value||topupAmt);
       if(!amt||amt<=0||amt>100000){notif('Enter valid amount (max $100,000).','error');return;}
-      DB.addTopUpReq({userEmail:S.user.email,userName:S.user.username,amount:amt,note:noteI.value.trim()});
+      await DB.addTopUpReq({userEmail:S.user.email,userName:S.user.username,amount:amt,note:noteI.value.trim()});
       closeM('m-tu');rMyAcct();notif('✅ Top-up request submitted! Awaiting Admin approval.','success');
     },false,{width:'100%',marginTop:'6px',fontSize:'13px',padding:'10px'}));
     // Show past requests
@@ -1126,14 +1419,15 @@ function openTopUp(){
 }
 
 // ── WALLET ADMIN PANEL ────────────────────────────────────────
-function rWalletAdmin(container){
-  const q=t();const reqs=DB.getPendingTopUps();
-  const allReqs=DB.getTopUpReqs().sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+async function rWalletAdmin(container){
+  const q=t();const reqs=await DB.getPendingTopUps();
+  const allReqs=await DB.getTopUpReqs().sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
   container.appendChild(el('div',{style:{color:q.ac,fontSize:'12px',fontWeight:'700',marginBottom:'12px'}},'💳 Top-Up Requests'+(reqs.length?' ('+reqs.length+' pending)':'')));
   if(!allReqs.length){container.appendChild(el('div',{style:{color:q.tm,fontSize:'12px',textAlign:'center',padding:'20px'}},'No top-up requests yet.'));return;}
   const SC={pending:'#ffb74d',approved:'#64dc64',rejected:'#f44'};
-  allReqs.forEach(r=>{
-    const sc=SC[r.status]||q.ac;const u=DB.byEmail(r.userEmail);
+  for(const r of allReqs){
+
+    const sc=SC[r.status]||q.ac;const u=await DB.byEmail(r.userEmail);
     const card=gc({padding:'14px',marginBottom:'9px',border:`1px solid ${sc}44`});
     const row1=el('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'7px'}});
     row1.appendChild(el('div',{},el('div',{style:{color:q.tx,fontSize:'13px',fontWeight:'700'}},r.userName+' · $'+r.amount.toFixed(2)),el('div',{style:{color:q.tm,fontSize:'10px'}},fdate(r.createdAt)+(r.note?' · '+r.note:''))));
@@ -1141,19 +1435,20 @@ function rWalletAdmin(container){
     card.appendChild(row1);
     if(r.status==='pending'){
       const brow=el('div',{style:{display:'flex',gap:'6px'}});
-      brow.appendChild(btn('✅ Approve',()=>{const w=(u?.wallet||0)+r.amount;DB.updUser(r.userEmail,{wallet:w});DB.updTopUpReq(r.id,{status:'approved',processedBy:'admin'});rWalletAdminPage();notif('✅ $'+r.amount.toFixed(2)+' added to '+r.userName,'success');},false,{fontSize:'11px',padding:'4px 10px'}));
-      brow.appendChild(btn('✕ Reject',()=>{DB.updTopUpReq(r.id,{status:'rejected',processedBy:'admin'});rWalletAdminPage();notif('❌ Request rejected.','error');},true,{fontSize:'11px',padding:'4px 8px',borderColor:'#f44',color:'#f88'}));
+      brow.appendChild(btn('✅ Approve',async ()=>{const w=(u?.wallet||0)+r.amount;await DB.updUser(r.userEmail,{wallet:w});await DB.updTopUpReq(r.id,{status:'approved',processedBy:'admin'});rWalletAdminPage();notif('✅ $'+r.amount.toFixed(2)+' added to '+r.userName,'success');},false,{fontSize:'11px',padding:'4px 10px'}));
+      brow.appendChild(btn('✕ Reject',async ()=>{await DB.updTopUpReq(r.id,{status:'rejected',processedBy:'admin'});rWalletAdminPage();notif('❌ Request rejected.','error');},true,{fontSize:'11px',padding:'4px 8px',borderColor:'#f44',color:'#f88'}));
       card.appendChild(brow);
     }
     container.appendChild(card);
-  });
+  
 }
-function rWalletAdminPage(){S.dtab='wallet';rDash();}
+}
+async function rWalletAdminPage(){S.dtab='wallet';rDash();}
 // ── USER PROFILE ──────────────────────────────────────────────
-function rUserProfile(){
+async function rUserProfile(){
   const q=t();const c=document.getElementById('page-userprofile');c.innerHTML='';
   if(!S.usrSel){goTo('myaccount');return;}
-  const u=DB.byEmail(S.usrSel.email)||S.usrSel;const me=S.loggedIn?DB.byEmail(S.user.email):null;
+  const u=await DB.byEmail(S.usrSel.email)||S.usrSel;const me=S.loggedIn?DB.byId(S.user.id):null;
   const isF=me&&(me.friends||[]).includes(u.email);const sentR=(u.friendRequests||[]).includes(me?.email);
   c.appendChild(btn('← Back',()=>goTo('myaccount'),true,{marginBottom:'18px'}));
   const card=gc({borderRadius:'14px',overflow:'hidden',marginBottom:'16px'});
@@ -1164,18 +1459,18 @@ function rUserProfile(){
   else aw.appendChild(el('div',{style:{width:'76px',height:'76px',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'34px',background:q.as,border:`3px solid ${q.ac}`,color:q.ac}},u.username[0].toUpperCase()));
   aw.appendChild(el('div',{style:{position:'absolute',bottom:'2px',right:'2px',width:'14px',height:'14px',borderRadius:'50%',background:u.online?'#64dc64':'#555',border:`2px solid ${q.cb}`}}));
   ir.appendChild(aw);ir.appendChild(el('h1',{style:{color:q.tx,fontSize:'22px',fontWeight:'800',margin:'0 0 3px'}},u.username));ir.appendChild(el('div',{style:{color:u.online?'#64dc64':q.tm,fontSize:'11px',marginBottom:'7px'}},u.online?'🟢 '+T('online'):'⚫ '+ago(u.lastSeen||new Date().toISOString())));ir.appendChild(el('div',{style:{color:q.tm,fontSize:'12px',lineHeight:'1.6',marginBottom:'12px'}},u.bio||'No bio.'));ir.appendChild(el('div',{style:{display:'flex',gap:'18px',marginBottom:'14px'}},el('div',{style:{textAlign:'center'}},el('div',{style:{color:q.ac,fontWeight:'800',fontSize:'16px'}},(u.friends||[]).length),el('div',{style:{color:q.tm,fontSize:'10px'}},T('friends'))),el('div',{style:{textAlign:'center'}},el('div',{style:{color:q.ac,fontWeight:'700',fontSize:'12px'}},fdate(u.joinDate)),el('div',{style:{color:q.tm,fontSize:'10px'}},'Joined'))));
-  if(S.loggedIn&&me){const bd=el('div',{style:{display:'flex',gap:'7px',flexWrap:'wrap'}});if(isF){bd.appendChild(btn('💬 '+T('chat'),()=>openChatWith(u)));bd.appendChild(btn('✅ Friends',null,true,{cursor:'default',opacity:'.7'}));}else if(sentR)bd.appendChild(btn('⏳ Request Sent',null,true,{cursor:'default',opacity:'.7'}));else bd.appendChild(btn('➕ '+T('addFriend'),()=>{const ok=DB.sendFR(me.email,u.email);notif(ok?'✅ Request sent!':'⚠️ Already sent.',ok?'success':'error');rUserProfile();}));ir.appendChild(bd);}
+  if(S.loggedIn&&me){const bd=el('div',{style:{display:'flex',gap:'7px',flexWrap:'wrap'}});if(isF){bd.appendChild(btn('💬 '+T('chat'),()=>openChatWith(u)));bd.appendChild(btn('✅ Friends',null,true,{cursor:'default',opacity:'.7'}));}else if(sentR)bd.appendChild(btn('⏳ Request Sent',null,true,{cursor:'default',opacity:'.7'}));else bd.appendChild(btn('➕ '+T('addFriend'),async ()=>{const ok=await DB.sendFR(me.email,u.email);notif(ok?'✅ Request sent!':'⚠️ Already sent.',ok?'success':'error');rUserProfile();}));ir.appendChild(bd);}
   card.appendChild(ir);c.appendChild(card);
 }
 // ── CHAT SYSTEM ───────────────────────────────────────────────
 let chatRefT=null,chatBadgeT=null;
-function getTotalUnread(){
+async function getTotalUnread(){
   if(!S.loggedIn||!S.user)return{total:0,friend:0,service:0};
-  const me=DB.byEmail(S.user.email);
+  const me=await DB.byId(S.user.id);
   const friends=(me.friends||[]);
   let friend=0;
-  friends.forEach(fe=>{const room=roomId(me.email,fe);const msgs=DB.getMsgs(room);friend+=msgs.filter(m=>m.from!==me.email&&!m.read).length;});
-  const adminMsgs=DB.getAdminMsgs();
+  for(const fe of friends){const room=roomId(me.email,fe);const msgs=await DB.getMsgs(room);friend+=msgs.filter(m=>m.from!==me.email&&!m.read).length;}
+  const adminMsgs=await DB.getAdminMsgs();
   const service=S.isAdmin?adminMsgs.filter(m=>!m.read).length:adminMsgs.filter(m=>m.from===me.email&&m.reply&&!m.replyRead).length;
   return{total:friend+service,friend,service};
 }
@@ -1219,31 +1514,33 @@ function rChatPanel(){
   updChatBadge();
 }
 
-function rChatFriends(box,q){
-  const me=DB.byEmail(S.user.email);const friends=(me.friends||[]).map(e=>DB.byEmail(e)).filter(Boolean);
+async function rChatFriends(box,q){
+  const me=await DB.byId(S.user.id);const friends=(me.friends||[]).map(e=>DB.byEmail(e)).filter(Boolean);
   if(!S.chatRoom){
     if(!friends.length){box.appendChild(el('div',{style:{flex:'1',display:'flex',alignItems:'center',justifyContent:'center',color:q.tm,fontSize:'11px',textAlign:'center',padding:'18px',lineHeight:'1.7'}},'No friends yet.\nAdd friends in My Account to start chatting.'));return;}
     const list=el('div',{style:{flex:'1',overflowY:'auto',padding:'7px'}});
-    friends.forEach(f=>{
-      const room=roomId(me.email,f.email);const msgs=DB.getMsgs(room);const last=msgs.length?msgs[msgs.length-1]:null;
+    for(const f of friends){
+
+      const room=roomId(me.email,f.email);const msgs=await DB.getMsgs(room);const last=msgs.length?msgs[msgs.length-1]:null;
       const unread=msgs.filter(mm=>mm.from!==me.email&&!mm.read).length;
-      const row=el('div',{style:{display:'flex',alignItems:'center',gap:'9px',padding:'9px',borderRadius:'9px',cursor:'pointer',transition:'.18s',marginBottom:'2px'},onclick:()=>{S.chatRoom=room;S.chatTarget=f;const m2=DB.getMsgs(room);m2.forEach(mm=>{if(mm.from!==me.email)mm.read=true;});DB.saveMsgs(room,m2);rChatPanel();}});
+      const row=el('div',{style:{display:'flex',alignItems:'center',gap:'9px',padding:'9px',borderRadius:'9px',cursor:'pointer',transition:'.18s',marginBottom:'2px'},onclick:async ()=>{S.chatRoom=room;S.chatTarget=f;const m2=await DB.getMsgs(room);m2.forEach(mm=>{if(mm.from!==me.email)mm.read=true;});DB.saveMsgs(room,m2);rChatPanel();}});
       row.onmouseenter=()=>row.style.background=q.sur;row.onmouseleave=()=>row.style.background='transparent';
       row.appendChild(el('div',{style:{position:'relative',flexShrink:'0'}},avEl(f,36),el('div',{class:'dot-s '+(f.online?'on':'off'),style:{position:'absolute',bottom:'0',right:'0',border:`2px solid ${q.cb}`}})));
       row.appendChild(el('div',{style:{flex:'1',minWidth:'0'}},el('div',{style:{color:q.tx,fontSize:'12px',fontWeight:'600',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}},f.username),el('div',{style:{color:q.tm,fontSize:'10px',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}},last?(last.img?'📷 Photo':last.text.slice(0,28)+'...'):T('startChat'))));
       if(unread>0)row.appendChild(el('div',{style:{background:q.ac,color:'#000',borderRadius:'50%',width:'16px',height:'16px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'9px',fontWeight:'700',flexShrink:'0'}},unread));
       list.appendChild(row);
-    });
+    
+}
     box.appendChild(list);
   } else {
     const f=S.chatTarget;const room=S.chatRoom;
     const hdr2=el('div',{style:{padding:'9px 11px',borderBottom:`1px solid ${q.sb}`,display:'flex',alignItems:'center',gap:'9px',flexShrink:'0'}});
-    hdr2.appendChild(el('button',{style:{background:'none',border:'none',color:q.ac,cursor:'pointer',fontSize:'15px',padding:'1px 3px'},onclick:()=>{S.chatRoom=null;S.chatTarget=null;rChatPanel();}},'←'));
+    hdr2.appendChild(el('button',{style:{background:'none',border:'none',color:q.ac,cursor:'pointer',fontSize:'15px',padding:'1px 3px'},onclick:async ()=>{S.chatRoom=null;S.chatTarget=null;rChatPanel();}},'←'));
     hdr2.appendChild(el('div',{style:{position:'relative'}},avEl(f,32),el('div',{class:'dot-s '+(f.online?'on':'off'),style:{position:'absolute',bottom:'0',right:'0',border:`2px solid ${q.cb}`}})));
     hdr2.appendChild(el('div',{style:{flex:'1'}},el('div',{style:{color:q.tx,fontSize:'12px',fontWeight:'700'}},f.username),el('div',{style:{color:f.online?'#64dc64':q.tm,fontSize:'10px'}},f.online?T('online'):T('offline'))));
-    hdr2.appendChild(el('button',{style:{background:'none',border:'none',color:q.tm,cursor:'pointer',fontSize:'14px'},onclick:()=>{S.cpopen=false;box.style.display='none';S.chatRoom=null;S.chatTarget=null;if(chatRefT){clearInterval(chatRefT);chatRefT=null;}}},'✕'));
+    hdr2.appendChild(el('button',{style:{background:'none',border:'none',color:q.tm,cursor:'pointer',fontSize:'14px'},onclick:async ()=>{S.cpopen=false;box.style.display='none';S.chatRoom=null;S.chatTarget=null;if(chatRefT){clearInterval(chatRefT);chatRefT=null;}}},'✕'));
     box.appendChild(hdr2);
-    const msgs=DB.getMsgs(room);
+    const msgs=await DB.getMsgs(room);
     const md=el('div',{style:{flex:'1',overflowY:'auto',padding:'11px',display:'flex',flexDirection:'column',gap:'3px'}});
     if(!msgs.length)md.appendChild(el('div',{style:{textAlign:'center',color:q.tm,fontSize:'11px',marginTop:'18px'}},T('startChat')+' with '+f.username));
     msgs.forEach(msg=>{
@@ -1251,12 +1548,12 @@ function rChatFriends(box,q){
       const bbl=el('div',{class:`cmsg ${isMe?'me':''}`});
       if(!isMe)bbl.appendChild(avEl(f,24));
       const ct=el('div',{class:'cbubble',style:{background:isMe?q.mm:q.mo,color:q.tx,borderRadius:isMe?'11px 11px 2px 11px':'11px 11px 11px 2px'}});
-      if(msg.img){const im=el('img',{src:msg.img});im.onclick=()=>{const mv=document.getElementById('m-iv');mv.style.display='flex';mv.innerHTML='';mv.appendChild(el('img',{src:msg.img,style:{maxWidth:'92vw',maxHeight:'88vh',borderRadius:'11px',objectFit:'contain'}}));};ct.appendChild(im);}
+      if(msg.img){const im=el('img',{src:msg.img});im.onclick=async ()=>{const mv=document.getElementById('m-iv');mv.style.display='flex';mv.innerHTML='';mv.appendChild(el('img',{src:msg.img,style:{maxWidth:'92vw',maxHeight:'88vh',borderRadius:'11px',objectFit:'contain'}}));};ct.appendChild(im);}
       if(msg.text)ct.appendChild(el('div',{},msg.text));
       ct.appendChild(el('div',{style:{color:'rgba(255,255,255,.3)',fontSize:'9px',marginTop:'2px',textAlign:isMe?'right':'left'}},ago(msg.time)));
       bbl.appendChild(ct);if(isMe)bbl.appendChild(avEl(me,24));md.appendChild(bbl);
     });
-    box.appendChild(md);setTimeout(()=>{md.scrollTop=md.scrollHeight;},25);
+    box.appendChild(md);setTimeout(async ()=>{md.scrollTop=md.scrollHeight;},25);
     const ir=el('div',{style:{padding:'7px 9px',borderTop:`1px solid ${q.sb}`,display:'flex',gap:'5px',alignItems:'center',flexShrink:'0'}});
     const inp=el('input',{type:'text',placeholder:'Type message...',style:{flex:'1',padding:'7px 10px',borderRadius:'20px',background:q.ib,border:`1px solid ${q.sb}`,color:q.tx,fontSize:'11px',outline:'none'}});
     inp.value=S.chatDraft[room]||'';inp.oninput=e=>{S.chatDraft[room]=e.target.value;};
@@ -1266,13 +1563,13 @@ function rChatFriends(box,q){
     ir.appendChild(el('button',{style:{background:q.bb,border:`1px solid ${q.bc}`,color:q.bt,borderRadius:'20px',padding:'5px 12px',fontSize:'11px',cursor:'pointer',fontWeight:'600'},onclick:sendMsg},'→'));
     box.appendChild(ir);
     if(chatRefT)clearInterval(chatRefT);
-    chatRefT=setInterval(()=>{if(S.cpopen&&S.chatRoom&&S.chatTab==='friends')rChatPanel();},4000);
+    chatRefT=setInterval(async ()=>{if(S.cpopen&&S.chatRoom&&S.chatTab==='friends')rChatPanel();},4000);
   }
 }
 
-function rChatSupport(box,q){
-  const me=DB.byEmail(S.user.email);const isAdmin=S.isAdmin;
-  const msgs=DB.getAdminMsgs();
+async function rChatSupport(box,q){
+  const me=await DB.byId(S.user.id);const isAdmin=S.isAdmin;
+  const msgs=await DB.getAdminMsgs();
   const myMsgs=isAdmin?msgs:msgs.filter(m=>m.from===me.email);
   const hdr2=el('div',{style:{padding:'8px 12px',borderBottom:`1px solid ${q.sb}`,flexShrink:'0'}});
   hdr2.appendChild(el('div',{style:{color:q.ac,fontSize:'11px',fontWeight:'700'}},isAdmin?'📬 All User Messages':'📩 '+T('directMsg')));
@@ -1281,8 +1578,9 @@ function rChatSupport(box,q){
   const ml=el('div',{style:{flex:'1',overflowY:'auto',padding:'9px'}});
   const TC={complaint:'#f44',suggestion:'#81c784',partnership:'#4fc3f7',inquiry:'#ffb74d'};
   if(!myMsgs.length)ml.appendChild(el('div',{style:{textAlign:'center',color:q.tm,fontSize:'11px',padding:'20px',lineHeight:'1.7'}},'No messages yet.'+(isAdmin?'':'\nUse the form below to contact Admin.')));
-  myMsgs.slice().reverse().forEach(msg=>{
-    const sender=DB.byEmail(msg.from);const tc=TC[msg.msgType]||q.ac;
+  for(const msg of [...myMsgs].reverse()){
+
+    const sender=await DB.byEmail(msg.from);const tc=TC[msg.msgType]||q.ac;
     const card=el('div',{style:{background:q.sur,borderRadius:'9px',padding:'10px',marginBottom:'7px',border:`1px solid ${tc}44`}});
     const topR=el('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'6px'}});
     topR.appendChild(el('div',{style:{display:'flex',alignItems:'center',gap:'7px'}},avEl(sender||{username:msg.fromName||'User'},26),el('div',{},el('div',{style:{color:q.tx,fontSize:'11px',fontWeight:'700'}},msg.fromName||'Unknown'),el('div',{style:{color:q.tm,fontSize:'9px'}},ago(msg.time)))));
@@ -1291,12 +1589,13 @@ function rChatSupport(box,q){
     card.appendChild(el('div',{style:{color:q.tx,fontSize:'11px',lineHeight:'1.5',marginBottom:'6px'}},msg.text));
     if(isAdmin&&!msg.replied){
       const ri=el('input',{type:'text',placeholder:'Reply to this message...',style:{width:'100%',padding:'5px 9px',borderRadius:'7px',background:q.ib,border:`1px solid ${q.sb}`,color:q.tx,fontSize:'11px',outline:'none',marginBottom:'5px'}});
-      const rb=btn('↩ Reply',()=>{const txt=ri.value.trim();if(!txt)return;DB.updAdminMsg(msg.id,{reply:txt,replied:true,repliedAt:new Date().toISOString()});rChatPanel();notif('✅ Reply sent!','success');},false,{fontSize:'10px',padding:'3px 9px'});
+      const rb=btn('↩ Reply',async ()=>{const txt=ri.value.trim();if(!txt)return;await DB.updAdminMsg(msg.id,{reply:txt,replied:true,repliedAt:new Date().toISOString()});rChatPanel();notif('✅ Reply sent!','success');},false,{fontSize:'10px',padding:'3px 9px'});
       card.appendChild(ri);card.appendChild(rb);
     }
     if(msg.reply){card.appendChild(el('div',{style:{marginTop:'7px',padding:'7px 9px',background:q.as,borderRadius:'7px',border:`1px solid ${q.ac}`}},el('div',{style:{color:q.ac,fontSize:'9px',fontWeight:'700',marginBottom:'3px'}},'↩ ADMIN REPLY'),el('div',{style:{color:q.tx,fontSize:'11px'}},msg.reply)));}
     ml.appendChild(card);
-  });
+  
+}
   box.appendChild(ml);
   if(!isAdmin){
     const frm=el('div',{style:{padding:'9px',borderTop:`1px solid ${q.sb}`,flexShrink:'0'}});
@@ -1309,16 +1608,16 @@ function rChatSupport(box,q){
   }
 }
 
-function sendMsg(){
+async function sendMsg(){
   if(!S.loggedIn||!S.chatRoom)return;
   const draft=S.chatDraft[S.chatRoom]||'';if(!draft.trim())return;
-  DB.addMsg(S.chatRoom,{from:S.user.email,text:draft.trim(),time:new Date().toISOString(),read:false});
+  await DB.addMsg(S.chatRoom,{from:S.user.email,text:draft.trim(),time:new Date().toISOString(),read:false});
   S.chatDraft[S.chatRoom]='';rChatPanel();
 }
-function onFiCimg(e){const f=e.target.files[0];if(!f||!S.chatRoom)return;rf(f).then(d=>{DB.addMsg(S.chatRoom,{from:S.user.email,img:d,text:'',time:new Date().toISOString(),read:false});rChatPanel();});e.target.value='';}
-function openChatWith(user){
+async function onFiCimg(e){const f=e.target.files[0];if(!f||!S.chatRoom)return;const d=await rf(f);await DB.addMsg(S.chatRoom,{from:S.user.email,img:d,text:'',time:new Date().toISOString(),read:false});rChatPanel();e.target.value='';}
+async function openChatWith(user){
   if(!S.loggedIn){openAuthM();return;}
-  const me=DB.byEmail(S.user.email);if(!(me.friends||[]).includes(user.email)){notif('⚠️ Can only chat with friends.','error');return;}
+  const me=await DB.byId(S.user.id);if(!(me.friends||[]).includes(user.email)){notif('⚠️ Can only chat with friends.','error');return;}
   S.chatRoom=roomId(me.email,user.email);S.chatTarget=user;S.chatTab='friends';S.cpopen=true;S.spopen=false;
   document.getElementById('spbox').style.display='none';
   const box=document.getElementById('cpbox');box.style.display='flex';rChatPanel();
@@ -1430,7 +1729,7 @@ function updParticles(){
 window.addEventListener('resize',()=>{const c=document.getElementById('pcan');if(S.fx){c.width=innerWidth;c.height=innerHeight;}});
 
 // ── BG / FILE UPLOADS ─────────────────────────────────────────
-function applySeasonBg(){
+async function applySeasonBg(){
   if(S.customBg)return;
   const seasonBg={
     Spring:'linear-gradient(135deg,#2d1020,#3d1535,#1a0828)',
@@ -1440,13 +1739,34 @@ function applySeasonBg(){
   };
   document.body.style.background=seasonBg[S.season]||t().bg;
 }
-function applyBgGradient(grad){if(!S.customBg)document.body.style.background=grad;}
-function onFiBg(e){const f=e.target.files[0];if(!f)return;const url=URL.createObjectURL(f);S.customBg={type:f.type.startsWith('video')?'video':'image',url,name:f.name};applyCustomBg();e.target.value='';rSPanel();}
-function onFiBgv(e){const f=e.target.files[0];if(!f)return;const url=URL.createObjectURL(f);S.customBg={type:'video',url,name:f.name};applyCustomBg();e.target.value='';rSPanel();}
-function applyCustomBg(){const old=document.getElementById('_cbg');if(old)old.remove();if(!S.customBg)return;const l=document.createElement(S.customBg.type==='video'?'video':'div');l.id='_cbg';l.style.cssText='position:fixed;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;pointer-events:none;';if(S.customBg.type==='video'){l.src=S.customBg.url;l.autoplay=true;l.loop=true;l.muted=true;l.style.opacity='.38';}else{l.style.backgroundImage=`url(${S.customBg.url})`;l.style.backgroundSize='cover';l.style.backgroundPosition='center';l.style.opacity='.28';}document.getElementById('app').insertBefore(l,document.getElementById('app').firstChild);}
-function rmCustomBg(){S.customBg=null;const o=document.getElementById('_cbg');if(o)o.remove();document.body.style.background=t().bg;rSPanel();}
-function onFiAv(e){const f=e.target.files[0];if(!f)return;openCropModal(f,'avatar');e.target.value='';}
-function onFiCp(e){const f=e.target.files[0];if(!f)return;openCropModal(f,'cover');e.target.value='';}
+async function applyBgGradient(grad){if(!S.customBg)document.body.style.background=grad;}
+async function onFiBg(e){const f=e.target.files[0];if(!f)return;const url=URL.createObjectURL(f);S.customBg={type:f.type.startsWith('video')?'video':'image',url,name:f.name};applyCustomBg();e.target.value='';rSPanel();}
+async function onFiBgv(e){const f=e.target.files[0];if(!f)return;const url=URL.createObjectURL(f);S.customBg={type:'video',url,name:f.name};applyCustomBg();e.target.value='';rSPanel();}
+async function applyCustomBg(){const old=document.getElementById('_cbg');if(old)old.remove();if(!S.customBg)return;const l=document.createElement(S.customBg.type==='video'?'video':'div');l.id='_cbg';l.style.cssText='position:fixed;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;pointer-events:none;';if(S.customBg.type==='video'){l.src=S.customBg.url;l.autoplay=true;l.loop=true;l.muted=true;l.style.opacity='.38';}else{l.style.backgroundImage=`url(${S.customBg.url})`;l.style.backgroundSize='cover';l.style.backgroundPosition='center';l.style.opacity='.28';}document.getElementById('app').insertBefore(l,document.getElementById('app').firstChild);}
+async function rmCustomBg(){S.customBg=null;const o=document.getElementById('_cbg');if(o)o.remove();document.body.style.background=t().bg;rSPanel();}
+async function onFiAv(e){
+  const f=e.target.files[0];if(!f)return;
+  openCropModal(f,'avatar',async(dataUrl,file)=>{
+    if(supa&&file){
+      const url=await uploadAvatar(file);
+      if(url){await DB.updUser(S.user.id,{avatar_url:url});S.user.avatar=url;S.user.avatar_url=url;applyTheme();rMyAcct();notif('✅ Foto profil diperbarui!','success');return;}
+    }
+    // Fallback: store as base64 if no Supabase
+    await DB.updUser(S.user.id,{avatar:dataUrl});S.user.avatar=dataUrl;applyTheme();rMyAcct();notif('✅ Foto profil diperbarui!','success');
+  });
+  e.target.value='';
+}
+async function onFiCp(e){
+  const f=e.target.files[0];if(!f)return;
+  openCropModal(f,'cover',async(dataUrl,file)=>{
+    if(supa&&file){
+      const url=await uploadCover(file);
+      if(url){await DB.updUser(S.user.id,{cover_url:url});S.user.cover=url;S.user.cover_url=url;rMyAcct();notif('✅ Foto cover diperbarui!','success');return;}
+    }
+    await DB.updUser(S.user.id,{cover:dataUrl});S.user.cover=dataUrl;rMyAcct();notif('✅ Foto cover diperbarui!','success');
+  });
+  e.target.value='';
+}
 
 // ── IMAGE CROP MODAL ──────────────────────────────────────────
 function openCropModal(file,target){
@@ -1571,7 +1891,7 @@ function openCropModal(file,target){
     previewBox.appendChild(el('img',{src:canvas.toDataURL('image/jpeg',.9),style:{borderRadius:isAvatar?'50%':'7px',width:isAvatar?'80px':'240px',height:isAvatar?'80px':'80px',objectFit:'fill',border:`2px solid ${q.ac}`,display:'block',margin:'0 auto'}}));
     previewBox.appendChild(el('div',{style:{color:q.tm,fontSize:'9px',marginTop:'4px'}},isAvatar?'80×80px':'240×80px (rasio 3:1)'));
   },true,{fontSize:'11px'}));
-  brow.appendChild(btn('✅ Apply Crop',()=>{
+  brow.appendChild(btn('✅ Apply Crop',async ()=>{
     if(cropW<10||cropH<10){notif('Pilih area crop terlebih dahulu!','error');return;}
     const canvas=document.createElement('canvas');
     const sx=imgEl.naturalWidth/imgEl.offsetWidth,sy=imgEl.naturalHeight/imgEl.offsetHeight;
@@ -1580,8 +1900,8 @@ function openCropModal(file,target){
     if(isAvatar){ctx.beginPath();ctx.arc(outW/2,outH/2,outW/2,0,Math.PI*2);ctx.clip();}
     ctx.drawImage(imgEl,cropX*sx,cropY*sy,cropW*sx,cropH*sy,0,0,outW,outH);
     const dataUrl=canvas.toDataURL('image/jpeg',.88);
-    if(target==='avatar'){DB.updUser(S.user.email,{avatar:dataUrl});S.user={...S.user,avatar:dataUrl};applyTheme();rMyAcct();notif('✅ Foto profil diperbarui!','success');}
-    else{DB.updUser(S.user.email,{cover:dataUrl});rMyAcct();notif('✅ Foto cover diperbarui! (rasio 3:1)','success');}
+    if(target==='avatar'){await DB.updUser(S.user.id,{avatar:dataUrl});S.user={...S.user,avatar:dataUrl};applyTheme();rMyAcct();notif('✅ Foto profil diperbarui!','success');}
+    else{await DB.updUser(S.user.id,{cover:dataUrl});rMyAcct();notif('✅ Foto cover diperbarui! (rasio 3:1)','success');}
     cleanup();
   },false,{fontSize:'11px'}));
   brow.appendChild(btn('Batal',()=>cleanup(),true,{fontSize:'11px'}));
@@ -1605,10 +1925,10 @@ const EXAM_QUESTIONS=[
   {q:'Which phrase resonates most with you?',opts:['"The future is already here, unequally distributed"','"Trust nothing, verify everything"','"What you cannot see, you cannot stop"','"Knowledge shared is power multiplied"'],scores:['Singularity Nexus','Protocol Zero','Shadow Syntax','Singularity Nexus']},
   {q:'When learning something new, you:',opts:['Study the theory and underlying models first','Look for rules and systematic frameworks','Observe others without revealing your intent','Experiment and iterate freely'],scores:['Singularity Nexus','Protocol Zero','Shadow Syntax','Shadow Syntax']},
 ];
-function rFraction(){
+async function rFraction(){
   const q=t();const c=document.getElementById('page-fraction');c.innerHTML='';
   if(!S.loggedIn){c.appendChild(el('div',{style:{textAlign:'center',padding:'70px'}},el('div',{style:{fontSize:'56px',marginBottom:'12px'}},'🔱'),el('div',{style:{color:q.tx,fontSize:'16px',fontWeight:'700',marginBottom:'8px'}},T('loginRequired')),btn('🔐 '+T('login'),openAuthM)));return;}
-  const u=DB.byEmail(S.user.email);
+  const u=await DB.byId(S.user.id);
   c.appendChild(el('h1',{style:{color:q.ac,fontSize:'22px',fontWeight:'800',marginBottom:'4px'}},'🔱 Fraction'));
   // Tabs: Info | Chat Global
   const hasFraction=!!(u.fraction&&FRACTION_DATA[u.fraction]);
@@ -1634,11 +1954,12 @@ function rFraction(){
     chatWrap.appendChild(chatHdr);
     // Messages
     const msgArea=el('div',{style:{flex:'1',overflowY:'auto',padding:'14px',display:'flex',flexDirection:'column',gap:'8px'}});
-    const allMsgs=DB.getGlobalFracChat();
+    const allMsgs=await DB.getGlobalFracChat();
     if(!allMsgs.length){msgArea.appendChild(el('div',{style:{color:q.tm,fontSize:'12px',textAlign:'center',padding:'30px'}},'Belum ada pesan. Jadilah yang pertama!'));}
-    allMsgs.forEach(msg=>{
+    for(const msg of allMsgs){
+
       const isMe=msg.userEmail===u.email;
-      const senderU=DB.byEmail(msg.userEmail);
+      const senderU=await DB.byEmail(msg.userEmail);
       const senderFrac=senderU?.fraction&&FRACTION_DATA[senderU.fraction];
       const row=el('div',{style:{display:'flex',gap:'7px',alignItems:'flex-end',flexDirection:isMe?'row-reverse':'row'}});
       // Avatar
@@ -1656,7 +1977,8 @@ function rFraction(){
       if(isMe)bubble.appendChild(el('div',{style:{color:q.tm,fontSize:'8px',textAlign:'right',marginTop:'2px'}},ago(msg.time)));
       row.appendChild(bubble);
       msgArea.appendChild(row);
-    });
+    
+}
     chatWrap.appendChild(msgArea);
     // Input
     const inputRow=el('div',{style:{display:'flex',gap:'8px',padding:'10px 14px',borderTop:`1px solid ${q.sb}`,flexShrink:'0',alignItems:'flex-end'}});
@@ -1668,9 +1990,9 @@ function rFraction(){
     c.appendChild(chatWrap);
     // Scroll to bottom
     setTimeout(()=>{msgArea.scrollTop=msgArea.scrollHeight;inp.focus();},80);
-    function sendFracMsg(){
+    async function sendFracMsg(){
       const txt=inp.value.trim();if(!txt)return;
-      DB.addFracChatMsg({userEmail:u.email,username:u.username,fraction:u.fraction,text:txt,time:new Date().toISOString()});
+      await DB.addFracChatMsg({userEmail:u.email,username:u.username,fraction:u.fraction,text:txt,time:new Date().toISOString()});
       inp.value='';S.fracPageTab='chat';rFraction();
     }
     return;
@@ -1707,14 +2029,15 @@ function rFraction(){
   }
   c.appendChild(el('div',{style:{color:q.ac,fontSize:'11px',fontWeight:'700',marginBottom:'10px'}},'🔱 SEMUA FRAKSI'));
   const allRow=el('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:'10px'}});
-  Object.entries(FRACTION_DATA).forEach(([name,fi])=>{
-    const count=DB.getUsers().filter(x=>x.fraction===name).length;
+  const _allUsersForFrac=await DB.getUsers();
+  for(const [name,fi] of Object.entries(FRACTION_DATA)){
+    const count=_allUsersForFrac.filter(x=>x.fraction===name).length;
     const card=gc({padding:'14px',border:`1px solid ${fi.color}33`});
     card.appendChild(el('div',{style:{display:'flex',alignItems:'center',gap:'8px',marginBottom:'7px'}},el('div',{style:{fontSize:'24px'}},fi.em),el('div',{style:{color:fi.color,fontSize:'13px',fontWeight:'700'}},name)));
     card.appendChild(el('div',{style:{color:q.tm,fontSize:'10px',lineHeight:'1.5',marginBottom:'6px'}},fi.desc));
     card.appendChild(el('div',{style:{color:q.ac,fontSize:'10px',fontWeight:'700'}},count+' member'+(count!==1?'s':'')));
     allRow.appendChild(card);
-  });
+  }
   c.appendChild(allRow);
 }
 
@@ -1745,7 +2068,7 @@ function openFractionExam(){
         el('div',{style:{color:fi.color,fontSize:'18px',fontWeight:'900',marginBottom:'6px'}},result),
         el('div',{style:{color:q.tm,fontSize:'12px',marginBottom:'14px'}},'Kepribadianmu cocok dengan '+result+'! '+fi.desc),
         el('div',{style:{background:`${fi.color}18`,border:`1px solid ${fi.color}`,borderRadius:'9px',padding:'11px',color:fi.color,fontSize:'11px',marginBottom:'16px'}},'Hasil ini akan dikirim ke Admin untuk ditinjau. Fraksimu akan ditetapkan setelah disetujui.'),
-        btn('📩 Submit Hasil',()=>{DB.updUser(S.user.email,{fracExamDone:true,fracResult:result});m.style.display='none';rFraction();notif('✅ Exam submitted! Menunggu persetujuan Admin.','success');},false,{fontSize:'13px',padding:'9px 20px'}),
+        btn('📩 Submit Hasil',async ()=>{await DB.updUser(S.user.id,{fracExamDone:true,fracResult:result});m.style.display='none';rFraction();notif('✅ Exam submitted! Menunggu persetujuan Admin.','success');},false,{fontSize:'13px',padding:'9px 20px'}),
         el('button',{style:{display:'block',margin:'8px auto 0',background:'none',border:'none',color:q.tm,fontSize:'11px',cursor:'pointer'},onclick:()=>{m.style.display='none';}},'Nanti saja')
       ));
     }
@@ -1754,7 +2077,7 @@ function openFractionExam(){
 }
 
 // ── CHALLENGE PAGE ────────────────────────────────────────────
-function rChallenge(){
+async function rChallenge(){
   const q=t();const c=document.getElementById('page-challenge');c.innerHTML='';
   if(!S.loggedIn){c.appendChild(el('div',{style:{textAlign:'center',padding:'70px'}},el('div',{style:{fontSize:'56px',marginBottom:'12px'}},'🏆'),el('div',{style:{color:q.tx,fontSize:'16px',fontWeight:'700',marginBottom:'8px'}},T('loginRequired')),btn('🔐 '+T('login'),openAuthM)));return;}
   c.appendChild(el('h1',{style:{color:q.ac,fontSize:'22px',fontWeight:'800',marginBottom:'4px'}},'🏆 Challenge'));
@@ -1765,11 +2088,12 @@ function rChallenge(){
   c.appendChild(tabs2);
 
   if(S.challTab==='browse'){
-    const approved=DB.getChallenges().filter(x=>x.status==='approved');
+    const approved=(await DB.getChallenges()).filter(x=>x.status==='approved');
     if(!approved.length){c.appendChild(el('div',{style:{textAlign:'center',padding:'40px',color:q.tm}},'No challenges available yet. Be the first to contribute one!'));return;}
     const grid=el('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(240px,1fr))',gap:'12px'}});
-    approved.forEach(ch=>{
-      const u2=DB.byEmail(S.user.email);const myAttempt=(ch.attempts||[]).find(a=>a.userEmail===u2.email);
+    for(const ch of approved){
+
+      const u2=await DB.byId(S.user.id);const myAttempt=(ch.attempts||[]).find(a=>a.userEmail===u2.email);
       const TC={Knowledge:'#4fc3f7',Creative:'#f06292',Technical:'#81c784',General:'#ffb74d'};const tc=TC[ch.type]||q.ac;
       const card=gc({padding:'18px',border:`1px solid ${tc}33`,cursor:'pointer',transition:'border-color .2s'});
       card.onmouseenter=()=>card.style.borderColor=tc;card.onmouseleave=()=>card.style.borderColor=`${tc}33`;
@@ -1779,10 +2103,11 @@ function rChallenge(){
       if(ch.reward)card.appendChild(el('div',{style:{color:'#ffb74d',fontSize:'10px',fontWeight:'700',marginBottom:'9px'}},'🎁 Reward: '+ch.reward));
       card.appendChild(el('div',{style:{display:'flex',gap:'6px'}},btn(myAttempt?'🔁 Retry':'▶️ Start',()=>openQuiz(ch),false,{fontSize:'11px',padding:'5px 12px'})));
       grid.appendChild(card);
-    });c.appendChild(grid);
+    
+}c.appendChild(grid);
 
   } else if(S.challTab==='mine'){
-    const allCh=DB.getChallenges();const me=S.user.email;
+    const allCh=await DB.getChallenges();const me=S.user.email;
     const myAttempts=allCh.flatMap(ch=>(ch.attempts||[]).filter(a=>a.userEmail===me).map(a=>({...a,chTitle:ch.title,chId:ch.id})));
     myAttempts.sort((a,b)=>new Date(b.date)-new Date(a.date));
     if(!myAttempts.length){c.appendChild(el('div',{style:{textAlign:'center',padding:'40px',color:q.tm}},'No attempts yet. Browse and start a challenge!'));return;}
@@ -1792,7 +2117,7 @@ function rChallenge(){
 
   } else if(S.challTab==='create'){
     // Challenge creation form
-    const mySubmissions=DB.getChallenges().filter(x=>x.createdBy===S.user.email);
+    const mySubmissions=(await DB.getChallenges()).filter(x=>x.createdBy===S.user.email);
     c.appendChild(el('div',{style:{color:q.ac,fontSize:'11px',fontWeight:'700',marginBottom:'5px'}},'📋 Your Submissions ('+mySubmissions.length+')'));
     mySubmissions.forEach(ch=>{const SC2={pending:'#ffb74d',approved:'#64dc64',rejected:'#f44'};const sc=SC2[ch.status]||'#aaa';c.appendChild(gc({padding:'11px',marginBottom:'6px',border:`1px solid ${sc}33`},el('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center'}},el('div',{style:{color:q.tx,fontSize:'12px',fontWeight:'700'}},ch.title),el('span',{style:{background:`${sc}18`,color:sc,borderRadius:'20px',padding:'2px 8px',fontSize:'9px',fontWeight:'700'}},ch.status.toUpperCase()))));});
     c.appendChild(el('div',{style:{color:q.ac,fontSize:'11px',fontWeight:'700',marginTop:'14px',marginBottom:'10px'}},'➕ NEW CHALLENGE'));
@@ -1820,7 +2145,7 @@ function rChallenge(){
     }
     addQuestionRow();formCard.appendChild(qlist);
     formCard.appendChild(btn('➕ Add Question',()=>addQuestionRow(),true,{fontSize:'11px',marginBottom:'10px'}));
-    formCard.appendChild(btn('📩 Submit for Approval',()=>{
+    formCard.appendChild(btn('📩 Submit for Approval',async ()=>{
       const questions=[];let valid=true;
       Array.from(qlist.children).forEach(qcard=>{
         const inputs=qcard.querySelectorAll('input');const qtext=inputs[0].value.trim();
@@ -1831,16 +2156,16 @@ function rChallenge(){
       });
       if(!form.title){notif('Title required!','error');return;}
       if(!valid||!questions.length){notif('Fill all question fields (text + 4 options)','error');return;}
-      DB.addChallenge({title:form.title,type:form.type,reward:form.reward,questions,createdBy:S.user.email,createdByName:S.user.username});
+      await DB.addChallenge({title:form.title,type:form.type,reward:form.reward,questions,createdBy:S.user.email,createdByName:S.user.username});
       notif('✅ Submitted for Admin approval!','success');rChallenge();
     },false,{fontSize:'12px',padding:'9px 18px'}));
     c.appendChild(formCard);
   }
 }
-function openQuiz(ch){
+async function openQuiz(ch){
   const q=t();const m=document.getElementById('m-quiz');m.style.display='flex';m.innerHTML='';
   let step2=0;let score2=0;const total=ch.questions.length;
-  const render=()=>{
+  const render=async ()=>{
     m.innerHTML='';
     const card=gc({padding:'26px',width:'480px',maxWidth:'97vw',borderRadius:'18px',position:'relative'});
     card.appendChild(el('button',{style:{position:'absolute',top:'10px',right:'12px',background:'none',border:'none',color:q.tm,fontSize:'18px',cursor:'pointer'},onclick:()=>closeM('m-quiz')},'✕'));
@@ -1858,10 +2183,10 @@ function openQuiz(ch){
     } else {
       const pct=Math.round(score2/total*100);const passed=pct>=60;
       card.appendChild(el('div',{style:{textAlign:'center'}},el('div',{style:{fontSize:'50px',marginBottom:'8px'}},passed?'🏆':'📊'),el('div',{style:{color:passed?'#64dc64':'#ffb74d',fontSize:'22px',fontWeight:'900',marginBottom:'4px'}},pct+'%'),el('div',{style:{color:q.tx,fontSize:'14px',fontWeight:'700',marginBottom:'5px'}},passed?'Challenge Passed!':'Keep Practicing!'),el('div',{style:{color:q.tm,fontSize:'11px',marginBottom:'12px'}},'Score: '+score2+'/'+total+(passed&&ch.reward?'\n🎁 Reward: '+ch.reward:''))));
-      DB.addAttempt(ch.id,{userEmail:S.user.email,userName:S.user.username,score:pct,passed,date:new Date().toISOString()});
+      await DB.addAttempt(ch.id,{score:pct,passed});
       if(passed){
-        const u2=DB.byEmail(S.user.email);const newB=[...new Set([...(u2.badges||[]),'challenge_taker'])];
-        DB.updUser(S.user.email,{badges:newB});S.user={...S.user,badges:newB};
+        const u2=await DB.byId(S.user.id);const newB=[...new Set([...(u2.badges||[]),'challenge_taker'])];
+        await DB.updUser(S.user.id,{badges:newB});S.user={...S.user,badges:newB};
         notif('🏆 Challenge passed! Badge earned.','success');
       }
       card.appendChild(el('div',{style:{display:'flex',gap:'8px',justifyContent:'center'}},btn('🔁 Retry',()=>{step2=0;score2=0;render();},true,{fontSize:'11px'}),btn('✅ Done',()=>closeM('m-quiz'),false,{fontSize:'11px'})));
@@ -1889,21 +2214,26 @@ document.getElementById('stgl').onclick=()=>{
 };
 
 // ── INIT & LOADING ────────────────────────────────────────────
-initDB();
 let prog=0;
 const ldi=setInterval(()=>{
-  prog+=2;
-  document.getElementById('lbf').style.width=prog+'%';
-  document.getElementById('lpct').textContent=`Initializing... ${prog}%`;
-  if(prog>=100){
-    clearInterval(ldi);
-    setTimeout(()=>{
-      document.getElementById('ls').style.display='none';
-      document.getElementById('app').style.display='flex';
-      applyTheme();rHome();updateClock();
-      updParticles();startChatBadgePoll();
-      notif('✨ '+T('welcome'));
-    },400);
-  }
-},30);
-
+  prog+=3;
+  const pct=Math.min(prog,80);
+  document.getElementById('lbf').style.width=pct+'%';
+  document.getElementById('lpct').textContent='Connecting... '+pct+'%';
+  if(prog>=80){clearInterval(ldi);}
+},25);
+(async()=>{
+  try{
+    await checkSession();
+  }catch(e){console.warn('Session check failed:',e);}
+  document.getElementById('lbf').style.width='100%';
+  document.getElementById('lpct').textContent='Ready! ✨';
+  setTimeout(()=>{
+    document.getElementById('ls').style.display='none';
+    document.getElementById('app').style.display='flex';
+    applyTheme();rHome();updateClock();
+    updParticles();startChatBadgePoll();
+    renderNav();renderAuth();
+    notif('✨ '+T('welcome'));
+  },400);
+})();
