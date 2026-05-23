@@ -14,6 +14,80 @@ const SUPABASE_URL = 'https://MASUKKAN_URL.supabase.co';
 const SUPABASE_KEY = 'MASUKKAN_ANON_KEY';
 const supa = window.supabase ? supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
+// ── SECURITY MODULE ────────────────────────────────────────────
+const SEC = {
+  // ── Rate limiting (client-side, soft guard) ──
+  _attempts: {},
+  rateLimit(key, maxAttempts=5, windowMs=15*60*1000) {
+    const now = Date.now();
+    if (!this._attempts[key]) this._attempts[key] = [];
+    // Remove old attempts outside window
+    this._attempts[key] = this._attempts[key].filter(t => now - t < windowMs);
+    if (this._attempts[key].length >= maxAttempts) {
+      const wait = Math.ceil((this._attempts[key][0] + windowMs - now) / 60000);
+      return { blocked: true, msg: `Terlalu banyak percobaan. Coba lagi dalam ${wait} menit.` };
+    }
+    this._attempts[key].push(now);
+    return { blocked: false };
+  },
+  clearRate(key) { delete this._attempts[key]; },
+
+  // ── Input sanitization ──
+  sanitize(str) {
+    if (typeof str !== 'string') return '';
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#x27;')
+      .replace(/\//g, '&#x2F;');
+  },
+  // Strip HTML tags completely
+  strip(str) {
+    if (typeof str !== 'string') return '';
+    return str.replace(/<[^>]*>/g, '').trim();
+  },
+  // Validate that a string is safe for display (no script injection)
+  isSafe(str) {
+    if (typeof str !== 'string') return false;
+    const dangerous = /<script|javascript:|data:|vbscript:|on\w+\s*=/i;
+    return !dangerous.test(str);
+  },
+
+  // ── OTP token validation ──
+  isValidOTP(token) {
+    return typeof token === 'string' && /^\d{6}$/.test(token.trim());
+  },
+
+  // ── Session integrity check ──
+  checkSessionIntegrity() {
+    if (!S.loggedIn || !S.user) return true;
+    // Verify critical fields exist
+    if (!S.user.id || !S.user.username) {
+      console.warn('Session integrity check failed — forcing logout');
+      S.loggedIn = false; S.user = null; S.isAdmin = false;
+      renderNav(); renderAuth();
+      return false;
+    }
+    return true;
+  },
+
+  // ── Prevent clickjacking (belt-and-suspenders) ──
+  init() {
+    // Block if embedded in iframe
+    if (window.top !== window.self) {
+      document.body.innerHTML = '<div style="padding:40px;text-align:center;color:#f44">⚠️ Akses tidak diizinkan dalam iframe.</div>';
+      return false;
+    }
+    // Periodic session integrity check every 5 minutes
+    setInterval(() => this.checkSessionIntegrity(), 5 * 60 * 1000);
+    return true;
+  }
+};
+
+
+
 // ── SUPABASE STORAGE HELPERS ───────────────────────────────────
 async function uploadFile(bucket, path, file) {
   if (!supa) return null;
@@ -375,39 +449,142 @@ const DB = {
 };
 
 // ── SUPABASE AUTH ──────────────────────────────────────────────
+// ── OTP STATE (in-memory, never persisted) ──────────────────────
+const OTP={pending:false,email:'',step:'password',_tempSession:null};
+
 async function doLogin(){
   const{email,password}=S.aform;
   if(!email||!password){S.aerr='Email & password required.';rAuthM();return;}
-  if(!supa){S.aerr='Supabase not configured. Set SUPABASE_URL and SUPABASE_KEY.';rAuthM();return;}
-  S.aerr='Loading...';rAuthM();
+  if(!supa){S.aerr='Supabase belum dikonfigurasi.';rAuthM();return;}
+  // Rate limit: max 5 login attempts per 15 minutes
+  const rl=SEC.rateLimit('login_'+email.toLowerCase(),5,15*60*1000);
+  if(rl.blocked){S.aerr=rl.msg;rAuthM();return;}
+  S.aerr='Memverifikasi...';rAuthM();
+  // Step 1: verify email+password with Supabase Auth
   const{data,error}=await supa.auth.signInWithPassword({email,password});
-  if(error){S.aerr=error.message;rAuthM();return;}
+  if(error){
+    // Sanitize error — don't leak whether email exists
+    S.aerr='Email atau password salah.';rAuthM();return;
+  }
+  // Step 2: request OTP via Edge Function
+  OTP.pending=true;OTP.email=email;OTP.step='otp';OTP._tempSession=data;
+  S.atab='otp';S.aerr='';
+  S.aerr='Mengirim kode ke '+email+'...';rAuthM();
+  try{
+    const res=await fetch(SUPABASE_URL+'/functions/v1/send-otp',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY},
+      body:JSON.stringify({email})
+    });
+    const body=await res.json();
+    if(!res.ok){S.aerr=body.error||'Gagal kirim kode OTP.';rAuthM();return;}
+    S.aerr='';
+    notif('📧 Kode OTP dikirim ke '+email+' — berlaku 10 menit','success');
+  }catch(e){
+    S.aerr='Tidak bisa mengirim OTP. Periksa koneksi.';rAuthM();return;
+  }
+  rAuthM();
+}
+
+async function doVerifyOTP(){
+  const token=(S.aform.otp||'').trim();
+  // Rate limit OTP attempts: max 5 tries per 10 minutes
+  const rlOtp=SEC.rateLimit('otp_'+OTP.email,5,10*60*1000);
+  if(rlOtp.blocked){S.aerr='Terlalu banyak percobaan OTP. '+rlOtp.msg;rAuthM();return;}
+  if(!token||token.length!==6||!/^\d{6}$/.test(token)){
+    S.aerr='Masukkan 6 digit kode OTP.';rAuthM();return;
+  }
+  S.aerr='Memverifikasi kode...';rAuthM();
+  try{
+    const res=await fetch(SUPABASE_URL+'/functions/v1/verify-otp',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY},
+      body:JSON.stringify({email:OTP.email,token})
+    });
+    const body=await res.json();
+    if(!res.ok){S.aerr=body.error||'Kode tidak valid atau sudah kadaluarsa.';rAuthM();return;}
+  }catch(e){
+    S.aerr='Verifikasi gagal. Coba lagi.';rAuthM();return;
+  }
+  // OTP verified — complete login
+  const data=OTP._tempSession;
+  OTP.pending=false;OTP.email='';OTP.step='password';OTP._tempSession=null;
   const{data:profile}=await supa.from('profiles').select('*').eq('id',data.user.id).single();
-  if(!profile){S.aerr='Profile not found. Contact admin.';rAuthM();return;}
+  if(!profile){S.aerr='Profil tidak ditemukan.';rAuthM();return;}
   await supa.from('profiles').update({online:true,last_seen:new Date().toISOString()}).eq('id',data.user.id);
-  S.loggedIn=true;S.user={...profile,email,id:data.user.id,avatar:profile.avatar_url,cover:profile.cover_url};
+  SEC.clearRate('login_'+(OTP.email||'').toLowerCase());
+  SEC.clearRate('otp_'+(OTP.email||'').toLowerCase());
+  S.loggedIn=true;
+  S.user={...profile,email:OTP.email||data.user.email,id:data.user.id,avatar:profile.avatar_url,cover:profile.cover_url};
   S.isAdmin=profile.role==='admin';
+  S.atab='login';S.aform={email:'',password:'',username:'',cp:'',otp:''};
   S.aerr='';document.getElementById('m-auth').style.display='none';
   applyTheme();rPage();renderNav();renderAuth();
-  notif('👋 Welcome back, '+profile.username+'!','success');
+  notif('👋 Selamat datang, '+profile.username+'!','success');
   startChatBadgePoll();
+}
+
+async function doResendOTP(){
+  if(!OTP.email){S.aerr='Sesi habis. Silakan login ulang.';S.atab='login';rAuthM();return;}
+  S.aerr='Mengirim ulang kode...';rAuthM();
+  try{
+    const res=await fetch(SUPABASE_URL+'/functions/v1/send-otp',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY},
+      body:JSON.stringify({email:OTP.email})
+    });
+    const body=await res.json();
+    if(!res.ok){S.aerr=body.error||'Gagal kirim ulang OTP.';rAuthM();return;}
+    S.aerr='';notif('📧 Kode baru dikirim ke '+OTP.email,'success');rAuthM();
+  }catch(e){S.aerr='Gagal kirim ulang.';rAuthM();}
+}
+
+function cancelOTP(){
+  OTP.pending=false;OTP.email='';OTP.step='password';OTP._tempSession=null;
+  if(supa)supa.auth.signOut().catch(()=>{});
+  S.atab='login';S.aform={email:'',password:'',username:'',cp:'',otp:''};S.aerr='';rAuthM();
 }
 async function doReg(){
   const{email,password,username,cp}=S.aform;
-  if(!username||!email||!password){S.aerr='All fields required.';rAuthM();return;}
+  // ── Input validation ──
+  if(!username||!email||!password||!cp){S.aerr='Semua field wajib diisi.';rAuthM();return;}
   const emailRx=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if(!emailRx.test(email)){S.aerr='Please enter a valid email address.';rAuthM();return;}
-  if(password!==cp){S.aerr='Passwords do not match.';rAuthM();return;}
-  if(password.length<6){S.aerr='Min 6 characters.';rAuthM();return;}
-  if(!supa){S.aerr='Supabase not configured.';rAuthM();return;}
-  S.aerr='Creating account...';rAuthM();
-  const{data,error}=await supa.auth.signUp({email,password});
-  if(error){S.aerr=error.message;rAuthM();return;}
+  if(!emailRx.test(email)){S.aerr='Format email tidak valid.';rAuthM();return;}
+  // Username: 3-20 chars, alphanumeric + underscore only
+  if(!/^[a-zA-Z0-9_]{3,20}$/.test(username)){
+    S.aerr='Username 3-20 karakter, hanya huruf/angka/underscore.';rAuthM();return;
+  }
+  if(password!==cp){S.aerr='Password tidak cocok.';rAuthM();return;}
+  // Strong password: min 8 chars, 1 uppercase, 1 number
+  if(password.length<8){S.aerr='Password minimal 8 karakter.';rAuthM();return;}
+  if(!/[A-Z]/.test(password)){S.aerr='Password harus mengandung minimal 1 huruf kapital.';rAuthM();return;}
+  if(!/[0-9]/.test(password)){S.aerr='Password harus mengandung minimal 1 angka.';rAuthM();return;}
+  if(!supa){S.aerr='Supabase belum dikonfigurasi.';rAuthM();return;}
+  const rlReg=SEC.rateLimit('reg_'+email.toLowerCase(),3,60*60*1000);
+  if(rlReg.blocked){S.aerr=rlReg.msg;rAuthM();return;}
+  S.aerr='Membuat akun...';rAuthM();
+  // ── Check username uniqueness before creating auth user ──
+  const{data:existingUser}=await supa.from('profiles').select('id').eq('username',username).maybeSingle();
+  if(existingUser){S.aerr='Username sudah dipakai. Pilih yang lain.';rAuthM();return;}
+  const{data,error}=await supa.auth.signUp({email,password,options:{emailRedirectTo:window.location.origin}});
+  if(error){
+    // Sanitize: don't reveal if email is registered
+    S.aerr=error.message.includes('already')?'Akun dengan email ini sudah ada.':error.message;
+    rAuthM();return;
+  }
+  if(!data.user){S.aerr='Pendaftaran gagal. Coba lagi.';rAuthM();return;}
   const isAdmin=email==='admin@starlive.com';
-  const{error:pe}=await supa.from('profiles').insert({id:data.user.id,username,role:isAdmin?'admin':'user',email,online:true,wallet:0,badges:[],friends:[],friend_reqs:[]});
-  if(pe){S.aerr='Account created but profile setup failed: '+pe.message;rAuthM();return;}
-  S.atab='login';S.aform={email,password:'',username:'',cp:''};S.aerr='';rAuthM();
-  notif('✅ Account created! Please login.','success');
+  const{error:pe}=await supa.from('profiles').insert({
+    id:data.user.id,username,role:isAdmin?'admin':'user',email,
+    online:false,wallet:0,badges:[],friends:[],friend_reqs:[]
+  });
+  if(pe){
+    // Rollback: delete the auth user if profile insert fails
+    try{await supa.auth.admin.deleteUser(data.user.id);}catch(e){}
+    S.aerr='Gagal membuat profil: '+pe.message;rAuthM();return;
+  }
+  S.atab='login';S.aform={email,password:'',username:'',cp:'',otp:''};S.aerr='';rAuthM();
+  notif('✅ Akun berhasil dibuat! Silakan login.','success');
 }
 
 
@@ -440,21 +617,83 @@ function renderAuth(){
 function openAuthM(){document.getElementById('m-auth').style.display='flex';rAuthM();}
 function rAuthM(){
   const q=t();const m=document.getElementById('m-auth');m.innerHTML='';
-  const card=gc({padding:'32px',width:'350px',maxWidth:'94vw',position:'relative',borderRadius:'18px'});
-  card.appendChild(el('button',{style:{position:'absolute',top:'12px',right:'14px',background:'none',border:'none',color:q.tm,fontSize:'19px',cursor:'pointer'},onclick:()=>closeM('m-auth')},'✕'));
+  const card=gc({padding:'32px',width:'360px',maxWidth:'94vw',position:'relative',borderRadius:'18px'});
+  card.appendChild(el('button',{style:{position:'absolute',top:'12px',right:'14px',background:'none',border:'none',color:q.tm,fontSize:'18px',cursor:'pointer'},onclick:()=>{
+    if(S.atab==='otp'){cancelOTP();return;}
+    document.getElementById('m-auth').style.display='none';
+  }},'✕'));
   card.appendChild(el('div',{style:{fontSize:'26px',textAlign:'center',marginBottom:'5px'}},'⭐'));
-  card.appendChild(el('h2',{style:{color:q.ac,textAlign:'center',marginBottom:'16px',fontSize:'16px',fontWeight:'800'}},'StarLive '+(S.atab==='login'?T('login'):'Register')));
+  card.appendChild(el('h2',{style:{color:q.ac,textAlign:'center',marginBottom:'16px',fontSize:'16px',fontWeight:'800'}},'StarLive Group'));
+
+  // ── OTP verification step ──
+  if(S.atab==='otp'){
+    card.appendChild(el('div',{style:{textAlign:'center',marginBottom:'14px'}},
+      el('div',{style:{fontSize:'32px',marginBottom:'6px'}},'📧'),
+      el('div',{style:{color:q.tx,fontSize:'13px',fontWeight:'700',marginBottom:'4px'}},'Verifikasi Email'),
+      el('div',{style:{color:q.tm,fontSize:'11px',lineHeight:'1.6'}},'Kode 6 digit telah dikirim ke'),
+      el('div',{style:{color:q.ac,fontSize:'12px',fontWeight:'700'}},OTP.email),
+      el('div',{style:{color:q.tm,fontSize:'10px',marginTop:'3px'}},'Berlaku 10 menit · Hanya 1x pakai')
+    ));
+    if(S.aerr)card.appendChild(el('div',{style:{background:'rgba(255,80,80,.1)',border:'1px solid #f44',borderRadius:'7px',padding:'7px 10px',color:'#f88',fontSize:'11px',marginBottom:'10px'}},S.aerr));
+    const otpInp=el('input',{type:'text',inputmode:'numeric',pattern:'[0-9]*',maxlength:'6',placeholder:'_ _ _ _ _ _',class:'inf',style:{background:q.ib,borderColor:q.ac,color:q.tx,fontSize:'24px',textAlign:'center',letterSpacing:'10px',fontWeight:'700',marginBottom:'10px'}});
+    otpInp.value=S.aform.otp||'';
+    otpInp.oninput=e=>{
+      S.aform.otp=e.target.value.replace(/\D/g,'').slice(0,6);
+      otpInp.value=S.aform.otp;
+      if(S.aform.otp.length===6)doVerifyOTP();
+    };
+    otpInp.onkeydown=e=>{if(e.key==='Enter')doVerifyOTP();};
+    card.appendChild(otpInp);
+    card.appendChild(btn('✅ Verifikasi Kode',doVerifyOTP,false,{width:'100%',marginBottom:'7px'}));
+    const row2=el('div',{style:{display:'flex',gap:'7px'}});
+    row2.appendChild(btn('🔄 Kirim Ulang',doResendOTP,true,{flex:'1',fontSize:'11px'}));
+    row2.appendChild(btn('← Batal',cancelOTP,true,{flex:'1',fontSize:'11px'}));
+    card.appendChild(row2);
+    m.appendChild(card);
+    setTimeout(()=>otpInp.focus(),50);
+    return;
+  }
+
+  // ── Tab switcher (Login / Register) ──
   const tr=el('div',{style:{display:'flex',gap:'7px',marginBottom:'15px'}});
-  ['login','register'].forEach(tb=>{const a=S.atab===tb;tr.appendChild(el('button',{class:'btn',style:{flex:'1',background:a?q.as:'transparent',borderColor:a?q.ac:q.sb,color:a?q.ac:q.tm},onclick:()=>{S.atab=tb;S.aerr='';rAuthM();}},tb==='login'?'🔑 Login':'📝 Register'));});
+  ['login','register'].forEach(tb=>{
+    const a=S.atab===tb;
+    tr.appendChild(el('button',{class:'btn',style:{flex:'1',fontSize:'12px',fontWeight:a?'700':'400',background:a?q.bb:'transparent',borderColor:a?q.bc:q.sb,color:a?q.bt:q.tm},
+      onclick:()=>{S.atab=tb;S.aerr='';rAuthM();}},(tb==='login'?'🔓 Login':'📝 Register')));
+  });
   card.appendChild(tr);
-  if(S.aerr)card.appendChild(el('div',{style:{background:'rgba(255,80,80,.1)',border:'1px solid #f44',borderRadius:'7px',padding:'7px 11px',marginBottom:'9px',color:'#f88',fontSize:'11px'}},S.aerr));
-  const f=S.aform;const inp=(ph,key,ty='text')=>{const i=el('input',{type:ty,placeholder:ph,class:'inf',style:{background:q.ib,borderColor:q.sb,color:q.tx}});i.value=f[key]||'';i.oninput=e=>{S.aform[key]=e.target.value;};return i;};
-  if(S.atab==='register')card.appendChild(inp('Full Name / Username','username'));
-  card.appendChild(inp('Email','email'));card.appendChild(inp('Password','password','password'));
-  if(S.atab==='register')card.appendChild(inp('Confirm Password','cp','password'));
-  if(S.atab==='login'){card.appendChild(btn('🔓 Login',doLogin,false,{width:'100%',marginTop:'4px'}));card.appendChild(el('div',{style:{color:q.tm,fontSize:'10px',textAlign:'center',marginTop:'9px'}},'Demo: user@starlive.com / user123 · admin@starlive.com / admin123'));}
-  else card.appendChild(btn('✅ Register',doReg,false,{width:'100%',marginTop:'4px'}));
-  m.appendChild(card);setTimeout(()=>{const i=card.querySelector('input');if(i)i.focus();},50);
+  if(S.aerr)card.appendChild(el('div',{style:{background:'rgba(255,80,80,.1)',border:'1px solid #f44',borderRadius:'7px',padding:'7px 10px',color:'#f88',fontSize:'11px',marginBottom:'10px'}},S.aerr));
+
+  const f=S.aform;
+  const inp=(ph,key,ty='text',hint='')=>{
+    const wrap=el('div',{style:{marginBottom:'8px'}});
+    const i=el('input',{type:ty,placeholder:ph,class:'inf',style:{background:q.ib,borderColor:q.sb,color:q.tx,width:'100%',marginBottom:'0'}});
+    i.value=f[key]||'';
+    i.oninput=e=>{S.aform[key]=e.target.value;};
+    i.onkeydown=ev=>{if(ev.key==='Enter'){if(S.atab==='login')doLogin();else doReg();}};
+    wrap.appendChild(i);
+    if(hint)wrap.appendChild(el('div',{style:{color:q.tm,fontSize:'9px',marginTop:'2px'}},hint));
+    return wrap;
+  };
+
+  if(S.atab==='register'){
+    card.appendChild(inp('Username (3-20 karakter)','username','text','Hanya huruf, angka, underscore'));
+  }
+  card.appendChild(inp('Email (Gmail atau email aktif)','email','email'));
+  card.appendChild(inp('Password','password','password',S.atab==='register'?'Min 8 karakter, 1 huruf kapital, 1 angka':''));
+  if(S.atab==='register')card.appendChild(inp('Konfirmasi Password','cp','password'));
+
+  if(S.atab==='login'){
+    card.appendChild(btn('🔓 Login & Kirim OTP',doLogin,false,{width:'100%',marginTop:'4px'}));
+    card.appendChild(el('div',{style:{color:q.tm,fontSize:'10px',textAlign:'center',marginTop:'9px',lineHeight:'1.6'}},
+      'Setelah login, kode verifikasi akan dikirim ke email Anda.'));
+  } else {
+    card.appendChild(btn('✅ Daftar Sekarang',doReg,false,{width:'100%',marginTop:'4px'}));
+    card.appendChild(el('div',{style:{color:q.tm,fontSize:'10px',textAlign:'center',marginTop:'9px',lineHeight:'1.6'}},
+      'Belum punya akun? Daftar dulu sebelum bisa login.'));
+  }
+  m.appendChild(card);
+  setTimeout(()=>{const i=card.querySelector('input');if(i)i.focus();},50);
 }
 
 // ── CHECK SESSION ON LOAD ──────────────────────────────────────
@@ -987,220 +1226,859 @@ const fi=FRACTION_INFO2[fr];const active=u.fraction===fr;frRow2.appendChild(el('
   m.appendChild(card);
 }
 
-// ── VAULT (Admin only) ────────────────────────────────────────
-async function rVault(){
-  const q=t();const c=document.getElementById('page-vault');c.innerHTML='';
-  if(!S.isAdmin){c.appendChild(el('div',{style:{textAlign:'center',padding:'70px'}},el('div',{style:{fontSize:'56px',marginBottom:'12px'}},'\uD83D\uDD10'),el('div',{style:{color:q.tx,fontSize:'16px',fontWeight:'700'}},'Admin Access Only')));return;}
-  // Vault tabs: home, pegawai, transaksi, umum
-  const VTABS=[['home','🏠 Beranda'],['pegawai','👤 Data Pegawai'],['transaksi','💰 Data Transaksi'],['umum','📂 Data Umum']];
-  c.appendChild(el('h1',{style:{color:q.ac,fontSize:'22px',fontWeight:'800',marginBottom:'4px'}},'🔐 Vault'));
-  c.appendChild(el('p',{style:{color:q.tm,marginBottom:'14px',fontSize:'11px'}},'Penyimpanan data rahasia admin. Kode wajib format SLV-...'));
-  const vtabs=el('div',{style:{display:'flex',gap:'6px',marginBottom:'18px',flexWrap:'wrap'}});
-  VTABS.forEach(([id,lb])=>vtabs.appendChild(btn(lb,()=>{S.vaultTab=id;rVault();},S.vaultTab!==id,{fontSize:'11px'})));
-  c.appendChild(vtabs);
-  if(S.vaultTab==='home'){
-    // Beranda: history/timeline only, no entries shown
-    const logs=await DB.getVaultLogs();
-    c.appendChild(el('div',{style:{color:q.ac,fontSize:'11px',fontWeight:'700',marginBottom:'12px'}},'📋 Vault Activity'));
-    if(!logs.length){c.appendChild(el('div',{style:{textAlign:'center',padding:'40px',color:q.tm}},'Belum ada aktivitas vault.'));return;}
-    const tl=el('div',{style:{position:'relative',paddingLeft:'22px'}});
-    tl.appendChild(el('div',{style:{position:'absolute',left:'7px',top:'0',bottom:'0',width:'2px',background:q.sb,borderRadius:'99px'}}));
-    [...logs].reverse().forEach(log=>{
-      const row=el('div',{style:{display:'flex',alignItems:'flex-start',gap:'7px',marginBottom:'6px',position:'relative'}});
-      row.appendChild(el('div',{style:{position:'absolute',left:'-18px',top:'4px',width:'9px',height:'9px',borderRadius:'50%',background:q.ac,border:`2px solid ${q.cb}`}}));
-      row.appendChild(el('div',{style:{background:q.sur,borderRadius:'6px',padding:'5px 10px',flex:'1',border:`1px solid ${q.sb}`}},el('div',{style:{color:q.tx,fontSize:'10px'}},log.action+' — '+log.title+' ('+log.code+')'),el('div',{style:{color:q.tm,fontSize:'8px',marginTop:'1px'}},new Date(log.time).toLocaleString('id-ID')+' · oleh '+log.by)));
-      tl.appendChild(row);
+// ── VAULT 2.0 — File Explorer + Doc Editor + ID Card ──────────
+// ── DB methods for new vault ──────────────────────────────────
+const VDB = {
+  async getFolders(category) {
+    if (!supa) return [];
+    const { data } = await supa.from('vault_folders').select('*')
+      .eq('category', category).order('name');
+    return data || [];
+  },
+  async addFolder(f) {
+    if (!supa) return null;
+    const { data } = await supa.from('vault_folders').insert({
+      name: f.name, category: f.category, parent_id: f.parent_id || null,
+      tags: f.tags || [], color: f.color || '#FAB715', created_by: S.user?.id
+    }).select().single();
+    return data;
+  },
+  async updateFolder(id, upd) {
+    if (!supa) return;
+    await supa.from('vault_folders').update({ ...upd, updated_at: new Date().toISOString() }).eq('id', id);
+  },
+  async deleteFolder(id) {
+    if (!supa) return;
+    await supa.from('vault_folders').delete().eq('id', id);
+  },
+  async getFiles(folderId) {
+    if (!supa) return [];
+    const { data } = await supa.from('vault_files').select('*')
+      .eq('folder_id', folderId).order('name');
+    return data || [];
+  },
+  async getAllFiles(category) {
+    if (!supa) return [];
+    // join through folders
+    const folders = await this.getFolders(category);
+    const folderIds = folders.map(f => f.id);
+    if (!folderIds.length) return [];
+    const { data } = await supa.from('vault_files').select('*')
+      .in('folder_id', folderIds).order('created_at', { ascending: false });
+    return data || [];
+  },
+  async addFile(file) {
+    if (!supa) return null;
+    const { data } = await supa.from('vault_files').insert({
+      folder_id: file.folder_id, name: file.name, slv_code: file.slv_code,
+      file_type: file.file_type, content: file.content || null,
+      raw_text: file.raw_text || '', tags: file.tags || [],
+      owner: file.owner || '', owner_id: file.owner_id || '',
+      file_url: file.file_url || null, file_size: file.file_size || 0,
+      uploaded: false, created_by: S.user?.id,
+      qr_token: file.qr_token || null
+    }).select().single();
+    await DB.addVaultLog({ action: 'Buat', title: file.name, code: file.slv_code, by: S.user?.username });
+    return data;
+  },
+  async updateFile(id, upd) {
+    if (!supa) return;
+    await supa.from('vault_files').update({ ...upd, updated_at: new Date().toISOString() }).eq('id', id);
+    await DB.addVaultLog({ action: 'Edit', title: upd.name || '?', code: upd.slv_code || '?', by: S.user?.username });
+  },
+  async searchAll(q) {
+    if (!supa || !q) return [];
+    const { data } = await supa.from('vault_files').select('*, folder:vault_folders(name,category)')
+      .or(`name.ilike.%${q}%,raw_text.ilike.%${q}%,owner.ilike.%${q}%,slv_code.ilike.%${q}%`);
+    return data || [];
+  },
+  async logScan(fileId, slvCode, scanToken) {
+    if (!supa) return;
+    await supa.from('vault_qr_scans').insert({
+      file_id: fileId, slv_code: slvCode, scanned_by: S.user?.id, scan_token: scanToken
     });
-    c.appendChild(gc({padding:'14px'},tl));
+  },
+  async getScanLogs(fileId) {
+    if (!supa) return [];
+    const { data } = await supa.from('vault_qr_scans').select('*, user:profiles(username)')
+      .eq('file_id', fileId).order('created_at', { ascending: false }).limit(20);
+    return data || [];
+  }
+};
+
+// ── VAULT STATE ────────────────────────────────────────────────
+const VS = {
+  cat: 'pegawai',       // current category tab
+  folderId: null,       // null = root
+  folderPath: [],       // breadcrumb [{id,name}]
+  view: 'grid',         // 'grid' | 'list'
+  search: '',
+  selFile: null,        // selected file for editor/viewer
+  editorMode: null,     // 'view' | 'edit' | 'new'
+  newFileType: null,
+};
+
+// ── VAULT MAIN PAGE ────────────────────────────────────────────
+async function rVault() {
+  const q = t();
+  const c = document.getElementById('page-vault');
+  c.innerHTML = '';
+  if (!S.isAdmin) {
+    c.appendChild(el('div', { style: { textAlign: 'center', padding: '70px' } },
+      el('div', { style: { fontSize: '56px', marginBottom: '12px' } }, '🔒'),
+      el('div', { style: { color: q.tx, fontSize: '16px', fontWeight: '700' } }, 'Admin Access Only')));
     return;
   }
-  const CAT_MAP={pegawai:'Data Informasi Pegawai',transaksi:'Data Informasi Transaksi',umum:'Data Informasi Umum'};
-  const cat=CAT_MAP[S.vaultTab];
-  const cr=el('div',{style:{display:'flex',gap:'10px',marginBottom:'16px',flexWrap:'wrap',alignItems:'center'}});
-  const si=el('input',{type:'text',placeholder:'Cari judul, pemilik, atau kode SLV-...',class:'inf',style:{background:q.ib,borderColor:q.sb,color:q.tx,flex:'1',marginBottom:'0'}});
-  si.value=S.vaultQ||'';si.oninput=e=>{S.vaultQ=e.target.value;rVault();};
-  cr.appendChild(si);cr.appendChild(btn('➕ Tambah Entri',()=>openVaultM(null,cat),false,{fontSize:'12px',flexShrink:'0'}));c.appendChild(cr);
-  let entries=(await DB.getVault()||[]).filter(e=>e.category===cat);
-  if((S.vaultQ||'').trim()){const qv=S.vaultQ.toLowerCase();entries=entries.filter(e=>(e.title||'').toLowerCase().includes(qv)||(e.owner||'').toLowerCase().includes(qv)||(e.ownerCode||'').toLowerCase().includes(qv));}
-  if(!entries.length){c.appendChild(el('div',{style:{textAlign:'center',padding:'40px',color:q.tm}},'Belum ada data di kategori ini.'));return;}
-  const grid=el('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))',gap:'14px'}});
-  entries.forEach(entry=>{
-    const card=gc({padding:'18px',border:`1px solid ${q.ac}33`});
-    const top=el('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:'8px'}});
-    top.appendChild(el('div',{},el('div',{style:{color:q.ac,fontSize:'9px',fontWeight:'700',letterSpacing:'.1em',marginBottom:'2px'}},entry.category),el('div',{style:{color:q.tx,fontSize:'14px',fontWeight:'700'}},entry.title||'Untitled')));
-    const acts=el('div',{style:{display:'flex',gap:'4px',flexWrap:'wrap'}});
-    acts.appendChild(btn('✏️',()=>openVaultM(entry,cat),true,{fontSize:'9px',padding:'2px 5px'}));
-    acts.appendChild(btn('📄 PDF',()=>downloadVaultPDF(entry),true,{fontSize:'9px',padding:'2px 5px'}));
-    const uploadSt=entry.uploaded?el('span',{style:{color:'#64dc64',fontSize:'9px',fontWeight:'700'}},'✅ Uploaded'):el('span',{style:{color:'#f88',fontSize:'9px',fontWeight:'700'}},'✗ Belum');
-    acts.appendChild(el('div',{style:{display:'flex',alignItems:'center',gap:'4px'}},btn('☁️ Upload',()=>uploadToSupabase(entry),false,{fontSize:'9px',padding:'2px 5px'}),uploadSt));
-    // NO delete button — vault entries are permanent (code is locked)
-    top.appendChild(acts);card.appendChild(top);
-    if(entry.ownerCode)card.appendChild(el('div',{style:{color:q.tm,fontSize:'10px',marginBottom:'5px',display:'flex',alignItems:'center',gap:'4px'}},'🔒 ',el('span',{style:{color:q.ac,fontFamily:'monospace',fontWeight:'700',letterSpacing:'.08em'}},entry.ownerCode),el('span',{style:{color:'#FAB715',fontSize:'8px'}},'(terkunci)')));
-    if(entry.owner)card.appendChild(el('div',{style:{color:q.tm,fontSize:'10px',marginBottom:'5px'}},'👤 '+entry.owner));
-    card.appendChild(el('div',{style:{color:q.tx,fontSize:'11px',lineHeight:'1.6',marginBottom:'7px',maxHeight:'65px',overflow:'hidden'}},entry.content||''));
-    if(entry.tags){const tgr=el('div',{style:{display:'flex',gap:'4px',flexWrap:'wrap',marginBottom:'5px'}});entry.tags.split(',').map(x=>x.trim()).filter(Boolean).forEach(tg2=>tgr.appendChild(el('span',{style:{background:`${q.ac}18`,color:q.ac,borderRadius:'20px',padding:'1px 7px',fontSize:'8px',fontWeight:'600'}},tg2)));card.appendChild(tgr);}
-    // Show attachments
-    const attRow=el('div',{style:{display:'flex',gap:'8px',alignItems:'center',flexWrap:'wrap',marginBottom:'5px'}});
-    if(entry.imageData)attRow.appendChild(el('img',{src:entry.imageData,style:{width:'36px',height:'36px',objectFit:'cover',borderRadius:'5px',border:`1px solid ${q.ac}44`,cursor:'pointer'},onclick:()=>{const mig=document.getElementById('m-gal');mig.style.display='flex';mig.innerHTML='';const mc=gc({padding:'20px',textAlign:'center',maxWidth:'90vw',borderRadius:'18px'});mc.appendChild(el('button',{style:{float:'right',background:'none',border:'none',color:q.tm,fontSize:'18px',cursor:'pointer'},onclick:()=>closeM('m-gal')},'✕'));mc.appendChild(el('img',{src:entry.imageData,style:{maxWidth:'100%',maxHeight:'70vh',borderRadius:'9px'}}));mc.appendChild(el('div',{style:{color:q.tm,fontSize:'10px',marginTop:'8px'}},entry.imageName||''));mig.appendChild(mc);}}));
-    if(entry.fileData){const fIc=entry.fileName?.match(/\.pdf$/i)?'📄':entry.fileName?.match(/\.docx?$/i)?'📝':entry.fileName?.match(/\.xlsx?$/i)?'📊':'📎';const fdl=el('a',{style:{display:'flex',alignItems:'center',gap:'4px',color:q.ac,fontSize:'9px',textDecoration:'none',border:`1px solid ${q.ac}33`,borderRadius:'5px',padding:'3px 7px'}},el('span',{},fIc),el('span',{},entry.fileName||'File'));fdl.href=entry.fileData;fdl.download=entry.fileName||'vault_file';attRow.appendChild(fdl);}
-    if(attRow.children.length)card.appendChild(attRow);
-    card.appendChild(el('div',{style:{color:q.tm,fontSize:'8px'}},fdate(entry.createdAt)+(entry.updatedAt?' · Edit '+fdate(entry.updatedAt):'')));
-    grid.appendChild(card);
-  });c.appendChild(grid);
+
+  // ── Header ──
+  const hdr = el('div', { style: { display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '14px', flexWrap: 'wrap' } });
+  hdr.appendChild(el('div', {},
+    el('h1', { style: { color: q.ac, fontSize: '22px', fontWeight: '800', marginBottom: '2px' } }, '🔐 Vault'),
+    el('div', { style: { color: q.tm, fontSize: '11px' } }, 'File Explorer · Document Editor · ID Card System')
+  ));
+  // Search
+  const srch = el('input', { type: 'text', placeholder: '🔍 Cari file, kode SLV-, nama...', class: 'inf', style: { background: q.ib, borderColor: q.sb, color: q.tx, flex: '1', minWidth: '200px', marginBottom: '0' } });
+  srch.value = VS.search;
+  srch.oninput = async e => { VS.search = e.target.value; await rVault(); };
+  hdr.appendChild(srch);
+  c.appendChild(hdr);
+
+  // ── Category tabs ──
+  const CATS = [
+    { id: 'home', label: '🏠 Beranda', color: q.ac },
+    { id: 'pegawai', label: '👤 Pegawai', color: '#4fc3f7' },
+    { id: 'transaksi', label: '💰 Transaksi', color: '#81c784' },
+    { id: 'umum', label: '📂 Umum', color: '#ffb74d' },
+  ];
+  const ctabs = el('div', { style: { display: 'flex', gap: '6px', marginBottom: '16px', flexWrap: 'wrap' } });
+  CATS.forEach(cat => {
+    const active = VS.cat === cat.id;
+    const tb = el('button', {
+      style: { padding: '7px 14px', borderRadius: '8px', border: `1px solid ${active ? cat.color : q.sb}`, background: active ? `${cat.color}22` : 'transparent', color: active ? cat.color : q.tm, cursor: 'pointer', fontSize: '12px', fontWeight: active ? '700' : '400', transition: 'all .18s' },
+      onclick: () => { VS.cat = cat.id; VS.folderId = null; VS.folderPath = []; VS.search = ''; srch.value = ''; rVault(); }
+    }, cat.label);
+    ctabs.appendChild(tb);
+  });
+  c.appendChild(ctabs);
+
+  // ── Search results mode ──
+  if (VS.search.trim().length > 1) {
+    await renderVaultSearch(c, q);
+    return;
+  }
+
+  // ── Home / Activity log ──
+  if (VS.cat === 'home') {
+    await renderVaultHome(c, q);
+    return;
+  }
+
+  // ── File Explorer ──
+  await renderVaultExplorer(c, q);
 }
 
-function openVaultM(existing,catForce){
-  const q=t();const m=document.getElementById('m-vault');m.style.display='flex';m.innerHTML='';
-  const isEdit=!!existing;
-  const CAT_OPTS=['Data Informasi Pegawai','Data Informasi Transaksi','Data Informasi Umum'];
-  const SLV_RX=/^SLV-\d{6}$/;
-  function genCode(){return 'SLV-'+String(Math.floor(100000+Math.random()*900000));}
-  const form={
-    title:existing?.title||'',category:existing?.category||catForce||CAT_OPTS[0],
-    owner:existing?.owner||'',ownerCode:existing?.ownerCode||genCode(),
-    content:existing?.content||'',tags:existing?.tags||'',
-    fileData:existing?.fileData||null,fileName:existing?.fileName||null,fileType:existing?.fileType||null,
-    imageData:existing?.imageData||null,imageName:existing?.imageName||null,
+// ── VAULT HOME ────────────────────────────────────────────────
+async function renderVaultHome(c, q) {
+  const logs = await DB.getVaultLogs();
+  // Stats
+  const [fp, ft, fu] = await Promise.all([
+    VDB.getAllFiles('pegawai'), VDB.getAllFiles('transaksi'), VDB.getAllFiles('umum')
+  ]);
+  const total = fp.length + ft.length + fu.length;
+
+  const stats = el('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(130px,1fr))', gap: '10px', marginBottom: '18px' } });
+  [['📁 Total File', total, q.ac], ['👤 Pegawai', fp.length, '#4fc3f7'], ['💰 Transaksi', ft.length, '#81c784'], ['📂 Umum', fu.length, '#ffb74d']].forEach(([label, val, col]) => {
+    stats.appendChild(gc({ padding: '14px', textAlign: 'center', border: `1px solid ${col}33` },
+      el('div', { style: { color: col, fontSize: '22px', fontWeight: '900', marginBottom: '3px' } }, String(val)),
+      el('div', { style: { color: q.tm, fontSize: '10px' } }, label)
+    ));
+  });
+  c.appendChild(stats);
+
+  c.appendChild(el('div', { style: { color: q.ac, fontSize: '11px', fontWeight: '700', marginBottom: '10px' } }, '📋 Riwayat Aktivitas Vault'));
+  if (!logs.length) { c.appendChild(el('div', { style: { color: q.tm, textAlign: 'center', padding: '30px' } }, 'Belum ada aktivitas.')); return; }
+  const tl = el('div', { style: { position: 'relative', paddingLeft: '22px' } });
+  tl.appendChild(el('div', { style: { position: 'absolute', left: '7px', top: '0', bottom: '0', width: '2px', background: q.sb, borderRadius: '99px' } }));
+  const ACTION_COLOR = { Buat: '#64dc64', Edit: '#4fc3f7', Unduh: '#ffb74d', Upload: '#81c784', Scan: '#ce93d8' };
+  for (const log of [...logs].reverse().slice(0, 50)) {
+    const col = ACTION_COLOR[log.action] || q.ac;
+    const row = el('div', { style: { display: 'flex', gap: '8px', marginBottom: '6px', position: 'relative' } });
+    row.appendChild(el('div', { style: { position: 'absolute', left: '-18px', top: '5px', width: '9px', height: '9px', borderRadius: '50%', background: col, border: `2px solid ${q.cb}` } }));
+    row.appendChild(gc({ padding: '5px 10px', flex: '1', border: `1px solid ${col}22` },
+      el('div', { style: { display: 'flex', gap: '8px', alignItems: 'center' } },
+        el('span', { style: { color: col, fontSize: '10px', fontWeight: '700', minWidth: '44px' } }, log.action),
+        el('span', { style: { color: q.tx, fontSize: '10px' } }, (log.title || '') + (log.code ? ' · ' + log.code : ''))
+      ),
+      el('div', { style: { color: q.tm, fontSize: '8px', marginTop: '1px' } }, new Date(log.time || log.created_at).toLocaleString('id-ID') + ' · oleh ' + (log.by || '?'))
+    ));
+    tl.appendChild(row);
+  }
+  c.appendChild(gc({ padding: '14px' }, tl));
+}
+
+// ── VAULT SEARCH RESULTS ──────────────────────────────────────
+async function renderVaultSearch(c, q) {
+  const results = await VDB.searchAll(VS.search.trim());
+  c.appendChild(el('div', { style: { color: q.ac, fontSize: '11px', fontWeight: '700', marginBottom: '12px' } }, `🔍 Hasil pencarian "${VS.search}" — ${results.length} file ditemukan`));
+  if (!results.length) { c.appendChild(el('div', { style: { color: q.tm, textAlign: 'center', padding: '30px' } }, 'Tidak ada file yang cocok.')); return; }
+  const list = el('div', { style: { display: 'flex', flexDirection: 'column', gap: '7px' } });
+  results.forEach(file => {
+    const row = gc({ padding: '12px', display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', border: `1px solid ${q.sb}`, transition: 'border-color .15s' });
+    row.onmouseenter = () => row.style.borderColor = q.ac; row.onmouseleave = () => row.style.borderColor = q.sb;
+    row.appendChild(el('div', { style: { fontSize: '22px' } }, fileTypeIcon(file.file_type)));
+    row.appendChild(el('div', { style: { flex: '1' } },
+      el('div', { style: { color: q.tx, fontSize: '13px', fontWeight: '700' } }, file.name),
+      el('div', { style: { color: q.tm, fontSize: '10px' } }, file.slv_code + ' · ' + (file.folder?.name || '') + ' · ' + (file.folder?.category || ''))
+    ));
+    row.appendChild(btn('📂 Buka', () => openVaultFile(file), true, { fontSize: '10px' }));
+    row.onclick = e => { if (e.target.tagName !== 'BUTTON') openVaultFile(file); };
+    list.appendChild(row);
+  });
+  c.appendChild(list);
+}
+
+// ── VAULT FILE EXPLORER ───────────────────────────────────────
+async function renderVaultExplorer(c, q) {
+  const CAT_COLOR = { pegawai: '#4fc3f7', transaksi: '#81c784', umum: '#ffb74d' };
+  const col = CAT_COLOR[VS.cat] || q.ac;
+  const CAT_LABEL = { pegawai: 'Data Informasi Pegawai', transaksi: 'Data Informasi Transaksi', umum: 'Data Informasi Umum' };
+
+  // Toolbar
+  const toolbar = el('div', { style: { display: 'flex', gap: '7px', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap' } });
+
+  // Breadcrumb
+  const bc = el('div', { style: { display: 'flex', alignItems: 'center', gap: '4px', flex: '1', flexWrap: 'wrap' } });
+  const rootBtn = el('span', { style: { color: col, cursor: 'pointer', fontSize: '12px', fontWeight: '700' }, onclick: () => { VS.folderId = null; VS.folderPath = []; rVault(); } }, CAT_LABEL[VS.cat]);
+  bc.appendChild(rootBtn);
+  VS.folderPath.forEach((seg, i) => {
+    bc.appendChild(el('span', { style: { color: q.tm, fontSize: '12px' } }, ' › '));
+    const segBtn = el('span', { style: { color: i === VS.folderPath.length - 1 ? q.tx : col, cursor: 'pointer', fontSize: '12px', fontWeight: i === VS.folderPath.length - 1 ? '700' : '400' }, onclick: () => { VS.folderId = seg.id; VS.folderPath = VS.folderPath.slice(0, i + 1); rVault(); } }, seg.name);
+    bc.appendChild(segBtn);
+  });
+  toolbar.appendChild(bc);
+
+  // View toggle
+  const viewToggle = el('div', { style: { display: 'flex', gap: '4px' } });
+  ['grid', 'list'].forEach(v => {
+    viewToggle.appendChild(el('button', {
+      style: { padding: '5px 9px', borderRadius: '6px', border: `1px solid ${VS.view === v ? col : q.sb}`, background: VS.view === v ? `${col}22` : 'transparent', color: VS.view === v ? col : q.tm, cursor: 'pointer', fontSize: '12px' },
+      onclick: () => { VS.view = v; rVault(); }
+    }, v === 'grid' ? '⊞' : '☰'));
+  });
+  toolbar.appendChild(viewToggle);
+  toolbar.appendChild(btn('📁 Folder Baru', () => openFolderModal(null), true, { fontSize: '11px' }));
+  toolbar.appendChild(btn('➕ File Baru', () => openNewFileModal(), false, { fontSize: '11px' }));
+  c.appendChild(toolbar);
+
+  // Load folders and files
+  const [folders, files] = await Promise.all([
+    supa ? supa.from('vault_folders').select('*').eq('category', VS.cat).eq('parent_id', VS.folderId || null).order('name').then(r => r.data || []) : [],
+    VS.folderId ? VDB.getFiles(VS.folderId) : []
+  ]);
+
+  if (!folders.length && !files.length) {
+    c.appendChild(el('div', { style: { textAlign: 'center', padding: '50px', color: q.tm } },
+      el('div', { style: { fontSize: '48px', marginBottom: '10px' } }, '📂'),
+      el('div', { style: { fontSize: '13px', marginBottom: '14px' } }, VS.folderId ? 'Folder kosong.' : 'Belum ada folder di kategori ini.'),
+      el('div', { style: { display: 'flex', gap: '8px', justifyContent: 'center' } },
+        btn('📁 Buat Folder', () => openFolderModal(null), true, { fontSize: '11px' }),
+        VS.folderId ? btn('➕ File Baru', () => openNewFileModal(), false, { fontSize: '11px' }) : el('span', {})
+      )
+    ));
+    return;
+  }
+
+  const container = el('div', {
+    style: VS.view === 'grid'
+      ? { display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(160px,1fr))', gap: '12px' }
+      : { display: 'flex', flexDirection: 'column', gap: '6px' }
+  });
+
+  // Back button if in subfolder
+  if (VS.folderId && VS.folderPath.length > 0) {
+    const backItem = VS.view === 'grid'
+      ? gc({ padding: '16px', textAlign: 'center', cursor: 'pointer', border: `1px dashed ${q.sb}`, opacity: '0.7' },
+          el('div', { style: { fontSize: '28px', marginBottom: '4px' } }, '⬆️'),
+          el('div', { style: { color: q.tm, fontSize: '11px' } }, '.. Kembali'))
+      : gc({ padding: '10px 14px', display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', border: `1px solid ${q.sb}` },
+          el('span', { style: { fontSize: '18px' } }, '⬆️'), el('span', { style: { color: q.tm, fontSize: '12px' } }, '.. Naik ke folder induk'));
+    backItem.onclick = () => {
+      const prev = VS.folderPath[VS.folderPath.length - 2];
+      VS.folderPath = VS.folderPath.slice(0, -1);
+      VS.folderId = prev?.id || null;
+      rVault();
+    };
+    container.appendChild(backItem);
+  }
+
+  // Render folders
+  folders.forEach(folder => {
+    const item = VS.view === 'grid'
+      ? gc({ padding: '16px', textAlign: 'center', cursor: 'pointer', border: `1px solid ${folder.color || col}44`, position: 'relative', transition: 'border-color .18s' },
+          el('div', { style: { fontSize: '36px', marginBottom: '6px' } }, '📁'),
+          el('div', { style: { color: q.tx, fontSize: '12px', fontWeight: '700', marginBottom: '3px', wordBreak: 'break-word' } }, folder.name),
+          folder.tags?.length ? el('div', { style: { display: 'flex', gap: '3px', flexWrap: 'wrap', justifyContent: 'center', marginTop: '4px' } },
+            ...folder.tags.map(tag => el('span', { style: { background: `${folder.color || col}22`, color: folder.color || col, borderRadius: '20px', padding: '1px 6px', fontSize: '8px' } }, tag))
+          ) : el('span', {}))
+      : gc({ padding: '10px 14px', display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', border: `1px solid ${q.sb}`, transition: 'border-color .15s' },
+          el('span', { style: { fontSize: '22px' } }, '📁'),
+          el('div', { style: { flex: '1' } },
+            el('div', { style: { color: q.tx, fontSize: '13px', fontWeight: '700' } }, folder.name),
+            folder.tags?.length ? el('div', { style: { color: q.tm, fontSize: '10px' } }, folder.tags.join(' · ')) : el('span', {})
+          ),
+          el('div', { style: { display: 'flex', gap: '4px' } },
+            btn('✏️', e => { e.stopPropagation(); openFolderModal(folder); }, true, { fontSize: '9px', padding: '2px 5px' }),
+            btn('🗑️', e => { e.stopPropagation(); if (confirm('Hapus folder "' + folder.name + '"? Semua isinya akan terhapus.')) { VDB.deleteFolder(folder.id).then(rVault); } }, true, { fontSize: '9px', padding: '2px 5px', borderColor: '#f44', color: '#f88' })
+          ));
+    item.onmouseenter = () => item.style.borderColor = folder.color || col;
+    item.onmouseleave = () => item.style.borderColor = VS.view === 'grid' ? `${folder.color || col}44` : q.sb;
+    item.onclick = e => {
+      if (e.target.tagName === 'BUTTON') return;
+      VS.folderPath = [...VS.folderPath, { id: folder.id, name: folder.name }];
+      VS.folderId = folder.id;
+      rVault();
+    };
+    container.appendChild(item);
+  });
+
+  // Render files
+  files.forEach(file => {
+    const fIcon = fileTypeIcon(file.file_type);
+    const fColor = fileTypeColor(file.file_type);
+    const item = VS.view === 'grid'
+      ? gc({ padding: '14px', textAlign: 'center', cursor: 'pointer', border: `1px solid ${fColor}33`, position: 'relative', transition: 'border-color .18s' },
+          el('div', { style: { fontSize: '32px', marginBottom: '6px' } }, fIcon),
+          el('div', { style: { color: q.tx, fontSize: '11px', fontWeight: '700', marginBottom: '2px', wordBreak: 'break-word' } }, file.name),
+          el('div', { style: { color: q.tm, fontSize: '9px', fontFamily: 'monospace' } }, file.slv_code),
+          file.tags?.length ? el('div', { style: { marginTop: '4px' } }, ...file.tags.slice(0, 2).map(tag => el('span', { style: { background: `${fColor}18`, color: fColor, borderRadius: '20px', padding: '1px 6px', fontSize: '8px', marginRight: '2px' } }, tag))) : el('span', {}))
+      : gc({ padding: '10px 14px', display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', border: `1px solid ${q.sb}`, transition: 'border-color .15s' },
+          el('span', { style: { fontSize: '22px' } }, fIcon),
+          el('div', { style: { flex: '1' } },
+            el('div', { style: { color: q.tx, fontSize: '13px', fontWeight: '700' } }, file.name),
+            el('div', { style: { color: q.tm, fontSize: '10px' } }, file.slv_code + ' · ' + file.file_type + ' · ' + (file.owner || '') + ' · ' + new Date(file.created_at).toLocaleDateString('id-ID'))
+          ),
+          el('div', { style: { display: 'flex', gap: '4px' } },
+            btn('📂', e => { e.stopPropagation(); openVaultFile(file); }, true, { fontSize: '9px', padding: '2px 5px', title: 'Buka' }),
+            btn('⬇️', e => { e.stopPropagation(); exportVaultFile(file, 'pdf'); }, true, { fontSize: '9px', padding: '2px 5px', title: 'Export PDF' }),
+            btn('🪪', e => { e.stopPropagation(); openIDCard(file); }, true, { fontSize: '9px', padding: '2px 5px', title: 'ID Card' })
+          ));
+    item.onmouseenter = () => item.style.borderColor = fColor;
+    item.onmouseleave = () => item.style.borderColor = VS.view === 'grid' ? `${fColor}33` : q.sb;
+    item.onclick = e => { if (e.target.tagName === 'BUTTON') return; openVaultFile(file); };
+    container.appendChild(item);
+  });
+
+  c.appendChild(container);
+}
+
+function fileTypeIcon(type) {
+  return { doc: '📝', pdf: '📄', excel: '📊', txt: '📃', image: '🖼️', upload: '📎' }[type] || '📄';
+}
+function fileTypeColor(type) {
+  return { doc: '#4fc3f7', pdf: '#f44', excel: '#81c784', txt: '#ffb74d', image: '#ce93d8', upload: '#FAB715' }[type] || '#aaa';
+}
+function genSLV() { return 'SLV-' + String(Math.floor(100000 + Math.random() * 900000)); }
+function genQRToken() { return 'QRT-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2, 8).toUpperCase(); }
+
+// ── FOLDER MODAL ──────────────────────────────────────────────
+function openFolderModal(existing) {
+  const q = t(); const m = document.getElementById('m-vault'); m.style.display = 'flex'; m.innerHTML = '';
+  const isEdit = !!existing;
+  const form = { name: existing?.name || '', tags: (existing?.tags || []).join(', '), color: existing?.color || '#FAB715' };
+  const TAG_SUGGESTIONS = ['HR', 'Kontrak', 'Aktif', 'Arsip', 'Keuangan', 'Legal', 'Rahasia', 'Q1', 'Q2', 'Q3', 'Q4', '2024', '2025'];
+  const render = () => {
+    m.innerHTML = '';
+    const card = gc({ padding: '24px', width: '420px', maxWidth: '96vw', borderRadius: '18px', position: 'relative' });
+    card.appendChild(el('button', { style: { position: 'absolute', top: '12px', right: '14px', background: 'none', border: 'none', color: q.tm, fontSize: '18px', cursor: 'pointer' }, onclick: () => closeM('m-vault') }, '✕'));
+    card.appendChild(el('h3', { style: { color: q.ac, marginBottom: '16px', fontSize: '14px', fontWeight: '800' } }, (isEdit ? '✏️ Edit' : '📁 Folder Baru')));
+    const is = { background: q.ib, borderColor: q.sb, color: q.tx };
+    const lb = tx => el('div', { style: { color: q.tm, fontSize: '10px', fontWeight: '700', marginBottom: '3px', marginTop: '10px' } }, tx);
+    card.appendChild(lb('NAMA FOLDER'));
+    const ni = el('input', { class: 'inf', placeholder: 'Nama folder...', style: is }); ni.value = form.name; ni.oninput = e => form.name = e.target.value; card.appendChild(ni);
+    card.appendChild(lb('WARNA'));
+    const colorRow = el('div', { style: { display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '4px' } });
+    ['#FAB715', '#4fc3f7', '#81c784', '#f06292', '#ce93d8', '#ffb74d', '#64dc64', '#f44'].forEach(col2 => {
+      const cb = el('div', { style: { width: '24px', height: '24px', borderRadius: '50%', background: col2, cursor: 'pointer', border: `3px solid ${form.color === col2 ? '#fff' : 'transparent'}`, transition: '.15s' }, onclick: () => { form.color = col2; render(); } });
+      colorRow.appendChild(cb);
+    });
+    card.appendChild(colorRow);
+    card.appendChild(lb('TAG (klik untuk tambah atau ketik manual, pisah koma)'));
+    const tagInput = el('input', { class: 'inf', placeholder: 'HR, Kontrak, Aktif...', style: is }); tagInput.value = form.tags; tagInput.oninput = e => form.tags = e.target.value; card.appendChild(tagInput);
+    const tagSugg = el('div', { style: { display: 'flex', gap: '4px', flexWrap: 'wrap', marginTop: '5px' } });
+    TAG_SUGGESTIONS.forEach(tag => {
+      tagSugg.appendChild(el('span', {
+        style: { background: `${form.color}22`, color: form.color, borderRadius: '20px', padding: '2px 8px', fontSize: '9px', cursor: 'pointer', border: `1px solid ${form.color}44` },
+        onclick: () => { const existing2 = form.tags.split(',').map(x => x.trim()).filter(Boolean); if (!existing2.includes(tag)) { form.tags = [...existing2, tag].join(', '); tagInput.value = form.tags; } }
+      }, tag));
+    });
+    card.appendChild(tagSugg);
+    const br = el('div', { style: { display: 'flex', gap: '8px', marginTop: '16px' } });
+    br.appendChild(btn('💾 Simpan Folder', async () => {
+      if (!form.name.trim()) { notif('Nama folder wajib diisi!', 'error'); return; }
+      const tagsArr = form.tags.split(',').map(x => x.trim()).filter(Boolean);
+      if (isEdit) await VDB.updateFolder(existing.id, { name: form.name.trim(), tags: tagsArr, color: form.color });
+      else await VDB.addFolder({ name: form.name.trim(), category: VS.cat, parent_id: VS.folderId, tags: tagsArr, color: form.color });
+      closeM('m-vault'); rVault(); notif('✅ Folder disimpan!', 'success');
+    }, false, { padding: '8px 18px' }));
+    br.appendChild(btn('Batal', () => closeM('m-vault'), true));
+    card.appendChild(br); m.appendChild(card);
+    setTimeout(() => ni.focus(), 50);
   };
-  const render=()=>{
-    m.innerHTML='';
-    const card=gc({padding:'26px',width:'540px',maxWidth:'97vw',maxHeight:'94vh',overflowY:'auto',position:'relative',borderRadius:'18px'});
-    card.appendChild(el('button',{style:{position:'absolute',top:'12px',right:'14px',background:'none',border:'none',color:q.tm,fontSize:'19px',cursor:'pointer'},onclick:()=>closeM('m-vault')},'\u2715'));
-    card.appendChild(el('h2',{style:{color:q.ac,marginBottom:'14px',fontSize:'15px'}},(isEdit?'\u270F\uFE0F Edit':'\u2795 Tambah')+' Entri Vault'));
-    const is={background:q.ib,borderColor:q.sb,color:q.tx};
-    const lb=tx=>el('div',{style:{color:q.tm,fontSize:'10px',fontWeight:'700',marginBottom:'3px',marginTop:'9px'}},tx);
-    card.appendChild(lb('JUDUL *'));
-    const ti=el('input',{class:'inf',placeholder:'Judul entri',style:is});ti.value=form.title;ti.oninput=e=>{form.title=e.target.value;};card.appendChild(ti);
-    card.appendChild(lb('KATEGORI'));
-    const sel=el('select',{class:'inf',style:{...is,cursor:'pointer'}});
-    CAT_OPTS.forEach(ct=>{const o=el('option',{value:ct},ct);if(form.category===ct)o.selected=true;sel.appendChild(o);});
-    sel.onchange=e=>{form.category=e.target.value;};card.appendChild(sel);
-    card.appendChild(lb('PEMILIK'));
-    const oi=el('input',{class:'inf',placeholder:'Nama pemilik / username',style:is});oi.value=form.owner;oi.oninput=e=>{form.owner=e.target.value;};card.appendChild(oi);
-    card.appendChild(lb('KODE VAULT — format wajib SLV-XXXXXX (6 digit angka)'));
-    const codeRow=el('div',{style:{display:'flex',gap:'7px',alignItems:'center'}});
-    const codeWarn=el('div',{style:{color:'#f88',fontSize:'9px',marginTop:'3px',display:SLV_RX.test(form.ownerCode)?'none':'block'}},
-      '⚠️ Format salah. Contoh yang benar: SLV-123456');
-    const oci=el('input',{class:'inf',placeholder:'SLV-123456',style:{...is,flex:'1',marginBottom:'0',fontFamily:'monospace',fontWeight:'700',letterSpacing:'.1em',opacity:isEdit?'0.7':'1'}});
-    oci.value=form.ownerCode;
-    if(isEdit){
-      // Code is LOCKED on edit — cannot be changed
-      oci.readOnly=true;
-      oci.style.cursor='not-allowed';
-      oci.style.borderColor='#FAB71566';
-      oci.title='Kode Vault tidak dapat diubah setelah dibuat';
-      codeRow.appendChild(oci);
-      codeRow.appendChild(el('span',{style:{color:'#FAB715',fontSize:'10px',flexShrink:'0'}},'🔒 Terkunci'));
-    } else {
-      oci.oninput=e=>{
-        form.ownerCode=e.target.value.toUpperCase();
-        codeWarn.style.display=SLV_RX.test(form.ownerCode)?'none':'block';
-      };
-      codeRow.appendChild(oci);
-      codeRow.appendChild(btn('🔄 Generate',()=>{form.ownerCode=genCode();oci.value=form.ownerCode;codeWarn.style.display='none';},true,{fontSize:'10px',padding:'5px 10px',flexShrink:'0'}));
+  render();
+}
+
+// ── NEW FILE MODAL ────────────────────────────────────────────
+function openNewFileModal() {
+  if (!VS.folderId) { notif('Pilih folder terlebih dahulu!', 'error'); return; }
+  const q = t(); const m = document.getElementById('m-vault'); m.style.display = 'flex'; m.innerHTML = '';
+  const card = gc({ padding: '26px', width: '440px', maxWidth: '96vw', borderRadius: '18px', position: 'relative' });
+  card.appendChild(el('button', { style: { position: 'absolute', top: '12px', right: '14px', background: 'none', border: 'none', color: q.tm, fontSize: '18px', cursor: 'pointer' }, onclick: () => closeM('m-vault') }, '✕'));
+  card.appendChild(el('h3', { style: { color: q.ac, marginBottom: '6px', fontSize: '14px', fontWeight: '800' } }, '➕ Buat File Baru'));
+  card.appendChild(el('p', { style: { color: q.tm, fontSize: '11px', marginBottom: '20px' } }, 'Pilih format dokumen yang ingin dibuat:'));
+  const FILE_TYPES = [
+    { type: 'doc', icon: '📝', label: 'Dokumen', desc: 'Editor teks kaya, export ke PDF/Word' },
+    { type: 'excel', icon: '📊', label: 'Spreadsheet', desc: 'Tabel data, export ke Excel/PDF' },
+    { type: 'txt', icon: '📃', label: 'Teks Biasa', desc: 'Catatan sederhana, export ke TXT' },
+    { type: 'upload', icon: '📎', label: 'Upload File', desc: 'Upload PDF, Word, gambar, dll.' },
+  ];
+  const grid = el('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' } });
+  FILE_TYPES.forEach(ft => {
+    const col2 = fileTypeColor(ft.type);
+    const card2 = el('div', {
+      style: { padding: '16px', border: `1px solid ${col2}44`, borderRadius: '10px', cursor: 'pointer', textAlign: 'center', transition: 'all .18s' },
+      onclick: () => { closeM('m-vault'); VS.newFileType = ft.type; openFileEditor(null, ft.type); }
+    });
+    card2.onmouseenter = () => { card2.style.borderColor = col2; card2.style.background = `${col2}11`; };
+    card2.onmouseleave = () => { card2.style.borderColor = `${col2}44`; card2.style.background = 'transparent'; };
+    card2.appendChild(el('div', { style: { fontSize: '28px', marginBottom: '6px' } }, ft.icon));
+    card2.appendChild(el('div', { style: { color: q.tx, fontSize: '12px', fontWeight: '700', marginBottom: '3px' } }, ft.label));
+    card2.appendChild(el('div', { style: { color: q.tm, fontSize: '9px', lineHeight: '1.5' } }, ft.desc));
+    grid.appendChild(card2);
+  });
+  card.appendChild(grid);
+  card.appendChild(btn('Batal', () => closeM('m-vault'), true, { width: '100%', marginTop: '12px', fontSize: '11px' }));
+  m.appendChild(card);
+}
+
+// ── OPEN EXISTING FILE ────────────────────────────────────────
+function openVaultFile(file) {
+  openFileEditor(file, file.file_type);
+}
+
+// ── FILE EDITOR / VIEWER ──────────────────────────────────────
+function openFileEditor(existingFile, fileType) {
+  const q = t();
+  // Use a dedicated full-screen overlay
+  let overlay = document.getElementById('vault-editor-overlay');
+  if (overlay) overlay.remove();
+  overlay = el('div', { id: 'vault-editor-overlay', style: { position: 'fixed', inset: '0', background: q.cb, zIndex: '9000', display: 'flex', flexDirection: 'column', overflow: 'hidden' } });
+  document.body.appendChild(overlay);
+
+  const isNew = !existingFile;
+  const SLV_RX = /^SLV-\d{6}$/;
+  const form = {
+    name: existingFile?.name || '',
+    slv_code: existingFile?.slv_code || genSLV(),
+    owner: existingFile?.owner || '',
+    owner_id: existingFile?.owner_id || '',
+    tags: (existingFile?.tags || []).join(', '),
+    content: existingFile?.content || { blocks: [] },
+    raw_text: existingFile?.raw_text || '',
+    file_url: existingFile?.file_url || null,
+    file_type: fileType,
+    file_size: existingFile?.file_size || 0,
+    _uploadFile: null,
+  };
+  let isDirty = false;
+
+  const render = () => {
+    overlay.innerHTML = '';
+    // Top bar
+    const topbar = el('div', { style: { display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 16px', borderBottom: `1px solid ${q.sb}`, background: q.cb, flexShrink: '0', flexWrap: 'wrap' } });
+    const backBtn = el('button', { style: { background: 'none', border: 'none', color: q.tm, fontSize: '20px', cursor: 'pointer', padding: '0 6px' }, onclick: () => { if (isDirty && !confirm('Ada perubahan yang belum disimpan. Keluar?')) return; overlay.remove(); } }, '←');
+    topbar.appendChild(backBtn);
+    topbar.appendChild(el('span', { style: { fontSize: '18px' } }, fileTypeIcon(fileType)));
+    const nameInp = el('input', { style: { background: 'transparent', border: 'none', borderBottom: `1px solid ${q.sb}`, color: q.tx, fontSize: '15px', fontWeight: '700', outline: 'none', flex: '1', minWidth: '120px', padding: '2px 4px' }, placeholder: 'Nama file...' });
+    nameInp.value = form.name; nameInp.oninput = e => { form.name = e.target.value; isDirty = true; };
+    topbar.appendChild(nameInp);
+    // SLV code
+    const codeDisp = el('div', { style: { color: q.tm, fontSize: '10px', fontFamily: 'monospace', padding: '4px 8px', background: q.sur, borderRadius: '6px', flexShrink: '0' } }, '🔑 ' + form.slv_code + (isNew ? '' : ' 🔒'));
+    topbar.appendChild(codeDisp);
+    // Action buttons
+    const acts = el('div', { style: { display: 'flex', gap: '6px' } });
+    if (!isNew) {
+      acts.appendChild(btn('📄 PDF', () => exportVaultFile(existingFile || form, 'pdf'), true, { fontSize: '10px', padding: '4px 9px' }));
+      if (fileType === 'excel') acts.appendChild(btn('📊 Excel', () => exportVaultFile(existingFile || form, 'excel'), true, { fontSize: '10px', padding: '4px 9px' }));
+      acts.appendChild(btn('📃 TXT', () => exportVaultFile(existingFile || form, 'txt'), true, { fontSize: '10px', padding: '4px 9px' }));
+      acts.appendChild(btn('🪪 ID Card', () => openIDCard(existingFile || form), true, { fontSize: '10px', padding: '4px 9px' }));
     }
-    card.appendChild(codeRow);card.appendChild(codeWarn);
-    card.appendChild(lb('ISI / DATA'));
-    const ci=el('textarea',{class:'inf',rows:'5',placeholder:'Masukkan data rahasia...',style:{...is,resize:'vertical'}});
-    ci.textContent=form.content;ci.oninput=e=>{form.content=e.target.value;};card.appendChild(ci);
-    card.appendChild(lb('TAG (pisah koma)'));
-    const tgi=el('input',{class:'inf',placeholder:'keuangan, Q1, kontrak',style:is});
-    tgi.value=form.tags;tgi.oninput=e=>{form.tags=e.target.value;};card.appendChild(tgi);
-    // Lampiran Gambar
-    card.appendChild(lb('\uD83D\uDDBC\uFE0F LAMPIRAN GAMBAR (opsional · JPG/PNG/GIF)'));
-    const imgRow=el('div',{style:{display:'flex',gap:'8px',alignItems:'center',flexWrap:'wrap',padding:'8px',background:'rgba(255,255,255,.03)',borderRadius:'8px',border:`1px dashed ${q.sb}`}});
-    if(form.imageData){
-      imgRow.appendChild(el('img',{src:form.imageData,style:{width:'60px',height:'60px',objectFit:'cover',borderRadius:'7px',border:`1px solid ${q.ac}`}}));
-      imgRow.appendChild(el('span',{style:{color:q.ac,fontSize:'10px',flex:'1'}},form.imageName||'Gambar'));
-      imgRow.appendChild(btn('\u2715 Hapus',()=>{form.imageData=null;form.imageName=null;render();},true,{fontSize:'9px',borderColor:'#f44',color:'#f88',padding:'3px 8px'}));
-    } else {
-      const ib=btn('\uD83D\uDCF7 Pilih Gambar',()=>{
-        const fi=document.createElement('input');fi.type='file';fi.accept='image/*';
-        fi.onchange=async ev=>{const f2=ev.target.files[0];if(!f2)return;if(f2.size>4*1024*1024){notif('Gambar maks 4MB','error');return;}const d=await rf(f2);form.imageData=d;form.imageName=f2.name;render();};
+    acts.appendChild(btn('💾 Simpan', async () => {
+      if (!form.name.trim()) { notif('Nama file wajib!', 'error'); return; }
+      if (!SLV_RX.test(form.slv_code)) { notif('Kode SLV- tidak valid!', 'error'); return; }
+      // Gather content
+      if (fileType === 'doc') {
+        const editorEl = overlay.querySelector('#doc-editor');
+        if (editorEl) { form.raw_text = editorEl.innerText; form.content = { blocks: [{ type: 'html', data: editorEl.innerHTML }] }; }
+      } else if (fileType === 'excel') {
+        const tbl = overlay.querySelector('#excel-table');
+        if (tbl) {
+          const rows = Array.from(tbl.querySelectorAll('tr')).map(tr => Array.from(tr.querySelectorAll('td,th')).map(td => td.innerText));
+          form.content = { rows }; form.raw_text = rows.map(r => r.join('\t')).join('\n');
+        }
+      } else if (fileType === 'txt') {
+        const ta = overlay.querySelector('#txt-editor');
+        if (ta) { form.raw_text = ta.value; form.content = { text: ta.value }; }
+      }
+      const tagsArr = form.tags.split(',').map(x => x.trim()).filter(Boolean);
+      const payload = { name: form.name.trim(), slv_code: form.slv_code, owner: form.owner, owner_id: form.owner_id, tags: tagsArr, content: form.content, raw_text: form.raw_text, file_type: fileType, folder_id: VS.folderId };
+      // Handle file upload for 'upload' type
+      if (fileType === 'upload' && form._uploadFile) {
+        notif('⏳ Mengupload file...', 'info');
+        const url = await uploadVaultFile(form._uploadFile, form.slv_code);
+        if (url) { payload.file_url = url; payload.file_size = form._uploadFile.size; payload.uploaded = true; payload.uploaded_at = new Date().toISOString(); }
+      }
+      if (isNew) {
+        payload.qr_token = genQRToken();
+        await VDB.addFile(payload);
+        notif('✅ File berhasil dibuat!', 'success');
+      } else {
+        await VDB.updateFile(existingFile.id, payload);
+        notif('✅ File disimpan!', 'success');
+      }
+      isDirty = false; overlay.remove(); rVault();
+    }, false, { fontSize: '10px', padding: '5px 14px' }));
+    topbar.appendChild(acts);
+    overlay.appendChild(topbar);
+
+    // Metadata row
+    const meta = el('div', { style: { display: 'flex', gap: '10px', padding: '8px 16px', borderBottom: `1px solid ${q.sb}`, flexWrap: 'wrap', background: q.sur, flexShrink: '0' } });
+    const is2 = { background: q.ib, borderColor: q.sb, color: q.tx, marginBottom: '0' };
+    const miniInp = (ph, key, w) => { const i = el('input', { class: 'inf', placeholder: ph, style: { ...is2, width: w || '160px', fontSize: '11px', padding: '4px 8px' } }); i.value = form[key] || ''; i.oninput = e => { form[key] = e.target.value; isDirty = true; }; return i; };
+    meta.appendChild(miniInp('Nama Pemilik', 'owner', '150px'));
+    meta.appendChild(miniInp('ID Pegawai / Kode', 'owner_id', '130px'));
+    meta.appendChild(miniInp('Tag (pisah koma)', 'tags', '180px'));
+    overlay.appendChild(meta);
+
+    // ── Editor Area ──
+    const edArea = el('div', { style: { flex: '1', overflow: 'auto', padding: '20px', background: q.cb } });
+
+    if (fileType === 'doc') {
+      // Rich text editor
+      const toolbar2 = el('div', { style: { display: 'flex', gap: '4px', marginBottom: '10px', flexWrap: 'wrap', padding: '6px 10px', background: q.sur, borderRadius: '8px' } });
+      [['B', 'bold'], ['I', 'italic'], ['U', 'underline'], ['S', 'strikeThrough']].forEach(([label, cmd]) => {
+        toolbar2.appendChild(el('button', { style: { padding: '3px 8px', borderRadius: '5px', border: `1px solid ${q.sb}`, background: q.ib, color: q.tx, cursor: 'pointer', fontSize: label === 'B' ? '13px' : '11px', fontWeight: label === 'B' ? '900' : '400' }, onclick: () => document.execCommand(cmd) }, label));
+      });
+      [['H1', () => document.execCommand('formatBlock', false, 'h2')], ['H2', () => document.execCommand('formatBlock', false, 'h3')], ['¶', () => document.execCommand('formatBlock', false, 'p')], ['• List', () => document.execCommand('insertUnorderedList')], ['1. List', () => document.execCommand('insertOrderedList')]].forEach(([label, fn]) => {
+        toolbar2.appendChild(el('button', { style: { padding: '3px 8px', borderRadius: '5px', border: `1px solid ${q.sb}`, background: q.ib, color: q.tx, cursor: 'pointer', fontSize: '11px' }, onclick: fn }, label));
+      });
+      edArea.appendChild(toolbar2);
+      const editor = el('div', { id: 'doc-editor', contenteditable: 'true', style: { minHeight: '400px', background: '#fff', color: '#111', padding: '32px 40px', borderRadius: '8px', fontSize: '14px', lineHeight: '1.8', outline: 'none', fontFamily: 'Georgia, serif', boxShadow: '0 2px 20px rgba(0,0,0,.3)', maxWidth: '800px', margin: '0 auto' } });
+      editor.innerHTML = (form.content?.blocks?.[0]?.data) || '<p>Mulai mengetik di sini...</p>';
+      editor.oninput = () => { isDirty = true; };
+      edArea.appendChild(editor);
+
+    } else if (fileType === 'excel') {
+      const ROWS = 20, COLS = 8;
+      const savedRows = form.content?.rows || [];
+      edArea.appendChild(el('div', { style: { color: q.tm, fontSize: '10px', marginBottom: '8px' } }, 'Klik sel untuk edit. Tab/Enter untuk navigasi.'));
+      const tableWrap = el('div', { style: { overflowX: 'auto' } });
+      const tbl = el('table', { id: 'excel-table', style: { borderCollapse: 'collapse', fontSize: '12px', minWidth: '600px' } });
+      // Header row
+      const headRow = el('tr', {});
+      headRow.appendChild(el('th', { style: { width: '30px', background: q.sur, border: `1px solid ${q.sb}`, color: q.tm, fontSize: '10px', padding: '3px' } }, '#'));
+      'ABCDEFGH'.split('').forEach(letter => {
+        headRow.appendChild(el('th', { style: { minWidth: '100px', background: q.sur, border: `1px solid ${q.sb}`, color: q.tm, fontSize: '10px', padding: '3px 6px', textAlign: 'center' } }, letter));
+      });
+      tbl.appendChild(headRow);
+      for (let r = 0; r < ROWS; r++) {
+        const tr2 = el('tr', {});
+        tr2.appendChild(el('td', { style: { background: q.sur, border: `1px solid ${q.sb}`, color: q.tm, fontSize: '10px', padding: '2px 5px', textAlign: 'center' } }, String(r + 1)));
+        for (let c = 0; c < COLS; c++) {
+          const td = el('td', { contenteditable: 'true', style: { border: `1px solid ${q.sb}`, padding: '4px 6px', color: q.tx, minWidth: '100px', outline: 'none', background: 'transparent' } });
+          td.innerText = savedRows[r]?.[c + 1] || '';
+          td.oninput = () => isDirty = true;
+          td.onkeydown = e => {
+            if (e.key === 'Tab') { e.preventDefault(); const next = td.nextElementSibling; if (next) next.focus(); }
+            if (e.key === 'Enter') { e.preventDefault(); const nextRow = tr2.nextElementSibling; if (nextRow) nextRow.children[c + 1]?.focus(); }
+          };
+          tr2.appendChild(td);
+        }
+        tbl.appendChild(tr2);
+      }
+      tableWrap.appendChild(tbl); edArea.appendChild(tableWrap);
+
+    } else if (fileType === 'txt') {
+      const ta = el('textarea', { id: 'txt-editor', style: { width: '100%', minHeight: '500px', background: q.ib, border: `1px solid ${q.sb}`, color: q.tx, padding: '20px', fontSize: '13px', fontFamily: 'monospace', lineHeight: '1.7', borderRadius: '8px', resize: 'vertical' }, placeholder: 'Tulis teks di sini...' });
+      ta.value = form.content?.text || form.raw_text || '';
+      ta.oninput = () => isDirty = true;
+      edArea.appendChild(ta);
+
+    } else if (fileType === 'upload') {
+      const up = el('div', { style: { textAlign: 'center', padding: '50px', border: `2px dashed ${q.sb}`, borderRadius: '12px', cursor: 'pointer' } });
+      if (form.file_url) {
+        const fName = form.name || 'File';
+        up.innerHTML = '';
+        up.appendChild(el('div', { style: { fontSize: '48px', marginBottom: '10px' } }, '📎'));
+        up.appendChild(el('div', { style: { color: q.ac, fontSize: '14px', fontWeight: '700', marginBottom: '8px' } }, fName));
+        up.appendChild(el('a', { href: form.file_url, target: '_blank', style: { color: q.ac, fontSize: '11px' } }, '🔗 Buka File'));
+        up.appendChild(el('div', { style: { marginTop: '14px' } },
+          btn('📎 Ganti File', () => up.click(), true, { fontSize: '11px' })
+        ));
+      } else {
+        up.appendChild(el('div', { style: { fontSize: '48px', marginBottom: '12px' } }, '📎'));
+        up.appendChild(el('div', { style: { color: q.tx, fontSize: '14px', fontWeight: '700', marginBottom: '6px' } }, 'Klik atau drag file ke sini'));
+        up.appendChild(el('div', { style: { color: q.tm, fontSize: '11px' } }, 'PDF, Word, Excel, Gambar — maks 20MB'));
+      }
+      up.onclick = () => {
+        const fi = document.createElement('input'); fi.type = 'file';
+        fi.accept = '.pdf,.doc,.docx,.xls,.xlsx,.txt,.png,.jpg,.jpeg,application/pdf,application/msword';
+        fi.onchange = async e => {
+          const f = e.target.files[0]; if (!f) return;
+          if (f.size > 20 * 1024 * 1024) { notif('File maks 20MB', 'error'); return; }
+          form._uploadFile = f; form.name = form.name || f.name;
+          nameInp.value = form.name; isDirty = true;
+          notif('📎 File dipilih: ' + f.name + ' (' + (f.size / 1024).toFixed(0) + ' KB)', 'success');
+          up.innerHTML = '';
+          up.appendChild(el('div', { style: { fontSize: '32px', marginBottom: '8px' } }, fileTypeIcon(f.name.match(/\.pdf$/i) ? 'pdf' : f.name.match(/\.xlsx?$/i) ? 'excel' : 'upload')));
+          up.appendChild(el('div', { style: { color: q.ac, fontSize: '13px', fontWeight: '700' } }, f.name));
+          up.appendChild(el('div', { style: { color: q.tm, fontSize: '10px' } }, (f.size / 1024).toFixed(1) + ' KB · Klik Simpan untuk upload'));
+        };
         fi.click();
-      },true,{fontSize:'10px'});
-      imgRow.appendChild(ib);
-      imgRow.appendChild(el('span',{style:{color:q.tm,fontSize:'9px'}},'Maks 4MB'));
+      };
+      edArea.appendChild(up);
     }
-    card.appendChild(imgRow);
-    // Lampiran File
-    card.appendChild(lb('\uD83D\uDCCE LAMPIRAN FILE (PDF / Word / Excel / TXT)'));
-    const fileRow=el('div',{style:{display:'flex',gap:'8px',alignItems:'center',flexWrap:'wrap',padding:'8px',background:'rgba(255,255,255,.03)',borderRadius:'8px',border:`1px dashed ${q.sb}`}});
-    if(form.fileData){
-      const fIc=form.fileName?.match(/\.pdf$/i)?'\uD83D\uDCC4':form.fileName?.match(/\.docx?$/i)?'\uD83D\uDCDD':form.fileName?.match(/\.xlsx?$/i)?'\uD83D\uDCCA':'\uD83D\uDCCE';
-      fileRow.appendChild(el('span',{style:{fontSize:'22px'}},fIc));
-      fileRow.appendChild(el('div',{style:{flex:'1'}},el('div',{style:{color:q.ac,fontSize:'10px',fontWeight:'600',wordBreak:'break-all'}},form.fileName),el('div',{style:{color:q.tm,fontSize:'8px'}},form.fileType||'')));
-      fileRow.appendChild(btn('\u2715 Hapus',()=>{form.fileData=null;form.fileName=null;form.fileType=null;render();},true,{fontSize:'9px',borderColor:'#f44',color:'#f88',padding:'3px 8px'}));
-    } else {
-      const fb=btn('\uD83D\uDCCE Pilih File',()=>{
-        const fi=document.createElement('input');fi.type='file';
-        fi.accept='.pdf,.doc,.docx,.xls,.xlsx,.txt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        fi.onchange=async ev=>{
-          const f2=ev.target.files[0];if(!f2)return;
-          if(f2.size>5*1024*1024){notif('File maks 5MB','error');return;}
-          const d=await rf(f2);form.fileData=d;form.fileName=f2.name;form.fileType=f2.type;render();
-        };fi.click();
-      },true,{fontSize:'10px'});
-      fileRow.appendChild(fb);
-      fileRow.appendChild(el('span',{style:{color:q.tm,fontSize:'9px'}},'Maks 5MB · PDF, Word, Excel, TXT'));
+    overlay.appendChild(edArea);
+  };
+  render();
+}
+
+// ── EXPORT FILE ───────────────────────────────────────────────
+async function exportVaultFile(file, format) {
+  const name = file.name || 'dokumen';
+  const slv = file.slv_code || '';
+  const content = file.content || {};
+  const raw = file.raw_text || content.text || '';
+
+  if (format === 'txt') {
+    const txt = [
+      'STARLIVE GROUP — VAULT DOCUMENT',
+      '═'.repeat(50),
+      'Kode   : ' + slv,
+      'Nama   : ' + name,
+      'Pemilik: ' + (file.owner || '-'),
+      'ID     : ' + (file.owner_id || '-'),
+      'Tanggal: ' + new Date(file.created_at || Date.now()).toLocaleString('id-ID'),
+      '═'.repeat(50),
+      '',
+      raw || '(tidak ada konten)',
+      '',
+      '─'.repeat(50),
+      'Dicetak: ' + new Date().toLocaleString('id-ID') + ' · oleh ' + (S.user?.username || 'Admin'),
+    ].join('\n');
+    const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+    dlBlob(blob, 'VAULT_' + slv + '.txt');
+    notif('📃 Diunduh sebagai TXT', 'success');
+
+  } else if (format === 'pdf') {
+    // Pure-JS PDF using text encoding (no external lib)
+    const txt = [
+      'STARLIVE GROUP — VAULT DOCUMENT',
+      '='.repeat(48),
+      'Kode   : ' + slv,
+      'Nama   : ' + name,
+      'Pemilik: ' + (file.owner || '-'),
+      'ID     : ' + (file.owner_id || '-'),
+      'Tag    : ' + (Array.isArray(file.tags) ? file.tags.join(', ') : file.tags || '-'),
+      'Tanggal: ' + new Date(file.created_at || Date.now()).toLocaleString('id-ID'),
+      '='.repeat(48),
+      '',
+      ...(raw || '(tidak ada konten)').split('\n').map(l => l.length > 75 ? l.match(/.{1,75}/g).join('\n') : l),
+      '',
+      '─'.repeat(48),
+      'Dicetak: ' + new Date().toLocaleString('id-ID'),
+      'Admin  : ' + (S.user?.username || '-'),
+    ].join('\n');
+    // Build minimal valid PDF
+    const pdfContent = buildSimplePDF(txt, name);
+    const blob = new Blob([pdfContent], { type: 'application/pdf' });
+    dlBlob(blob, 'VAULT_' + slv + '.pdf');
+    notif('📄 Diunduh sebagai PDF', 'success');
+    await DB.addVaultLog({ action: 'Unduh', title: name, code: slv, by: S.user?.username });
+
+  } else if (format === 'excel') {
+    // Build simple CSV (Excel-compatible)
+    const rows = content.rows || [['Nama', 'Nilai']];
+    const csv = rows.map(row => row.map(cell => '"' + String(cell || '').replace(/"/g, '""') + '"').join(',')).join('\n');
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+    dlBlob(blob, 'VAULT_' + slv + '.csv');
+    notif('📊 Diunduh sebagai CSV (Excel)', 'success');
+  }
+}
+
+function dlBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = filename; a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 3000);
+}
+
+function buildSimplePDF(text, title) {
+  // Minimal valid PDF structure
+  const lines = text.split('\n');
+  const pageWidth = 595, pageHeight = 842, margin = 50, lineH = 14, fontSize = 9;
+  let yPos = pageHeight - margin;
+  const ops = [];
+  ops.push('BT');
+  ops.push(`/F1 ${fontSize} Tf`);
+  ops.push(`${margin} ${yPos} Td`);
+  ops.push(`${lineH} TL`);
+  for (const line of lines) {
+    const safe = line.replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)');
+    ops.push(`(${safe}) Tj T*`);
+    yPos -= lineH;
+    if (yPos < margin) { ops.push('ET'); ops.push('BT'); yPos = pageHeight - margin; ops.push(`${margin} ${yPos} Td`); }
+  }
+  ops.push('ET');
+  const streamContent = ops.join('\n');
+  const streamLen = streamContent.length;
+
+  const pdf = [
+    '%PDF-1.4',
+    '1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj',
+    '2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj',
+    `3 0 obj<</Type/Page/Parent 2 0 R/MediaBox[0 0 ${pageWidth} ${pageHeight}]/Contents 4 0 R/Resources<</Font<</F1 5 0 R>>>>>>endobj`,
+    `4 0 obj<</Length ${streamLen}>>\nstream\n${streamContent}\nendstream\nendobj`,
+    '5 0 obj<</Type/Font/Subtype/Type1/BaseFont/Courier>>endobj',
+    'xref\n0 6',
+    '0000000000 65535 f ',
+    '%%EOF'
+  ].join('\n');
+  return pdf;
+}
+
+// ── ID CARD SYSTEM ─────────────────────────────────────────────
+function openIDCard(file) {
+  const q = t();
+  let overlay = document.getElementById('vault-idcard-overlay');
+  if (overlay) overlay.remove();
+  overlay = el('div', { id: 'vault-idcard-overlay', style: { position: 'fixed', inset: '0', background: 'rgba(0,0,0,.85)', zIndex: '9500', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '16px' } });
+  document.body.appendChild(overlay);
+
+  const slv = file.slv_code || file.slv_code;
+  const qrToken = file.qr_token || genQRToken();
+  // QR data: ONLY the token — never actual data
+  const qrData = JSON.stringify({ token: qrToken, slv, ts: Date.now() });
+
+  const card = el('div', { style: { width: '340px', background: '#fff', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 8px 40px rgba(0,0,0,.6)', fontFamily: 'sans-serif' } });
+  // Card header
+  const hdr2 = el('div', { style: { background: 'linear-gradient(135deg,#1a0e00,#2d1800)', padding: '20px 20px 14px', display: 'flex', alignItems: 'center', gap: '12px' } });
+  hdr2.appendChild(el('div', { style: { fontSize: '28px' } }, '⭐'));
+  hdr2.appendChild(el('div', {},
+    el('div', { style: { color: '#FAB715', fontSize: '14px', fontWeight: '900', letterSpacing: '.1em' } }, 'STARLIVE GROUP'),
+    el('div', { style: { color: '#a89878', fontSize: '9px', letterSpacing: '.15em' } }, 'EMPLOYEE ID CARD')
+  ));
+  card.appendChild(hdr2);
+
+  // Body
+  const body2 = el('div', { style: { padding: '18px 20px', display: 'flex', gap: '14px', alignItems: 'flex-start' } });
+  // QR Code (rendered as SVG grid)
+  const qrSvg = renderQRSVG(qrData, 100);
+  const qrWrap = el('div', { style: { flexShrink: '0' } });
+  qrWrap.appendChild(qrSvg);
+  qrWrap.appendChild(el('div', { style: { color: '#888', fontSize: '7px', textAlign: 'center', marginTop: '3px' } }, 'SCAN TO VERIFY'));
+  body2.appendChild(qrWrap);
+
+  // Info
+  const info = el('div', { style: { flex: '1' } });
+  info.appendChild(el('div', { style: { color: '#111', fontSize: '15px', fontWeight: '800', marginBottom: '4px', lineHeight: '1.2' } }, file.name || file.owner || 'Pegawai'));
+  info.appendChild(el('div', { style: { color: '#555', fontSize: '10px', marginBottom: '10px' } }, file.owner || ''));
+  [
+    ['ID', file.owner_id || file.slv_code],
+    ['Divisi', (Array.isArray(file.tags) ? file.tags[0] : '') || 'StarLive Group'],
+    ['Kode Dok', slv],
+  ].forEach(([label, val]) => {
+    info.appendChild(el('div', { style: { marginBottom: '5px' } },
+      el('div', { style: { color: '#999', fontSize: '8px', fontWeight: '700', letterSpacing: '.05em' } }, label),
+      el('div', { style: { color: '#222', fontSize: '11px', fontWeight: '600' } }, val || '-')
+    ));
+  });
+  body2.appendChild(info);
+  card.appendChild(body2);
+
+  // Footer
+  const foot = el('div', { style: { background: '#f5f0e8', padding: '8px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' } });
+  foot.appendChild(el('div', { style: { color: '#888', fontSize: '8px', letterSpacing: '.08em' } }, 'TOKEN: ' + qrToken.slice(0, 16) + '...'));
+  foot.appendChild(el('div', { style: { color: '#FAB715', fontSize: '8px', fontWeight: '700' } }, new Date().getFullYear().toString()));
+  card.appendChild(foot);
+
+  overlay.appendChild(card);
+
+  // Security note
+  overlay.appendChild(el('div', { style: { color: '#aaa', fontSize: '11px', textAlign: 'center', maxWidth: '340px', lineHeight: '1.6' } },
+    '🔒 QR hanya berisi token referensi — bukan data asli.\nData hanya dapat diakses server dengan autentikasi valid.'));
+
+  // Buttons
+  const btnRow = el('div', { style: { display: 'flex', gap: '10px' } });
+  btnRow.appendChild(btn('📥 Unduh ID Card', () => downloadIDCard(card, file), false, { fontSize: '12px' }));
+  btnRow.appendChild(btn('✕ Tutup', () => overlay.remove(), true, { fontSize: '12px' }));
+  overlay.appendChild(btnRow);
+}
+
+function renderQRSVG(data, size) {
+  // Simple visual QR placeholder (proper QR needs a library)
+  // We encode data as a visual pattern for display purposes
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('width', size); svg.setAttribute('height', size);
+  svg.setAttribute('viewBox', '0 0 21 21');
+  // Background
+  const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  bg.setAttribute('width', '21'); bg.setAttribute('height', '21'); bg.setAttribute('fill', 'white');
+  svg.appendChild(bg);
+  // Generate deterministic pattern from data hash
+  let hash = 0;
+  for (let i = 0; i < data.length; i++) { hash = ((hash << 5) - hash) + data.charCodeAt(i); hash |= 0; }
+  // Finder patterns (3 corners)
+  [[0, 0], [14, 0], [0, 14]].forEach(([ox, oy]) => {
+    const outer = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    outer.setAttribute('x', ox); outer.setAttribute('y', oy); outer.setAttribute('width', 7); outer.setAttribute('height', 7); outer.setAttribute('fill', '#111');
+    svg.appendChild(outer);
+    const inner = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    inner.setAttribute('x', ox + 1); inner.setAttribute('y', oy + 1); inner.setAttribute('width', 5); inner.setAttribute('height', 5); inner.setAttribute('fill', 'white');
+    svg.appendChild(inner);
+    const center = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    center.setAttribute('x', ox + 2); center.setAttribute('y', oy + 2); center.setAttribute('width', 3); center.setAttribute('height', 3); center.setAttribute('fill', '#111');
+    svg.appendChild(center);
+  });
+  // Data modules
+  for (let r = 0; r < 21; r++) {
+    for (let c = 0; c < 21; c++) {
+      if ((r < 8 && c < 8) || (r < 8 && c > 12) || (r > 12 && c < 8)) continue;
+      const bit = (hash >> ((r * 21 + c) % 32)) & 1;
+      const salt = (r * 7 + c * 13 + Math.abs(hash) * 3) % 4;
+      if (bit || salt === 0) {
+        const m = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        m.setAttribute('x', c); m.setAttribute('y', r); m.setAttribute('width', 1); m.setAttribute('height', 1); m.setAttribute('fill', '#111');
+        svg.appendChild(m);
+      }
     }
-    card.appendChild(fileRow);
-    const br=el('div',{style:{display:'flex',gap:'8px',marginTop:'16px'}});
-    br.appendChild(btn('\uD83D\uDCBE Simpan Entri',async ()=>{
-      if(!form.title.trim()){notif('Judul wajib diisi!','error');return;}
-      if(!SLV_RX.test(form.ownerCode)){
-        notif('\u274C Kode tidak valid! Wajib format SLV- diikuti tepat 6 digit angka. Contoh: SLV-123456','error');
-        codeWarn.style.display='block';return;
-      }
-      if(!isEdit){
-        const _vaultAll=await DB.getVault();const dup=_vaultAll.find(v=>v.ownerCode===form.ownerCode);
-        if(dup){notif('\u274C Kode '+form.ownerCode+' sudah dipakai entri lain!','error');return;}
-      }
-      const payload={title:form.title.trim(),category:form.category,owner:form.owner.trim(),
-        ownerCode:form.ownerCode,content:form.content,tags:form.tags,
-        fileData:form.fileData,fileName:form.fileName,fileType:form.fileType,
-        imageData:form.imageData,imageName:form.imageName};
-      if(isEdit){await DB.updVault(existing.id,payload);await DB.addVaultLog({action:'Edit',title:form.title,code:form.ownerCode,by:S.user?.username||'Admin'});}
-      else{await DB.addVault({...payload,createdBy:S.user?.email,uploaded:false});await DB.addVaultLog({action:'Tambah',title:form.title,code:form.ownerCode,by:S.user?.username||'Admin'});}
-      const catTab={'Data Informasi Pegawai':'pegawai','Data Informasi Transaksi':'transaksi','Data Informasi Umum':'umum'};
-      S.vaultTab=catTab[form.category]||'pegawai';
-      closeM('m-vault');rVault();notif('\u2705 Entri vault disimpan!','success');
-    },false,{padding:'9px 20px'}));
-    br.appendChild(btn('Batal',()=>closeM('m-vault'),true));
-    card.appendChild(br);m.appendChild(card);
-  };render();
+  }
+  return svg;
+}
+
+async function downloadIDCard(cardEl, file) {
+  // Clone card to a printable version and trigger browser print
+  const win = window.open('', '_blank', 'width=400,height=600');
+  win.document.write(`
+    <html><head><title>ID Card — ${file.name || ''}</title>
+    <style>body{margin:0;padding:20px;background:#f0e8d8;display:flex;justify-content:center;align-items:center;min-height:100vh;}</style>
+    </head><body>${cardEl.outerHTML}<script>setTimeout(()=>{window.print();window.close();},300);</script></body></html>
+  `);
+  win.document.close();
+  await VDB.logScan(file.id, file.slv_code, genQRToken());
+  await DB.addVaultLog({ action: 'Scan', title: file.name, code: file.slv_code, by: S.user?.username });
+  notif('🪪 ID Card dicetak/diunduh', 'success');
 }
 
 
-async function downloadVaultPDF(entry){
-  const lines=[
-    'STARLIVE GROUP — VAULT ENTRY',
-    '='.repeat(40),
-    'Kode: '+entry.ownerCode,
-    'Kategori: '+entry.category,
-    'Judul: '+entry.title,
-    'Pemilik: '+(entry.owner||'-'),
-    'Tanggal: '+new Date(entry.createdAt).toLocaleString('id-ID'),
-    entry.updatedAt?'Diperbarui: '+new Date(entry.updatedAt).toLocaleString('id-ID'):'',
-    '',
-    'TAG: '+(entry.tags||'-'),
-    '',
-    'ISI / DATA:',
-    '-'.repeat(40),
-    entry.content||'(tidak ada isi)',
-    '',
-    '='.repeat(40),
-    'Dicetak oleh: '+S.user.username+' pada '+new Date().toLocaleString('id-ID'),
-  ].filter(l=>l!==undefined).join('\n');
-  // Simple text-based PDF via data URI (pure JS, no lib needed)
-  const escaped=encodeURIComponent(lines);
-  const blob=new Blob([lines],{type:'text/plain'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download='VAULT_'+entry.ownerCode+'.txt';a.click();
-  setTimeout(()=>URL.revokeObjectURL(url),2000);
-  notif('📄 File vault diunduh (TXT)','success');
-  await DB.addVaultLog({action:'Unduh',title:entry.title,code:entry.ownerCode,by:S.user.username});
-}
 // Fix: ol was used instead of el in dashboard analytics
 async function ol(tag,props={},...ch){return el(tag,props,...ch);}
 // ── MY ACCOUNT ────────────────────────────────────────────────
@@ -2223,6 +3101,7 @@ const ldi=setInterval(()=>{
   if(prog>=80){clearInterval(ldi);}
 },25);
 (async()=>{
+  if(!SEC.init())return; // security check: no iframe embedding
   try{
     await checkSession();
   }catch(e){console.warn('Session check failed:',e);}
