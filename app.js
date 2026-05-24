@@ -10,8 +10,8 @@ const LANGS={
 };
 async function T(k){return (LANGS[S.lang]||LANGS.English)[k]||k;}
 // ── SUPABASE CLIENT ───────────────────────────────────────────
-const SUPABASE_URL = 'https://MASUKKAN_URL.supabase.co';
-const SUPABASE_KEY = 'MASUKKAN_ANON_KEY';
+const SUPABASE_URL = 'https://tcpdaozlggnmlinqenkw.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_n7ppL6YuOKuqVDSW4f_GxQ_e3DRC5Ni';
 const supa = window.supabase ? supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
 // ── SECURITY MODULE ────────────────────────────────────────────
