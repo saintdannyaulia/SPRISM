@@ -1,262 +1,39 @@
 # ⭐ StarLive Platform, Repository, Intelligence & Social Matrix
 
-> **Platform web digital multifungsi untuk informasi dan komunikasi StarLive Group** —  ...
-
-[![HTML](https://img.shields.io/badge/HTML-5-E34F26?style=flat-square&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
-[![CSS](https://img.shields.io/badge/CSS-3-1572B6?style=flat-square&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
-[![JavaScript](https://img.shields.io/badge/JavaScript-ES6%2B-F7DF1E?style=flat-square&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-[![Storage](https://img.shields.io/badge/Storage-Supabase-4CAF50?style=flat-square)](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)
-[![Version](https://img.shields.io/badge/V-6.0-FAB715?style=flat-square)](CHANGELOG.md)
+[![HTML](https://img.shields.io/badge/HTML-E34F26?logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
+[![CSS](https://img.shields.io/badge/CSS-1572B6?logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
+[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![Supabase](https://img.shields.io/badge/Supabase-3FCF8E?logo=supabase&logoColor=white)](https://supabase.com)
+[![VS Code](https://img.shields.io/badge/VS%20Code-007ACC?logo=visualstudiocode&logoColor=white)](https://code.visualstudio.com)
 
 ---
 
-## Daftar Isi
+## Directory
 
-- [Latar Belakang](#latar-belakang)
-- [Cara Kerja](#cara-kerja)
-- [Struktur Proyek](#struktur-proyek)
-- [Instalasi & Menjalankan](#instalasi--menjalankan)
-- [Akun Default](#akun-default)
-- [Fitur Lengkap](#fitur-lengkap)
-- [Arsitektur Kode](#arsitektur-kode)
-- [Struktur Data localStorage](#struktur-data-localstorage)
-- [Afiliasi StarLive](#afiliasi-starlive)
-- [Stack Teknologi](#stack-teknologi)
-- [Lisensi](#lisensi)
-
----
-
-## Latar Belakang
-
-StarLive Group mensimulasikan ekosistem konglomerat digital lengkap yang dapat berjalan sepenuhnya di browser — tanpa server, tanpa database eksternal, dan tanpa proses build. Proyek ini dibuat sebagai demonstrasi teknis bahwa sebuah platform komunitas penuh dapat dibangun hanya dengan HTML, CSS, dan Vanilla JavaScript.
-
-Tujuan utama proyek:
-
-1. Menyediakan portal terpusat untuk 5 afiliasi perusahaan StarLive.
-2. Mengelola profil kreator, proyek aktif, galeri, dan toko merchandise.
-3. Memfasilitasi interaksi komunitas via chat, pertemanan, dan sistem challenge.
-4. Memberikan kontrol penuh kepada admin melalui dasbor dan brankas data.
+- [Overview](#overview)
+- [Features & Tech Stack](#features--tech-stack)
+- [System Workflow](#system-workflow)
+- [User Guide](#user-guide)
+  - [Equipment](#equipment)
+  - [Installation](#installation)
+  - [Configuration](#configuration)
+  - [Troubleshooting](#troubleshooting)
+- [Development Notes](#development-notes)
+  - [Arsitektur Kode](#arsitektur-kode)
+  - [Struktur Data localStorage](#struktur-data-localstorage)
+  - [Limitations](#limitations)
+  - [Future Development](#future-development)
+- [Author](#author)
 
 ---
 
-## Cara Kerja
+## Overview
 
-```
-Pengguna membuka index.html di browser
-              │
-              ▼
-┌─────────────────────────────┐
-│       Loading Screen        │  ← inisialisasi state & tema
-└─────────────┬───────────────┘
-              │
-              ▼
-┌─────────────────────────────┐
-│     Cek Session Login       │  ← baca S.loggedIn dari localStorage
-│  (loggedIn / guest)         │
-└──────┬──────────────┬───────┘
-       │              │
-  Tamu (guest)    User / Admin
-       │              │
-       ▼              ▼
-┌────────────┐  ┌──────────────────┐
-│ Halaman    │  │ Halaman + Fitur  │
-│ Publik     │  │ Member + Admin   │
-│ (Home,     │  │ (Chat, Store,    │
-│  Gallery,  │  │  Dashboard,      │
-│  Social)   │  │  Vault, dll.)    │
-└────────────┘  └──────────────────┘
-              │
-              ▼
-  Semua data disimpan ke localStorage
-  dengan prefix sl5_*
-```
+**StarLive SPRISM** adalah platform web digital multifungsi untuk informasi dan komunikasi **StarLive Group** — sebuah simulasi ekosistem konglomerat digital lengkap yang berjalan sepenuhnya di browser tanpa server, tanpa database eksternal, dan tanpa proses build.
 
-Seluruh logika dikontrol dari `app.js` dan dibagi dalam dua file pendukung:
+Proyek ini membuktikan bahwa sebuah platform komunitas penuh dapat dibangun hanya dengan HTML, CSS, dan Vanilla JavaScript, mencakup portal terpusat untuk 5 afiliasi perusahaan StarLive, manajemen kreator dan proyek, sistem sosial & chat, toko merchandise, hingga dasbor admin.
 
-| File | Tanggung Jawab |
-|---|---|
-| `index.html` | Struktur DOM, semua elemen halaman dan modal |
-| `style.css` | Seluruh styling: tema warna, animasi, layout responsif |
-| `app.js` | State global, layer DB, render tiap halaman, autentikasi, chat, tema, i18n |
-
----
-
-## Struktur Proyek
-
-```
-starlive-group/
-│
-├── index.html          # Struktur HTML utama + semua modal
-├── style.css           # Styling global, animasi, tema
-├── app.js              # Logika aplikasi lengkap (~1.900 baris)
-│
-└── README.md
-```
-
-> **Catatan:** Proyek ini semula adalah single-file (`StarLiveGroup_v6.html`). Setelah refactor, dipisah menjadi 3 file di atas agar lebih mudah dipelihara. Ketiga file harus berada dalam **satu folder yang sama**.
-
----
-
-## Instalasi & Menjalankan
-
-### Prasyarat
-
-- Browser modern: **Chrome 110+**, Firefox 110+, Edge 110+, atau Safari 16+
-- Tidak memerlukan Node.js, Python, atau server apapun
-
-### Langkah
-
-```bash
-# 1. Clone repositori
-git clone https://github.com/username/starlive-group.git
-cd starlive-group
-
-# 2. Buka langsung di browser
-#    macOS
-open index.html
-
-#    Windows
-start index.html
-
-#    Linux
-xdg-open index.html
-```
-
-### Menggunakan Live Server (direkomendasikan)
-
-Untuk pengalaman terbaik, gunakan ekstensi **Live Server** di VS Code:
-
-1. Install ekstensi [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) di VS Code
-2. Klik kanan `index.html` → **Open with Live Server**
-3. Browser akan otomatis terbuka di `http://127.0.0.1:5500`
-
-> ⚠️ Membuka via `file://` langsung tetap berjalan, namun Live Server memberikan hot-reload dan menghindari potensi CORS pada beberapa browser.
-
----
-
-## Akun Default
-
-| Role | Email | Password | Akses |
-|---|---|---|---|
-| **Admin** | `admin@starlive.com` | `admin123` | Semua fitur + Dashboard + Vault |
-| **User** | Daftar sendiri via Register | Bebas | Fitur member standar |
-
----
-
-## Fitur Lengkap
-
-### Halaman & Navigasi
-
-| Halaman | Deskripsi |
-|---|---|
-| **Home** | Slideshow interaktif, statistik komunitas, dan deskripsi perusahaan |
-| **Affiliation** | 5 afiliasi perusahaan dengan accordion detail & link portal |
-| **Creator** | Kartu profil semua kreator, klik untuk melihat detail lengkap |
-| **Project** | Daftar proyek aktif dengan progress bar dan status |
-| **Gallery** | Grid foto/video dengan lightbox viewer dan upload |
-| **Store** | Katalog merchandise dengan keranjang belanja & checkout |
-| **Social** | Tautan ke semua platform komunitas StarLive |
-| **Dashboard** | Statistik page views dan manajemen pengguna *(admin only)* |
-| **Vault** | Penyimpanan data rahasia *(admin only)* |
-| **Fraction** | Sistem divisi internal dengan ujian masuk |
-| **Challenge** | Kuis interaktif berhadiah badge |
-
-### Autentikasi & Akun
-
-- Registrasi dan login via email/password
-- Profil lengkap: avatar, cover photo, bio, badge
-- Dua role: **User** dan **Admin**
-- Sistem wallet dengan mekanisme top-up dan approval admin
-
-### Sosial & Komunitas
-
-- **Chat** — ruang obrolan global dan direct message antar pengguna
-- **Friends** — kirim, terima, dan tolak permintaan pertemanan
-- **Online status** — indikator online/offline real-time
-- **Complaints** — sistem keluhan dan saran ke admin
-- **Direct Message to Admin** — komunikasi langsung ke admin
-
-### Toko & Transaksi
-
-- Katalog produk dengan gambar, kategori, harga, dan stok
-- Keranjang belanja dengan pengaturan jumlah item
-- Alur checkout dengan ringkasan pesanan
-- Manajemen produk penuh oleh admin (tambah/edit/hapus)
-
-### Challenge & Gamifikasi
-
-- Kuis pilihan ganda yang dapat dibuat oleh admin atau kreator
-- Sistem skor dengan passing grade 60%
-- Badge otomatis untuk setiap challenge yang diselesaikan
-- Riwayat attempt per challenge
-
-### Kustomisasi & UX
-
-- **Multi-tema** — Dark, Gold, Ocean, Sakura, Matrix, dan lainnya
-- **Multi-bahasa (i18n)** — English, Indonesian, Japanese, Chinese, Korean, German
-- **Partikel animasi** — efek bintang/partikel yang dapat dikonfigurasi
-- **Background kustom** — upload gambar atau video sebagai wallpaper
-- **Sidebar collapsible** — bisa dilipat untuk tampilan lebih luas
-- **Live clock** — jam dan tanggal real-time di sudut layar
-
----
-
-## Arsitektur Kode
-
-Seluruh logika dalam `app.js` diorganisasi ke dalam beberapa blok utama:
-
-```
-app.js
-│
-├── LANGS            ← Kamus terjemahan (7 bahasa)
-├── DB               ← Layer abstraksi localStorage (get/set/update)
-├── S                ← State global aplikasi (user, page, cart, tema)
-│
-├── Theme Engine     ← Sistem multi-tema dengan CSS variable
-├── Particle Engine  ← Animasi partikel pada canvas
-│
-├── Page Renders
-│   ├── rHome()      ← Slideshow + statistik
-│   ├── rAffil()     ← Accordion afiliasi
-│   ├── rCreators()  ← Grid kartu kreator
-│   ├── rProjects()  ← Daftar proyek + progress bar
-│   ├── rGallery()   ← Grid galeri + upload
-│   ├── rStore()     ← Katalog produk + keranjang
-│   ├── rDashboard() ← Statistik admin
-│   └── ...dst
-│
-└── Modals
-    ├── openAuthM()  ← Modal login/register
-    ├── openEC()     ← Edit creator
-    ├── openQuiz()   ← Quiz challenge
-    ├── openCO()     ← Checkout
-    └── ...dst
-```
-
----
-
-## Struktur Data localStorage
-
-Semua data disimpan di browser menggunakan `localStorage` dengan prefix `sl5_`:
-
-| Key | Tipe | Isi |
-|---|---|---|
-| `sl5_users` | `Array` | Data semua pengguna terdaftar |
-| `sl5_creators` | `Array` | Profil kreator |
-| `sl5_projects` | `Array` | Proyek aktif |
-| `sl5_gallery` | `Array` | Koleksi foto & video |
-| `sl5_products` | `Array` | Katalog produk toko |
-| `sl5_challenges` | `Array` | Kuis & challenge |
-| `sl5_topup_reqs` | `Array` | Permintaan top-up wallet |
-| `sl5_adminmsgs` | `Array` | Pesan complaints & DM ke admin |
-| `sl5_chat_<room>` | `Array` | Pesan per ruang obrolan |
-| `sl5_pageviews` | `Object` | Statistik kunjungan per halaman |
-
-> **Peringatan:** Data akan hilang jika pengguna menghapus cache browser. Untuk penyimpanan persisten, pertimbangkan [migrasi ke Supabase](SUPABASE_MIGRATION.md).
-
----
-
-## Afiliasi StarLive
+**5 Afiliasi StarLive Group:**
 
 | # | Nama | Bidang |
 |:---:|---|---|
@@ -266,28 +43,248 @@ Semua data disimpan di browser menggunakan `localStorage` dengan prefix `sl5_`:
 | 4 | **StarLive Studios** | Produksi kreatif & desain |
 | 5 | **StarLive Commerce** | E-commerce & marketplace |
 
+> **📝 Notes**
+> <!-- Tambahkan catatan tambahan, konteks proyek, atau informasi relevan lainnya di sini -->
+> <!-- Contoh: versi aktif, link demo, atau kondisi khusus yang perlu diketahui -->
+
 ---
 
-## Stack Teknologi
+## Features & Tech Stack
+
+### Features
+
+**Halaman & Navigasi**
+
+| Halaman | Deskripsi |
+|---|---|
+| **Home** | Slideshow interaktif, statistik komunitas, dan deskripsi perusahaan |
+| **Affiliation** | 5 afiliasi dengan accordion detail & link portal |
+| **Creator** | Kartu profil kreator dengan detail lengkap |
+| **Project** | Daftar proyek aktif dengan progress bar dan status |
+| **Gallery** | Grid foto/video dengan lightbox viewer dan upload |
+| **Store** | Katalog merchandise dengan keranjang & checkout |
+| **Social** | Tautan ke semua platform komunitas StarLive |
+| **Dashboard** | Statistik page views & manajemen pengguna *(admin only)* |
+| **Vault** | Penyimpanan data rahasia *(admin only)* |
+| **Fraction** | Sistem divisi internal dengan ujian masuk |
+| **Challenge** | Kuis interaktif berhadiah badge |
+
+**Sosial & Komunitas**
+
+- Chat global dan direct message antar pengguna
+- Sistem pertemanan: kirim, terima, dan tolak permintaan
+- Indikator online/offline real-time
+- Sistem keluhan & saran ke admin
+
+**Toko & Transaksi**
+
+- Katalog produk dengan gambar, kategori, harga, dan stok
+- Keranjang belanja dengan pengaturan jumlah item
+- Alur checkout dengan ringkasan pesanan
+- Manajemen produk penuh oleh admin
+
+**Gamifikasi & Kustomisasi**
+
+- Kuis pilihan ganda dengan sistem badge otomatis
+- Multi-tema: Dark, Gold, Ocean, Sakura, Matrix, dan lainnya
+- Multi-bahasa (i18n): Indonesia, English, Japanese, Chinese, Korean, German
+- Background kustom: upload gambar atau video sebagai wallpaper
+- Partikel animasi dan live clock
+
+### Tech Stack
 
 | Kategori | Teknologi | Keterangan |
 |---|---|---|
-| **Markup** | HTML5 | Semantic elements, WAI-ARIA |
-| **Styling** | CSS3 | Custom properties, backdrop-filter, keyframe |
-| **Logika** | Vanilla JS ES6+ | Tanpa framework, tanpa bundler |
-| **Storage** | Browser localStorage | Persistensi data sisi klien |
-| **Build** | — | Zero build step, zero dependencies |
+| Markup | HTML5 | Semantic elements, WAI-ARIA |
+| Styling | CSS3 | Custom properties, backdrop-filter, keyframe |
+| Logika | Vanilla JS ES6+ | Tanpa framework, tanpa bundler |
+| Storage | Browser localStorage | Persistensi data sisi klien (prefix `sl5_`) |
+| Migration path | Supabase | Target migrasi storage ke cloud *(opsional)* |
+| Build | — | Zero build step, zero dependencies |
 
 ---
 
-## Lisensi
+## System Workflow
 
-Proyek ini dikembangkan oleh tim StarLive SAINT untuk keperluan internal **StarLive Group**. Seluruh hak cipta dilindungi.
+### Flowchart
+
+```
+┌──────────────────────┐     ┌─────────────────────────┐     ┌──────────────────────┐
+│  Buka index.html     │     │  Inisialisasi           │     │  Cek Session Login   │
+│  di browser          │────▶│  state & tema           │────▶│  baca S.loggedIn     │
+│                      │     │  Loading Screen         │     │  dari localStorage   │
+└──────────────────────┘     └─────────────────────────┘     └──────────┬───────────┘
+                                                                          │
+                                                            ┌─────────────┴─────────────┐
+                                                            │                           │
+                                                            ▼                           ▼
+┌──────────────────────┐                        ┌──────────────────┐     ┌─────────────────────────┐
+│  Semua data          │                        │  Tamu (guest)    │     │  User / Admin           │
+│  disimpan ke         │◀───────────────────────│  Halaman publik  │     │  Halaman + fitur member │
+│  localStorage sl5_*  │                        │  Home, Gallery,  │     │  Chat, Store, Dashboard │
+└──────────────────────┘                        │  Social          │     │  Vault, dll.            │
+                                                └──────────────────┘     └─────────────────────────┘
+```
+
+### Explanation
+
+| Langkah | Proses | Keterangan |
+|---|---|---|
+| 1 | Buka `index.html` | Tidak memerlukan server — bisa via `file://` atau Live Server |
+| 2 | Loading Screen | Inisialisasi state global `S`, tema, dan partikel |
+| 3 | Cek session | Baca `S.loggedIn` dari localStorage — tentukan role user |
+| 4 | Render halaman | Tamu mendapat akses publik; member/admin mendapat akses penuh |
+| 5 | Simpan data | Semua interaksi ditulis ke localStorage dengan prefix `sl5_` |
 
 ---
 
-<p align="center"><em>⭐ Light up every corner of the digital universe. ⭐</em></p>
+## User Guide
+
+### Equipment
+
+Pastikan hal berikut tersedia sebelum memulai:
+
+- Browser modern: **Chrome 110+**, Firefox 110+, Edge 110+, atau Safari 16+
+- Tidak memerlukan Node.js, Python, server, atau dependensi apapun
+- Ekstensi **Live Server** di VS Code *(opsional tapi direkomendasikan)*
+
+---
+
+### Installation
+
+#### 1. Clone Repositori
+
+```bash
+git clone https://github.com/username/starlive-group.git
+cd starlive-group
+```
+
+#### 2. Buka di Browser
+
+**Langsung via file:**
+
+```bash
+open index.html        # macOS
+start index.html       # Windows
+xdg-open index.html    # Linux
+```
+
+**Via Live Server (direkomendasikan):**
+
+1. Install ekstensi [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) di VS Code
+2. Klik kanan `index.html` → **Open with Live Server**
+3. Browser otomatis terbuka di `http://127.0.0.1:5500`
+
+> Live Server memberikan hot-reload dan menghindari potensi CORS pada beberapa browser.
+
+> **Catatan:** Ketiga file (`index.html`, `style.css`, `app.js`) harus berada dalam **satu folder yang sama**.
+
+---
+
+### Configuration
+
+**Akun Default:**
+
+| Role | Email | Password | Akses |
+|---|---|---|---|
+| **Admin** | `admin@starlive.com` | `admin123` | Semua fitur + Dashboard + Vault |
+| **User** | Daftar sendiri via Register | Bebas | Fitur member standar |
+
+**Kustomisasi tema** — tersedia langsung dari antarmuka:
+
+| Opsi | Cara Akses |
+|---|---|
+| Tema warna | Menu pengaturan → pilih tema (Dark, Gold, Ocean, Sakura, Matrix, dll.) |
+| Bahasa | Menu pengaturan → pilih bahasa (6 bahasa tersedia) |
+| Background | Upload gambar atau video dari menu pengaturan |
+| Partikel animasi | Toggle on/off dari menu pengaturan |
+
+---
+
+### Troubleshooting
+
+| Masalah | Kemungkinan Penyebab | Solusi |
+|---|---|---|
+| Halaman kosong / tidak muncul | File tidak dalam satu folder | Pastikan `index.html`, `style.css`, `app.js` satu direktori |
+| Data hilang setelah reload | Cache browser dihapus | Wajar — localStorage bersifat persisten per browser, bukan per akun |
+| Fitur chat tidak muncul | Belum login | Login terlebih dahulu — chat hanya tersedia untuk member |
+| Admin menu tidak ada | Login sebagai user biasa | Gunakan akun `admin@starlive.com` untuk akses admin |
+| CORS error di browser | Buka via `file://` pada browser tertentu | Gunakan Live Server di VS Code |
+
+---
+
+## Development Notes
+
+### Arsitektur Kode
+
+Seluruh logika dalam `app.js` (~1.900 baris) diorganisasi ke dalam blok-blok berikut:
+
+| Blok | Isi |
+|---|---|
+| `LANGS` | Kamus terjemahan 6 bahasa |
+| `DB` | Layer abstraksi localStorage (get/set/update) |
+| `S` | State global aplikasi (user, page, cart, tema) |
+| Theme Engine | Sistem multi-tema dengan CSS variable |
+| Particle Engine | Animasi partikel pada canvas |
+| Page Renders | `rHome()`, `rAffil()`, `rCreators()`, `rProjects()`, `rGallery()`, `rStore()`, `rDashboard()`, dll. |
+| Modals | `openAuthM()`, `openEC()`, `openQuiz()`, `openCO()`, dll. |
+
+**Struktur file:**
+
+```
+starlive-group/
+├── index.html      # Struktur DOM + semua modal
+├── style.css       # Styling global, animasi, tema
+├── app.js          # Logika aplikasi (~1.900 baris)
+└── README.md
+```
+
+> Proyek ini semula adalah single-file (`StarLiveGroup_v6.html`). Setelah refactor dipisah menjadi 3 file agar lebih mudah dipelihara.
+
+---
+
+### Struktur Data localStorage
+
+Semua data disimpan di browser dengan prefix `sl5_`:
+
+| Key | Tipe | Isi |
+|---|---|---|
+| `sl5_users` | Array | Data semua pengguna terdaftar |
+| `sl5_creators` | Array | Profil kreator |
+| `sl5_projects` | Array | Proyek aktif |
+| `sl5_gallery` | Array | Koleksi foto & video |
+| `sl5_products` | Array | Katalog produk toko |
+| `sl5_challenges` | Array | Kuis & challenge |
+| `sl5_topup_reqs` | Array | Permintaan top-up wallet |
+| `sl5_adminmsgs` | Array | Pesan complaints & DM ke admin |
+| `sl5_chat_<room>` | Array | Pesan per ruang obrolan |
+| `sl5_pageviews` | Object | Statistik kunjungan per halaman |
+
+---
+
+### Limitations
+
+| Komponen | Batasan |
+|---|---|
+| Storage | Data hilang jika pengguna menghapus cache browser — tidak ada backup cloud |
+| Skalabilitas | localStorage dibatasi ~5–10 MB per origin — tidak cocok untuk data besar |
+| Multi-device | Data tidak tersinkronisasi antar perangkat atau browser berbeda |
+| Keamanan | Password disimpan di localStorage — tidak cocok untuk deployment production |
+
+### Future Development
+
+Beberapa pengembangan yang dapat dilakukan ke depan:
+
+- [ ] **Migrasi ke Supabase** — gantikan localStorage dengan database cloud untuk persistensi lintas perangkat
+- [ ] **Autentikasi aman** — implementasi hashing password dan session token yang proper
+- [ ] **PWA support** — tambahkan service worker agar dapat diinstal dan berjalan offline
+- [ ] **Notifikasi real-time** — integrasi WebSocket atau Supabase Realtime untuk chat dan status online
+- [ ] **Export/import data** — fitur backup dan restore data pengguna secara manual
+
+---
+
 <p align="center">
   <b>Pengembangan dari tim StarLive SAINT</b>
 </p>
-<p align="center">Danny Aulia · Said Hasan Hanafiah · Noah Von Nobelius · Arvian Raveindra Pradana</p>
+
+<p align="center"><i>Danny Aulia · Said Hasan Hanafiah · Noah Von Nobelius · Arvian Raveindra Pradana</i></p>
