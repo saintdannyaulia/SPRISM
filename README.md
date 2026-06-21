@@ -33,19 +33,15 @@
 
 Proyek ini membuktikan bahwa sebuah platform komunitas penuh dapat dibangun hanya dengan HTML, CSS, dan Vanilla JavaScript, mencakup portal terpusat untuk 5 afiliasi perusahaan StarLive, manajemen kreator dan proyek, sistem sosial & chat, toko merchandise, hingga dasbor admin.
 
-**5 Afiliasi StarLive Group:**
+**Lima Afiliasi StarLive Group:**
 
 | # | Nama | Bidang |
 |:---:|---|---|
-| 1 | **StarLive Media** | Konten & hiburan digital |
-| 2 | **StarLive Tech** | Solusi teknologi & software |
-| 3 | **StarLive Academy** | Pendidikan & pelatihan digital |
-| 4 | **StarLive Studios** | Produksi kreatif & desain |
-| 5 | **StarLive Commerce** | E-commerce & marketplace |
-
-> **📝 Notes**
-> <!-- Tambahkan catatan tambahan, konteks proyek, atau informasi relevan lainnya di sini -->
-> <!-- Contoh: versi aktif, link demo, atau kondisi khusus yang perlu diketahui -->
+| 1 | **Nova Creative Studio** | Creative Media |
+| 2 | **Zenith Prime Labs** | Research & Development |
+| 3 | **Polaris Academy** | Academics & Learning |
+| 4 | **Solstice Media Info** | Cyber Intelligence |
+| 5 | **Stellaris Lounge** | Commerce & Marketplace |
 
 ---
 
@@ -58,16 +54,16 @@ Proyek ini membuktikan bahwa sebuah platform komunitas penuh dapat dibangun hany
 | Halaman | Deskripsi |
 |---|---|
 | **Home** | Slideshow interaktif, statistik komunitas, dan deskripsi perusahaan |
-| **Affiliation** | 5 afiliasi dengan accordion detail & link portal |
-| **Creator** | Kartu profil kreator dengan detail lengkap |
-| **Project** | Daftar proyek aktif dengan progress bar dan status |
-| **Gallery** | Grid foto/video dengan lightbox viewer dan upload |
+| **Affiliation** | Lima afiliasi dengan informasi detail & link portal |
+| **Creator** | Profil kreator dengan detail lengkap |
+| **Project** | Daftar proyek aktif dengan progres status |
+| **Gallery** | Grid foto/video dengan lightbox viewer |
 | **Store** | Katalog merchandise dengan keranjang & checkout |
-| **Social** | Tautan ke semua platform komunitas StarLive |
+| **Social** | Tautan semua platform komunitas StarLive |
+| **Fraction** | Sistem komunitas internal dengan ujian masuk |
+| **Challenge** | Kuis interaktif berhadiah badge |
 | **Dashboard** | Statistik page views & manajemen pengguna *(admin only)* |
 | **Vault** | Penyimpanan data rahasia *(admin only)* |
-| **Fraction** | Sistem divisi internal dengan ujian masuk |
-| **Challenge** | Kuis interaktif berhadiah badge |
 
 **Sosial & Komunitas**
 
@@ -287,4 +283,4 @@ Beberapa pengembangan yang dapat dilakukan ke depan:
   <b>Pengembangan dari tim StarLive SAINT</b>
 </p>
 
-<p align="center"><i>Danny Aulia · Said Hasan Hanafiah · Noah Von Nobelius · Arvian Raveindra Pradana</i></p>
+<p align="center"><i>Danny Aulia · Said Hasan Hanafiah · Alan Dimia Yuan · Noah Von Nobelius · Arvian Raveindra Pradana</i></p>
