@@ -1,12 +1,12 @@
 
 // ── TRANSLATIONS ──────────────────────────────────────────────
 const LANGS={
-  English:{home:'Home',affiliation:'Affiliation',creator:'Creator',project:'Project',gallery:'Gallery',store:'Store',social:'Social',dashboard:'Dashboard',vault:'Vault',fraction:'Fraction',challenge:'Challenge',myAccount:'My Account',login:'Login',logout:'Logout',loginReg:'🔐 Login / Register',friends:'Friends',addFriend:'Add Friend',chat:'Chat',online:'Online',offline:'Offline',send:'Send',cancel:'Cancel',save:'Save',edit:'Edit',whoWeAre:'Who We Are',whoWeAreDesc:'StarLive Group is a multi-vertical technology and creative conglomerate operating at the intersection of media, technology, education, and culture.',ourMission:'Our five affiliates collaborate under one vision: to light up every corner of the digital universe.',creatorSub:'The minds behind StarLive.',affiliSub:'Our network of partner organizations.',projectSub:'Active initiatives shaping the future of StarLive.',gallerySub:'Visual stories from across the StarLive universe.',storeSub:'Official StarLive merchandise.',socialSub:'Join the StarLive community across all platforms.',loginRequired:'Login required',noFriends:'No friends yet.',startChat:'Start a conversation',complaints:'Complaints & Suggestions',directMsg:'Direct Message to Admin',welcome:'Welcome to StarLive Group!',search:'Search...',vaultTitle:'Vault — Secure Data Storage',vaultSub:'Admin-only access to confidential business data.'},
-  Indonesian:{home:'Beranda',affiliation:'Afiliasi',creator:'Kreator',project:'Proyek',gallery:'Galeri',store:'Toko',social:'Sosial',dashboard:'Dasbor',vault:'Brankas',fraction:'Fraksi',challenge:'Tantangan',myAccount:'Akun Saya',login:'Masuk',logout:'Keluar',loginReg:'🔐 Masuk / Daftar',friends:'Teman',addFriend:'Tambah Teman',chat:'Obrolan',online:'Online',offline:'Offline',send:'Kirim',cancel:'Batal',save:'Simpan',edit:'Edit',whoWeAre:'Tentang Kami',whoWeAreDesc:'StarLive Group adalah konglomerat teknologi dan kreatif multi-vertikal yang beroperasi di persimpangan media, teknologi, pendidikan, dan budaya.',ourMission:'Lima afiliasi kami berkolaborasi dalam satu visi: menerangi setiap sudut alam semesta digital.',creatorSub:'Pikiran di balik StarLive.',affiliSub:'Jaringan organisasi mitra kami.',projectSub:'Inisiatif aktif membentuk masa depan StarLive.',gallerySub:'Kisah visual dari alam semesta StarLive.',storeSub:'Merchandise resmi StarLive.',socialSub:'Bergabung dengan komunitas StarLive di semua platform.',loginRequired:'Login diperlukan',noFriends:'Belum ada teman.',startChat:'Mulai percakapan',complaints:'Keluhan & Saran',directMsg:'Pesan Langsung ke Admin',welcome:'Selamat datang di StarLive Group!',search:'Cari...',vaultTitle:'Brankas — Penyimpanan Data Aman',vaultSub:'Akses khusus admin untuk data bisnis rahasia.'},
-  Japanese:{home:'ホーム',affiliation:'提携',creator:'クリエイター',project:'プロジェクト',gallery:'ギャラリー',store:'ストア',social:'ソーシャル',dashboard:'ダッシュボード',vault:'金庫',myAccount:'マイアカウント',login:'ログイン',logout:'ログアウト',loginReg:'🔐 ログイン / 登録',friends:'友達',addFriend:'友達追加',chat:'チャット',online:'オンライン',offline:'オフライン',send:'送信',cancel:'キャンセル',save:'保存',edit:'編集',whoWeAre:'私たちについて',whoWeAreDesc:'StarLive Groupは、メディア、テクノロジー、教育、文化の交差点で活動する多角的なテクノロジー・クリエイティブコングロマリットです。',ourMission:'5つの関連会社が一つのビジョンのもとに協力しています。',creatorSub:'StarLiveを支える人々。',affiliSub:'パートナー組織のネットワーク。',projectSub:'StarLiveの未来を形作るイニシアチブ。',gallerySub:'StarLiveユニバース全体のビジュアルストーリー。',storeSub:'StarLiveオフィシャルグッズ。',socialSub:'全プラットフォームでStarLiveコミュニティに参加。',loginRequired:'ログインが必要です',noFriends:'まだ友達がいません。',startChat:'会話を始める',complaints:'苦情・提案',directMsg:'管理者への直接メッセージ',welcome:'StarLive Groupへようこそ！',search:'検索...',vaultTitle:'金庫 — 安全なデータ保管',vaultSub:'管理者専用の機密ビジネスデータへのアクセス。'},
-  Chinese:{home:'主页',affiliation:'联属',creator:'创作者',project:'项目',gallery:'画廊',store:'商店',social:'社交',dashboard:'仪表板',vault:'保险库',myAccount:'我的账户',login:'登录',logout:'登出',loginReg:'🔐 登录 / 注册',friends:'朋友',addFriend:'添加朋友',chat:'聊天',online:'在线',offline:'离线',send:'发送',cancel:'取消',save:'保存',edit:'编辑',whoWeAre:'关于我们',whoWeAreDesc:'StarLive Group是一家多元化科技创意集团，活跃于媒体、技术、教育和文化的交汇处。',ourMission:'我们的五个附属机构在同一愿景下合作：照亮数字宇宙的每个角落。',creatorSub:'StarLive背后的思想。',affiliSub:'我们的合作伙伴网络。',projectSub:'塑造StarLive未来的主动性。',gallerySub:'来自StarLive宇宙的视觉故事。',storeSub:'StarLive官方周边。',socialSub:'在所有平台加入StarLive社区。',loginRequired:'需要登录',noFriends:'还没有朋友。',startChat:'开始对话',complaints:'投诉与建议',directMsg:'直接发消息给管理员',welcome:'欢迎来到StarLive Group！',search:'搜索...',vaultTitle:'保险库 — 安全数据存储',vaultSub:'管理员专用的机密业务数据访问。'},
-  Korean:{home:'홈',affiliation:'제휴',creator:'크리에이터',project:'프로젝트',gallery:'갤러리',store:'스토어',social:'소셜',dashboard:'대시보드',vault:'금고',myAccount:'내 계정',login:'로그인',logout:'로그아웃',loginReg:'🔐 로그인 / 회원가입',friends:'친구',addFriend:'친구 추가',chat:'채팅',online:'온라인',offline:'오프라인',send:'전송',cancel:'취소',save:'저장',edit:'편집',whoWeAre:'회사 소개',whoWeAreDesc:'StarLive Group은 미디어, 기술, 교육, 문화의 교차점에서 운영되는 다각적 기술·창의 기업입니다.',ourMission:'5개의 계열사가 하나의 비전으로 협력합니다.',creatorSub:'StarLive를 이끄는 사람들.',affiliSub:'파트너 조직 네트워크.',projectSub:'StarLive의 미래를 형성하는 이니셔티브.',gallerySub:'StarLive 유니버스의 시각적 이야기.',storeSub:'StarLive 공식 상품.',socialSub:'모든 플랫폼에서 StarLive 커뮤니티에 참여하세요.',loginRequired:'로그인 필요',noFriends:'아직 친구가 없습니다.',startChat:'대화 시작',complaints:'불만 및 제안',directMsg:'관리자에게 직접 메시지',welcome:'StarLive Group에 오신 것을 환영합니다!',search:'검색...',vaultTitle:'금고 — 안전한 데이터 저장소',vaultSub:'관리자 전용 기밀 비즈니스 데이터 접근.'},
-  German:{home:'Startseite',affiliation:'Partner',creator:'Ersteller',project:'Projekt',gallery:'Galerie',store:'Shop',social:'Sozial',dashboard:'Dashboard',vault:'Tresor',myAccount:'Mein Konto',login:'Anmelden',logout:'Abmelden',loginReg:'🔐 Anmelden / Registrieren',friends:'Freunde',addFriend:'Freund hinzufügen',chat:'Chat',online:'Online',offline:'Offline',send:'Senden',cancel:'Abbrechen',save:'Speichern',edit:'Bearbeiten',whoWeAre:'Über uns',whoWeAreDesc:'StarLive Group ist ein diversifizierter Technologie- und Kreativkonzern an der Schnittstelle von Medien, Technologie, Bildung und Kultur.',ourMission:'Unsere fünf Tochtergesellschaften arbeiten zusammen, um jeden Winkel des digitalen Universums zu erhellen.',creatorSub:'Die Köpfe hinter StarLive.',affiliSub:'Unser Netzwerk von Partnerorganisationen.',projectSub:'Aktive Initiativen, die die Zukunft von StarLive gestalten.',gallerySub:'Visuelle Geschichten aus dem StarLive-Universum.',storeSub:'Offizielle StarLive-Merchandise.',socialSub:'Treten Sie der StarLive-Community auf allen Plattformen bei.',loginRequired:'Anmeldung erforderlich',noFriends:'Noch keine Freunde.',startChat:'Gespräch beginnen',complaints:'Beschwerden & Vorschläge',directMsg:'Direktnachricht an Admin',welcome:'Willkommen bei StarLive Group!',search:'Suchen...',vaultTitle:'Tresor — Sicherer Datenspeicher',vaultSub:'Nur-Admin-Zugriff auf vertrauliche Geschäftsdaten.'},
+  English:{home:'Home',affiliation:'Affiliation',creator:'Creator',project:'Project',gallery:'Gallery',store:'Merchandise',social:'Social',dashboard:'Dashboard',vault:'Vault',fraction:'Fraction',challenge:'Challenge',myAccount:'My Account',login:'Login',logout:'Logout',loginReg:'🔐 Login / Register',friends:'Friends',addFriend:'Add Friend',chat:'Chat',online:'Online',offline:'Offline',send:'Send',cancel:'Cancel',save:'Save',edit:'Edit',whoWeAre:'Who We Are',whoWeAreDesc:'StarLive Group is a multi-vertical technology and creative conglomerate operating at the intersection of media, technology, education, and culture.',ourMission:'Our five affiliates collaborate under one vision: to light up every corner of the digital universe.',creatorSub:'The minds behind StarLive.',affiliSub:'Our network of partner organizations.',projectSub:'Active initiatives shaping the future of StarLive.',gallerySub:'Visual stories from across the StarLive universe.',storeSub:'Official StarLive merchandise — browse our collection.',socialSub:'Join the StarLive community across all platforms.',loginRequired:'Login required',noFriends:'No friends yet.',startChat:'Start a conversation',complaints:'Complaints & Suggestions',directMsg:'Direct Message to Admin',welcome:'Welcome to StarLive Group!',search:'Search...',vaultTitle:'Vault — Secure Data Storage',vaultSub:'Admin-only access to confidential business data.'},
+  Indonesian:{home:'Beranda',affiliation:'Afiliasi',creator:'Kreator',project:'Proyek',gallery:'Galeri',store:'Merchandise',social:'Sosial',dashboard:'Dasbor',vault:'Brankas',fraction:'Fraksi',challenge:'Tantangan',myAccount:'Akun Saya',login:'Masuk',logout:'Keluar',loginReg:'🔐 Masuk / Daftar',friends:'Teman',addFriend:'Tambah Teman',chat:'Obrolan',online:'Online',offline:'Offline',send:'Kirim',cancel:'Batal',save:'Simpan',edit:'Edit',whoWeAre:'Tentang Kami',whoWeAreDesc:'StarLive Group adalah konglomerat teknologi dan kreatif multi-vertikal yang beroperasi di persimpangan media, teknologi, pendidikan, dan budaya.',ourMission:'Lima afiliasi kami berkolaborasi dalam satu visi: menerangi setiap sudut alam semesta digital.',creatorSub:'Pikiran di balik StarLive.',affiliSub:'Jaringan organisasi mitra kami.',projectSub:'Inisiatif aktif membentuk masa depan StarLive.',gallerySub:'Kisah visual dari alam semesta StarLive.',storeSub:'Merchandise resmi StarLive — jelajahi koleksi kami.',socialSub:'Bergabung dengan komunitas StarLive di semua platform.',loginRequired:'Login diperlukan',noFriends:'Belum ada teman.',startChat:'Mulai percakapan',complaints:'Keluhan & Saran',directMsg:'Pesan Langsung ke Admin',welcome:'Selamat datang di StarLive Group!',search:'Cari...',vaultTitle:'Brankas — Penyimpanan Data Aman',vaultSub:'Akses khusus admin untuk data bisnis rahasia.'},
+  Japanese:{home:'ホーム',affiliation:'提携',creator:'クリエイター',project:'プロジェクト',gallery:'ギャラリー',store:'Merchandise',social:'ソーシャル',dashboard:'ダッシュボード',vault:'金庫',myAccount:'マイアカウント',login:'ログイン',logout:'ログアウト',loginReg:'🔐 ログイン / 登録',friends:'友達',addFriend:'友達追加',chat:'チャット',online:'オンライン',offline:'オフライン',send:'送信',cancel:'キャンセル',save:'保存',edit:'編集',whoWeAre:'私たちについて',whoWeAreDesc:'StarLive Groupは、メディア、テクノロジー、教育、文化の交差点で活動する多角的なテクノロジー・クリエイティブコングロマリットです。',ourMission:'5つの関連会社が一つのビジョンのもとに協力しています。',creatorSub:'StarLiveを支える人々。',affiliSub:'パートナー組織のネットワーク。',projectSub:'StarLiveの未来を形作るイニシアチブ。',gallerySub:'StarLiveユニバース全体のビジュアルストーリー。',storeSub:'StarLiveオフィシャルグッズ。',socialSub:'全プラットフォームでStarLiveコミュニティに参加。',loginRequired:'ログインが必要です',noFriends:'まだ友達がいません。',startChat:'会話を始める',complaints:'苦情・提案',directMsg:'管理者への直接メッセージ',welcome:'StarLive Groupへようこそ！',search:'検索...',vaultTitle:'金庫 — 安全なデータ保管',vaultSub:'管理者専用の機密ビジネスデータへのアクセス。'},
+  Chinese:{home:'主页',affiliation:'联属',creator:'创作者',project:'项目',gallery:'画廊',store:'Merchandise',social:'社交',dashboard:'仪表板',vault:'保险库',myAccount:'我的账户',login:'登录',logout:'登出',loginReg:'🔐 登录 / 注册',friends:'朋友',addFriend:'添加朋友',chat:'聊天',online:'在线',offline:'离线',send:'发送',cancel:'取消',save:'保存',edit:'编辑',whoWeAre:'关于我们',whoWeAreDesc:'StarLive Group是一家多元化科技创意集团，活跃于媒体、技术、教育和文化的交汇处。',ourMission:'我们的五个附属机构在同一愿景下合作：照亮数字宇宙的每个角落。',creatorSub:'StarLive背后的思想。',affiliSub:'我们的合作伙伴网络。',projectSub:'塑造StarLive未来的主动性。',gallerySub:'来自StarLive宇宙的视觉故事。',storeSub:'StarLive官方周边。',socialSub:'在所有平台加入StarLive社区。',loginRequired:'需要登录',noFriends:'还没有朋友。',startChat:'开始对话',complaints:'投诉与建议',directMsg:'直接发消息给管理员',welcome:'欢迎来到StarLive Group！',search:'搜索...',vaultTitle:'保险库 — 安全数据存储',vaultSub:'管理员专用的机密业务数据访问。'},
+  Korean:{home:'홈',affiliation:'제휴',creator:'크리에이터',project:'프로젝트',gallery:'갤러리',store:'Merchandise',social:'소셜',dashboard:'대시보드',vault:'금고',myAccount:'내 계정',login:'로그인',logout:'로그아웃',loginReg:'🔐 로그인 / 회원가입',friends:'친구',addFriend:'친구 추가',chat:'채팅',online:'온라인',offline:'오프라인',send:'전송',cancel:'취소',save:'저장',edit:'편집',whoWeAre:'회사 소개',whoWeAreDesc:'StarLive Group은 미디어, 기술, 교육, 문화의 교차점에서 운영되는 다각적 기술·창의 기업입니다.',ourMission:'5개의 계열사가 하나의 비전으로 협력합니다.',creatorSub:'StarLive를 이끄는 사람들.',affiliSub:'파트너 조직 네트워크.',projectSub:'StarLive의 미래를 형성하는 이니셔티브.',gallerySub:'StarLive 유니버스의 시각적 이야기.',storeSub:'StarLive 공식 상품.',socialSub:'모든 플랫폼에서 StarLive 커뮤니티에 참여하세요.',loginRequired:'로그인 필요',noFriends:'아직 친구가 없습니다.',startChat:'대화 시작',complaints:'불만 및 제안',directMsg:'관리자에게 직접 메시지',welcome:'StarLive Group에 오신 것을 환영합니다!',search:'검색...',vaultTitle:'금고 — 안전한 데이터 저장소',vaultSub:'관리자 전용 기밀 비즈니스 데이터 접근.'},
+  German:{home:'Startseite',affiliation:'Partner',creator:'Ersteller',project:'Projekt',gallery:'Galerie',store:'Merchandise',social:'Sozial',dashboard:'Dashboard',vault:'Tresor',myAccount:'Mein Konto',login:'Anmelden',logout:'Abmelden',loginReg:'🔐 Anmelden / Registrieren',friends:'Freunde',addFriend:'Freund hinzufügen',chat:'Chat',online:'Online',offline:'Offline',send:'Senden',cancel:'Abbrechen',save:'Speichern',edit:'Bearbeiten',whoWeAre:'Über uns',whoWeAreDesc:'StarLive Group ist ein diversifizierter Technologie- und Kreativkonzern an der Schnittstelle von Medien, Technologie, Bildung und Kultur.',ourMission:'Unsere fünf Tochtergesellschaften arbeiten zusammen, um jeden Winkel des digitalen Universums zu erhellen.',creatorSub:'Die Köpfe hinter StarLive.',affiliSub:'Unser Netzwerk von Partnerorganisationen.',projectSub:'Aktive Initiativen, die die Zukunft von StarLive gestalten.',gallerySub:'Visuelle Geschichten aus dem StarLive-Universum.',storeSub:'Offizielle StarLive-Merchandise.',socialSub:'Treten Sie der StarLive-Community auf allen Plattformen bei.',loginRequired:'Anmeldung erforderlich',noFriends:'Noch keine Freunde.',startChat:'Gespräch beginnen',complaints:'Beschwerden & Vorschläge',directMsg:'Direktnachricht an Admin',welcome:'Willkommen bei StarLive Group!',search:'Suchen...',vaultTitle:'Tresor — Sicherer Datenspeicher',vaultSub:'Nur-Admin-Zugriff auf vertrauliche Geschäftsdaten.'},
 };
 
 // ── THEMES ────────────────────────────────────────────────────
@@ -18,7 +18,7 @@ const TH={
 };
 
 // ── STATE ─────────────────────────────────────────────────────
-const S={theme:'cyber',season:'Autumn',lang:'English',bgP:0,fx:false,loggedIn:false,isAdmin:false,user:null,page:'home',sopen:true,spopen:false,cpopen:false,crtSel:null,usrSel:null,cart:{},tuAmt:'',atab:'login',aerr:'',aform:{email:'',password:'',username:'',cp:''},stab:'theme',customBg:null,slidx:0,slTimer:null,dtab:'analytics',chatRoom:null,chatTarget:null,chatDraft:{},chatTab:'friends',vaultQ:'',vaultTab:'home',fracPageTab:'info',_cb:{},_pimgid:null,_ecid:null,_ecf:null,_prodEditId:null,fracExamAnswers:{},fracExamStep:0,challTab:'browse',challEditId:null,challTakeId:null,dashTab2:'users',pageViews:{}};
+const S={theme:'cyber',season:'Autumn',lang:'English',bgP:0,fx:false,loggedIn:false,isAdmin:false,user:null,page:'home',sopen:true,spopen:false,cpopen:false,crtSel:null,usrSel:null,tuAmt:'',atab:'login',aerr:'',aform:{email:'',password:'',username:'',cp:''},stab:'theme',customBg:null,slidx:0,slTimer:null,dtab:'analytics',chatRoom:null,chatTarget:null,chatDraft:{},chatTab:'friends',vaultQ:'',vaultTab:'home',fracPageTab:'info',_cb:{},_pimgid:null,_ecid:null,_ecf:null,_prodEditId:null,fracExamAnswers:{},fracExamStep:0,challTab:'browse',challEditId:null,challTakeId:null,dashTab2:'users',pageViews:{}};
 
 // ── STATIC DATA ───────────────────────────────────────────────
 const CDEF=[
@@ -58,7 +58,7 @@ const AFFIL=[
   {id:5,n:"Stellaris Lounge",ic:"🛋️",d:"Community hub for collaboration.",c:"#ce93d8",url:"https://example.com/stellaris"},
 ];
 const SLIDES=[{e:"🌌",l:"Nebula Conference 2025",bg:"linear-gradient(135deg,#0d0020,#1a0040)"},{e:"🎨",l:"NeoCanvas Launch",bg:"linear-gradient(135deg,#200010,#400030)"},{e:"🏙️",l:"StarLive Cyber HQ",bg:"linear-gradient(135deg,#001a20,#003040)"},{e:"🌸",l:"Spring Creator Festival",bg:"linear-gradient(135deg,#200a00,#402000)"},{e:"🤖",l:"AI Lab Grand Opening",bg:"linear-gradient(135deg,#001020,#002040)"},{e:"✨",l:"Awards Gala Night 2024",bg:"linear-gradient(135deg,#1a1000,#302000)"}];
-const NAV=[{id:"home",lk:"home",i:"🏠"},{id:"affiliation",lk:"affiliation",i:"🤝"},{id:"creator",lk:"creator",i:"👨‍💻"},{id:"project",lk:"project",i:"🚀"},{id:"gallery",lk:"gallery",i:"🖼️"},{id:"social",lk:"social",i:"🌐"},{id:"store",lk:"store",i:"🛒",locked:true},{id:"fraction",lk:"fraction",i:"🔱",locked:true},{id:"challenge",lk:"challenge",i:"🏆",locked:true},{id:"dashboard",lk:"dashboard",i:"📊",admin:true},{id:"vault",lk:"vault",i:"🔐",admin:true}];
+const NAV=[{id:"home",lk:"home",i:"🏠"},{id:"affiliation",lk:"affiliation",i:"🤝"},{id:"creator",lk:"creator",i:"👨‍💻"},{id:"project",lk:"project",i:"🚀"},{id:"gallery",lk:"gallery",i:"🖼️"},{id:"social",lk:"social",i:"🌐"},{id:"store",lk:"store",i:"🛍️",locked:true},{id:"fraction",lk:"fraction",i:"🔱",locked:true},{id:"challenge",lk:"challenge",i:"🏆",locked:true},{id:"dashboard",lk:"dashboard",i:"📊",admin:true},{id:"vault",lk:"vault",i:"🔐",admin:true}];
 const DA=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const MA=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const AX={};
@@ -120,7 +120,7 @@ function closePanels(){S.spopen=false;S.cpopen=false;document.getElementById('sp
 function onMC(){closePanels();}
 
 
-async function T(k){return (LANGS[S.lang]||LANGS.English)[k]||k;}
+function T(k){return (LANGS[S.lang]||LANGS.English)[k]||k;}
 // ── SUPABASE CLIENT ───────────────────────────────────────────
 const SUPABASE_URL = 'https://tcpdaozlggnmlinqenkw.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_n7ppL6YuOKuqVDSW4f_GxQ_e3DRC5Ni';
@@ -235,18 +235,18 @@ const DB = {
   async getUsers() {
     if (!supa) return [];
     const { data } = await supa.from('profiles').select('*');
-    return data || [];
+    return (data||[]).map(u=>({...u, friendRequests: u.friend_reqs||[], avatar: u.avatar_url, cover: u.cover_url}));
   },
   async byId(id) {
     if (!supa) return null;
     const { data } = await supa.from('profiles').select('*').eq('id', id).single();
-    return data;
+    return data ? {...data, friendRequests: data.friend_reqs||[], avatar: data.avatar_url, cover: data.cover_url} : null;
   },
   async byEmail(email) {
     // For compatibility — look up via metadata stored in profile
     if (!supa) return null;
     const { data } = await supa.from('profiles').select('*').eq('email', email).maybeSingle();
-    return data;
+    return data ? {...data, friendRequests: data.friend_reqs||[], avatar: data.avatar_url, cover: data.cover_url} : null;
   },
   async updUser(id, updates) {
     if (!supa) return;
@@ -256,7 +256,6 @@ const DB = {
     if (updates.cover !== undefined) mapped.cover_url = updates.cover;
     if (updates.online !== undefined) mapped.online = updates.online;
     if (updates.lastSeen !== undefined) mapped.last_seen = updates.lastSeen;
-    if (updates.wallet !== undefined) mapped.wallet = updates.wallet;
     if (updates.badges !== undefined) mapped.badges = updates.badges;
     if (updates.friends !== undefined) mapped.friends = updates.friends;
     if (updates.friendRequests !== undefined) mapped.friend_reqs = updates.friendRequests;
@@ -266,7 +265,7 @@ const DB = {
     if (updates.fracResult !== undefined) mapped.frac_result = updates.fracResult;
     // Pass remaining fields directly
     Object.keys(updates).forEach(k => {
-      if (!['avatar','cover','online','lastSeen','wallet','badges','friends','friendRequests','bio','fraction','fracExamDone','fracResult'].includes(k))
+      if (!['avatar','cover','online','lastSeen','badges','friends','friendRequests','bio','fraction','fracExamDone','fracResult'].includes(k))
         mapped[k] = updates[k];
     });
     const { error } = await supa.from('profiles').update(mapped).eq('id', id);
@@ -366,22 +365,38 @@ const DB = {
   async getMsgs(room, limit=100) {
     if (!supa) return [];
     const { data } = await supa.from('messages').select('*, sender:profiles(id,username,avatar_url)').eq('room', room).order('created_at',{ascending:true}).limit(limit);
-    return (data||[]).map(msg=>({...msg, text:msg.content, userEmail:msg.sender?.id, username:msg.sender?.username, avatar:msg.sender?.avatar_url, time:msg.created_at}));
+    return (data||[]).map(msg=>{
+      let text=msg.content, img=null;
+      if (typeof msg.content === 'string' && msg.content.startsWith('__IMG__')) {
+        try { const p=JSON.parse(msg.content.slice(7)); img=p.img; text=p.text||''; } catch(e) { /* fall back to raw content */ }
+      }
+      return {...msg, text, img, userEmail:msg.sender?.id, username:msg.sender?.username, avatar:msg.sender?.avatar_url, time:msg.created_at};
+    });
   },
   async addMsg(room, msg) {
     if (!supa) return;
-    await supa.from('messages').insert({room, sender_id: S.user.id, content: msg.text||msg.content});
+    const content = msg.img ? '__IMG__'+JSON.stringify({img:msg.img,text:msg.text||''}) : (msg.text||msg.content);
+    await supa.from('messages').insert({room, sender_id: S.user.id, content});
+  },
+  async markMsgsRead(room, meId) {
+    if (!supa) return;
+    try { await supa.from('messages').update({read:true}).eq('room', room).neq('sender_id', meId); }
+    catch (e) { console.warn('markMsgsRead:', e); }
   },
 
   // ── GLOBAL FRACTION CHAT ──────────────────────────────────
-  async getGlobalFracChat(limit=200) {
+  async getGlobalFracChat(limit=200, room='global_fraction') {
     if (!supa) return [];
-    const { data } = await supa.from('messages').select('*, sender:profiles(id,username,avatar_url,fraction)').eq('room','global_fraction').order('created_at',{ascending:true}).limit(limit);
+    const { data } = await supa.from('messages').select('*, sender:profiles(id,username,avatar_url,fraction)').eq('room', room).order('created_at',{ascending:true}).limit(limit);
     return (data||[]).map(msg=>({...msg, text:msg.content, userEmail:msg.sender?.id, username:msg.sender?.username, fraction:msg.sender?.fraction, time:msg.created_at}));
   },
   async addFracChatMsg(msg) {
     if (!supa) return;
-    await supa.from('messages').insert({room:'global_fraction', sender_id:S.user.id, content:msg.text});
+    const room = msg.channel === 'fraction' ? 'fraction_' + (msg.fraction||'').replace(/ /g,'_').toLowerCase() : 'global_fraction';
+    await supa.from('messages').insert({
+      room, sender_id:S.user.id, content:msg.text,
+      metadata: JSON.stringify({username:msg.username, fraction:msg.fraction, channel:msg.channel||'global'})
+    });
   },
 
   // ── ADMIN MESSAGES ────────────────────────────────────────
@@ -430,7 +445,7 @@ const DB = {
   },
   async addChallenge(c) {
     if (!supa) return;
-    await supa.from('challenges').insert({title:c.title, questions:c.questions, status:c.status||'pending', created_by:S.user.id, desc:c.desc||''});
+    await supa.from('challenges').insert({title:c.title, type:c.type||'General', reward:c.reward||'', questions:c.questions, status:c.status||'pending', created_by:S.user.id, desc:c.desc||''});
   },
   async updChallenge(id, updates) {
     if (!supa) return;
@@ -492,7 +507,7 @@ const DB = {
     const { data } = await supa.from('store_orders').select('*, user:profiles(username)').order('created_at',{ascending:false});
     return (data||[]).map(o=>({...o, userName:o.user?.username, createdAt:o.created_at}));
   },
-  async addStoreOrder(o) {
+  async addStoreOrder(o) { return; // removed
     if (!supa) return;
     await supa.from('store_orders').insert({user_id:S.user.id, items:o.items, total:o.total, cart:o.cart||{}});
   },
@@ -626,6 +641,8 @@ async function doVerifyOTP(){
   await supa.from('profiles').update({online:true,last_seen:new Date().toISOString()}).eq('id',data.user.id);
   SEC.clearRate('login_'+(OTP.email||'').toLowerCase());
   SEC.clearRate('otp_'+(OTP.email||'').toLowerCase());
+  // Clear OTP form field
+  S.aform.otp='';
   S.loggedIn=true;
   S.user={...profile,email:OTP.email||data.user.email,id:data.user.id,avatar:profile.avatar_url,cover:profile.cover_url};
   S.isAdmin=profile.role==='admin';
@@ -688,11 +705,13 @@ async function doReg(){
   const isAdmin=email==='admin@starlive.com';
   const{error:pe}=await supa.from('profiles').insert({
     id:data.user.id,username,role:isAdmin?'admin':'user',email,
-    online:false,wallet:0,badges:[],friends:[],friend_reqs:[]
+    online:false,badges:[],friends:[],friend_reqs:[]
   });
   if(pe){
-    // Rollback: delete the auth user if profile insert fails
-    try{await supa.auth.admin.deleteUser(data.user.id);}catch(e){}
+    // NOTE: Tidak bisa rollback auth user dari client-side (anon key tidak
+    // punya privilese admin — auth.admin.* hanya bisa dipanggil dari server
+    // dengan service role key). Akun auth tanpa profile akan perlu
+    // dibersihkan manual dari sisi admin/server jika kasus ini terjadi.
     S.aerr='Gagal membuat profil: '+pe.message;rAuthM();return;
   }
   S.atab='login';S.aform={email,password:'',username:'',cp:'',otp:''};S.aerr='';rAuthM();
@@ -743,7 +762,7 @@ function rAuthM(){
       el('div',{style:{fontSize:'32px',marginBottom:'6px'}},'📧'),
       el('div',{style:{color:q.tx,fontSize:'13px',fontWeight:'700',marginBottom:'4px'}},'Verifikasi Email'),
       el('div',{style:{color:q.tm,fontSize:'11px',lineHeight:'1.6'}},'Kode 6 digit telah dikirim ke'),
-      el('div',{style:{color:q.ac,fontSize:'12px',fontWeight:'700'}},OTP.email),
+      el('div',{style:{display:'flex',alignItems:'center',gap:'6px',justifyContent:'center',flexWrap:'wrap'}},el('span',{style:{background:'rgba(66,133,244,.15)',border:'1px solid #4285F4',color:'#4fc3f7',borderRadius:'20px',padding:'2px 9px',fontSize:'10px',fontWeight:'700'}},'📧 Gmail / Email'),el('span',{style:{color:q.ac,fontSize:'12px',fontWeight:'700'}},OTP.email)),
       el('div',{style:{color:q.tm,fontSize:'10px',marginTop:'3px'}},'Berlaku 10 menit · Hanya 1x pakai')
     ));
     if(S.aerr)card.appendChild(el('div',{style:{background:'rgba(255,80,80,.1)',border:'1px solid #f44',borderRadius:'7px',padding:'7px 10px',color:'#f88',fontSize:'11px',marginBottom:'10px'}},S.aerr));
@@ -791,12 +810,12 @@ function rAuthM(){
   if(S.atab==='register'){
     card.appendChild(inp('Username (3-20 karakter)','username','text','Hanya huruf, angka, underscore'));
   }
-  card.appendChild(inp('Email (Gmail atau email aktif)','email','email'));
+  card.appendChild(inp('Email (Gmail direkomendasikan)','email','email'));
   card.appendChild(inp('Password','password','password',S.atab==='register'?'Min 8 karakter, 1 huruf kapital, 1 angka':''));
   if(S.atab==='register')card.appendChild(inp('Konfirmasi Password','cp','password'));
 
   if(S.atab==='login'){
-    card.appendChild(btn('🔓 Login & Kirim OTP',doLogin,false,{width:'100%',marginTop:'4px'}));
+    card.appendChild(btn('🔓 Login — Kode OTP dikirim ke Gmail',doLogin,false,{width:'100%',marginTop:'4px'}));
     card.appendChild(el('div',{style:{color:q.tm,fontSize:'10px',textAlign:'center',marginTop:'9px',lineHeight:'1.6'}},
       'Setelah login, kode verifikasi akan dikirim ke email Anda.'));
   } else {
@@ -986,7 +1005,7 @@ async function rGallery(){
     card.appendChild(prev);
     const bot=el('div',{style:{padding:'9px 12px',display:'flex',justifyContent:'space-between',alignItems:'center'}});
     bot.appendChild(el('div',{},el('div',{style:{color:q.tx,fontSize:'11px',fontWeight:'600'}},item.title),el('div',{style:{color:q.tm,fontSize:'10px',marginTop:'1px'}},(item.type==='video'?'🎬':'📷')+' '+item.cat)));
-    if(S.isAdmin)bot.appendChild(el('button',{style:{background:'rgba(255,60,60,.12)',border:'1px solid #f44',color:'#f88',borderRadius:'5px',padding:'2px 6px',fontSize:'10px',cursor:'pointer'},onclick:e=>{e.stopPropagation();if(confirm('Delete this item?')){const g=DB.getGallery().filter(x=>x.id!==item.id);DB.saveGallery(g);rGallery();notif('Deleted.','success');}}},'✕'));
+    if(S.isAdmin)bot.appendChild(el('button',{style:{background:'rgba(255,60,60,.12)',border:'1px solid #f44',color:'#f88',borderRadius:'5px',padding:'2px 6px',fontSize:'10px',cursor:'pointer'},onclick:async e=>{e.stopPropagation();if(confirm('Delete this item?')){await DB.deleteGallery(item.id);rGallery();notif('Deleted.','success');}}},'✕'));
     card.appendChild(bot);
     card.onclick=()=>{
       const m=document.getElementById('m-gal');m.style.display='flex';m.innerHTML='';
@@ -1027,11 +1046,10 @@ function onFiGal(e){
     });
     sel.onchange=e2=>{gCat=e2.target.value;};card.appendChild(sel);
     const brow=el('div',{style:{display:'flex',gap:'8px',marginTop:'14px'}});
-    brow.appendChild(btn('✅ Upload ke Gallery',()=>{
+    brow.appendChild(btn('✅ Upload ke Gallery',async ()=>{
       if(!gTitle.trim()){notif('Judul wajib diisi!','error');return;}
-      const gal=DB.getGallery();
-      gal.push({id:'G'+Date.now(),type,emoji:type==='video'?'🎬':'🖼️',title:gTitle.trim(),cat:gCat,mediaUrl:dataUrl,uploadedBy:S.user?.username||'Admin',uploadedAt:new Date().toISOString()});
-      DB.saveGallery(gal);closeM('m-gal');rGallery();notif('✅ Media berhasil ditambahkan!','success');
+      await DB.addGallery({type,emoji:type==='video'?'🎬':'🖼️',title:gTitle.trim(),cat:gCat,mediaUrl:dataUrl});
+      closeM('m-gal');rGallery();notif('✅ Media berhasil ditambahkan!','success');
     },false,{fontSize:'12px'}));
     brow.appendChild(btn('Batal',()=>closeM('m-gal'),true,{fontSize:'12px'}));
     card.appendChild(brow);m.appendChild(card);
@@ -1042,33 +1060,38 @@ function onFiGal(e){
 // ── STORE (Admin edit: stock, price, photo) ───────────────────
 async function rStore(){
   const q=t();const c=document.getElementById('page-store');c.innerHTML='';
-  if(!S.loggedIn){c.appendChild(el('div',{style:{textAlign:'center',padding:'70px'}},el('div',{style:{fontSize:'56px',marginBottom:'12px'}},'🔒'),el('div',{style:{color:q.tx,fontSize:'16px',fontWeight:'700',marginBottom:'8px'}},T('loginRequired')),btn('🔐 '+T('login'),openAuthM)));return;}
   const prods=await DB.getProducts();
-  const tot=prods.reduce((s,p)=>s+(S.cart[p.id]||0)*p.price,0);const cnt=Object.values(S.cart).reduce((a,b)=>a+b,0);
-  const hdr=el('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'20px',flexWrap:'wrap',gap:'9px'}},el('div',{},el('h1',{style:{color:q.ac,fontSize:'24px',fontWeight:'800',marginBottom:'3px'}},T('store')),el('p',{style:{color:q.tm,fontSize:'12px'}},T('storeSub'))));
+  const hdr=el('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'20px',flexWrap:'wrap',gap:'9px'}},
+    el('div',{},el('h1',{style:{color:q.ac,fontSize:'24px',fontWeight:'800',marginBottom:'3px'}},'🛍️ Merchandise'),el('p',{style:{color:q.tm,fontSize:'12px'}},T('storeSub'))));
   const hdrRight=el('div',{style:{display:'flex',gap:'8px',alignItems:'center'}});
-  if(cnt>0)hdrRight.appendChild(gc({padding:'8px 13px',display:'flex',gap:'9px',alignItems:'center'},el('span',{style:{fontSize:'16px'}},'🛒'),el('div',{},el('div',{style:{color:q.ac,fontWeight:'700',fontSize:'12px'}},cnt+' items'),el('div',{style:{color:q.tx,fontSize:'11px'}},'$'+tot.toFixed(2))),btn('Checkout →',()=>openCO())));
   if(S.isAdmin)hdrRight.appendChild(btn('➕ New Item',()=>openProdNew(),false,{fontSize:'11px'}));
-  hdr.appendChild(hdrRight);
-  c.appendChild(hdr);
-  const grid=el('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(200px,1fr))',gap:'16px'}});
+  hdr.appendChild(hdrRight);c.appendChild(hdr);
+  if(!prods.length){c.appendChild(el('div',{style:{textAlign:'center',padding:'60px',color:q.tm}},'Belum ada merchandise. Cek kembali nanti!'));return;}
+  const grid=el('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(210px,1fr))',gap:'16px'}});
   prods.forEach(p=>{
-    const qty=S.cart[p.id]||0;const oos=p.stock<=0;
-    const qc=el('div',{style:{display:'flex',alignItems:'center',gap:'8px'}});
-    qc.appendChild(el('button',{style:{width:'27px',height:'27px',borderRadius:'50%',background:q.bb,border:`1px solid ${q.bc}`,color:q.bt,cursor:'pointer',fontSize:'13px'},onclick:()=>{if(S.cart[p.id]>1)S.cart[p.id]--;else delete S.cart[p.id];rStore();}},'−'));
-    qc.appendChild(el('span',{style:{color:q.tx,fontWeight:'700',minWidth:'17px',textAlign:'center',fontSize:'12px'}},String(qty)));
-    qc.appendChild(el('button',{style:{width:'27px',height:'27px',borderRadius:'50%',background:q.bb,border:`1px solid ${q.bc}`,color:q.bt,cursor:'pointer',fontSize:'13px'},onclick:()=>{if(qty<p.stock){S.cart[p.id]=(S.cart[p.id]||0)+1;rStore();}else notif('Stock limit reached.','error');}},'+'));
     const wrap=el('div',{style:{position:'relative'}});
-    const imgA=el('div',{style:{height:'64px',display:'flex',alignItems:'center',justifyContent:'center',marginBottom:'9px',borderRadius:'8px',overflow:'hidden'}});
-    if(p.image){imgA.appendChild(el('img',{src:p.image,style:{width:'64px',height:'64px',objectFit:'cover',borderRadius:'8px'}}));}
-    else imgA.appendChild(el('div',{style:{fontSize:'48px'}},p.e));
-    const card=gc({padding:'17px'},imgA,el('div',{style:{color:q.ac,fontSize:'9px',fontWeight:'700',letterSpacing:'.07em'}},p.cat),el('div',{style:{color:q.tx,fontSize:'13px',fontWeight:'700',margin:'3px 0 5px'}},p.name),el('div',{style:{color:q.tm,fontSize:'10px',lineHeight:'1.5',marginBottom:'9px'}},p.desc),el('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'9px'}},el('div',{style:{color:q.ac,fontSize:'19px',fontWeight:'900'}},'$'+p.price),el('div',{style:{color:p.stock<5?'#f88':q.tm,fontSize:'10px'}},oos?'❌ Out of stock':'Stock: '+p.stock)),(oos?el('div',{style:{color:'#f88',fontSize:'11px',textAlign:'center',padding:'6px'}},'Unavailable'):(qty?qc:btn('Add to Cart',()=>{if(p.stock>0){S.cart[p.id]=(S.cart[p.id]||0)+1;rStore();}},false,{width:'100%'}))));
+    const imgA=el('div',{style:{height:'72px',display:'flex',alignItems:'center',justifyContent:'center',marginBottom:'10px',borderRadius:'9px',overflow:'hidden',background:q.sur}});
+    if(p.image)imgA.appendChild(el('img',{src:p.image,style:{width:'72px',height:'72px',objectFit:'cover',borderRadius:'9px'}}));
+    else imgA.appendChild(el('div',{style:{fontSize:'52px'}},p.e));
+    const availBadge=p.stock<=0?el('div',{style:{background:'rgba(244,68,68,.12)',border:'1px solid #f44',color:'#f88',borderRadius:'7px',padding:'5px 10px',fontSize:'11px',textAlign:'center',marginTop:'6px'}},'❌ Habis'):
+      el('div',{style:{background:p.stock<5?'rgba(255,183,77,.1)':'rgba(100,220,100,.07)',border:`1px solid ${p.stock<5?'#ffb74d':'#64dc64'}`,color:p.stock<5?'#ffb74d':'#64dc64',borderRadius:'7px',padding:'5px 10px',fontSize:'11px',textAlign:'center',marginTop:'6px'}},p.stock<5?'⚠️ Stok terbatas':'✅ Tersedia');
+    const card=gc({padding:'17px'},imgA,
+      el('div',{style:{color:q.ac,fontSize:'9px',fontWeight:'700',letterSpacing:'.07em'}},p.cat),
+      el('div',{style:{color:q.tx,fontSize:'13px',fontWeight:'700',margin:'3px 0 5px'}},p.name),
+      el('div',{style:{color:q.tm,fontSize:'10px',lineHeight:'1.5',marginBottom:'9px'}},p.desc),
+      availBadge);
     wrap.appendChild(card);
-    if(S.isAdmin){const aRow=el('div',{style:{display:'flex',gap:'4px',position:'absolute',top:'9px',right:'9px'}});aRow.appendChild(el('button',{style:{background:q.as,border:`1px solid ${q.ac}`,color:q.ac,borderRadius:'6px',padding:'3px 7px',fontSize:'10px',cursor:'pointer'},onclick:e=>{e.stopPropagation();openProdEdit(p.id);}},T('edit')));aRow.appendChild(el('button',{style:{background:'rgba(244,68,68,.12)',border:'1px solid #f44',color:'#f88',borderRadius:'6px',padding:'3px 6px',fontSize:'10px',cursor:'pointer'},onclick:e=>{e.stopPropagation();if(confirm('Delete "'+p.name+'"?')){const ps=DB.getProducts().filter(x=>x.id!==p.id);DB.saveProducts(ps);rStore();notif('🗑️ Product deleted.','error');}}},'✕'));wrap.appendChild(aRow);}
+    if(S.isAdmin){
+      const aRow=el('div',{style:{display:'flex',gap:'4px',position:'absolute',top:'9px',right:'9px'}});
+      aRow.appendChild(el('button',{style:{background:q.as,border:`1px solid ${q.ac}`,color:q.ac,borderRadius:'6px',padding:'3px 7px',fontSize:'10px',cursor:'pointer'},onclick:e=>{e.stopPropagation();openProdEdit(p.id);}},T('edit')));
+      aRow.appendChild(el('button',{style:{background:'rgba(244,68,68,.12)',border:'1px solid #f44',color:'#f88',borderRadius:'6px',padding:'3px 6px',fontSize:'10px',cursor:'pointer'},onclick:async e=>{e.stopPropagation();if(confirm('Delete "'+p.name+'"?')){await DB.deleteProduct(p.id);rStore();notif('🗑️ Dihapus.','error');}}},'✕'));
+      wrap.appendChild(aRow);
+    }
     grid.appendChild(wrap);
   });
   c.appendChild(grid);
 }
+
 async function openProdNew(){
   const q=t();const m=document.getElementById('m-prod');m.style.display='flex';
   const form={name:'',price:0,stock:0,desc:'',cat:'Apparel',e:'📦',image:null};
@@ -1119,22 +1142,6 @@ async function openProdEdit(id){
   };render();
 }
 async function onFiProd(e){const f=e.target.files[0];if(!f)return;if(S._cb['fi-prod'])S._cb['fi-prod'](f);e.target.value='';}
-async function openCO(){
-  const q=t();const m=document.getElementById('m-co');m.style.display='flex';m.innerHTML='';
-  const prods=await DB.getProducts();const items=prods.filter(p=>S.cart[p.id]);const tot=items.reduce((s,p)=>s+S.cart[p.id]*p.price,0);
-  const u=await DB.byId(S.user.id);const wal=u?u.wallet:0;const suf=wal>=tot;
-  const card=gc({padding:'26px',width:'400px',maxWidth:'96vw',position:'relative',borderRadius:'18px'});
-  card.appendChild(el('button',{style:{position:'absolute',top:'11px',right:'13px',background:'none',border:'none',color:q.tm,fontSize:'18px',cursor:'pointer'},onclick:()=>closeM('m-co')},'✕'));
-  card.appendChild(el('h2',{style:{color:q.ac,marginBottom:'14px',fontSize:'16px'}},'🛒 Checkout — StarLive E-Wallet'));
-  const id=el('div',{style:{background:q.sur,borderRadius:'11px',padding:'11px',marginBottom:'12px',border:`1px solid ${q.sb}`}});
-  items.forEach(p=>id.appendChild(el('div',{style:{display:'flex',justifyContent:'space-between',padding:'4px 0',borderBottom:`1px solid ${q.sb}`}},el('div',{style:{display:'flex',gap:'6px',alignItems:'center'}},el('span',{style:{fontSize:'14px'}},p.e),el('span',{style:{color:q.tx,fontSize:'11px'}},p.name+' ×'+S.cart[p.id])),el('span',{style:{color:q.ac,fontWeight:'700',fontSize:'11px'}},'$'+(S.cart[p.id]*p.price).toFixed(2)))));
-  id.appendChild(el('div',{style:{display:'flex',justifyContent:'space-between',paddingTop:'7px'}},el('span',{style:{color:q.tx,fontWeight:'700',fontSize:'12px'}},'TOTAL'),el('span',{style:{color:q.ac,fontWeight:'900',fontSize:'16px'}},'$'+tot.toFixed(2))));
-  card.appendChild(id);
-  card.appendChild(gc({padding:'11px',marginBottom:'12px',border:`1px solid ${suf?q.ac:'#f44'}`,background:suf?q.as:'rgba(255,60,60,.08)',display:'flex',justifyContent:'space-between',alignItems:'center'},el('div',{},el('div',{style:{color:q.ac,fontSize:'9px',fontWeight:'700'}},'⭐ STARLIVE E-WALLET'),el('div',{style:{color:q.tx,fontSize:'17px',fontWeight:'900'}},'$'+wal.toFixed(2))),el('span',{style:{color:suf?'#64dc64':'#f88',fontWeight:'700',fontSize:'11px'}},suf?'✅ Sufficient':'❌ Insufficient')));
-  if(!suf){card.appendChild(el('div',{style:{color:q.tm,fontSize:'11px',marginBottom:'11px',textAlign:'center'}},'Need $'+(tot-wal).toFixed(2)+' more'));const br=el('div',{style:{display:'flex',gap:'7px'}});br.appendChild(btn('💳 Top-Up',()=>{closeM('m-co');openTopUp();},false,{flex:'1'}));br.appendChild(btn(T('cancel'),()=>closeM('m-co'),true,{flex:'1'}));card.appendChild(br);}
-  else{card.appendChild(el('div',{style:{color:q.tm,fontSize:'11px',marginBottom:'11px',textAlign:'center'}},'Balance after: $'+(wal-tot).toFixed(2)));const br=el('div',{style:{display:'flex',gap:'7px'}});br.appendChild(btn('✅ Pay Now',async ()=>{const prs=DB.getProducts();items.forEach(p=>{const st=prs.find(x=>x.id===p.id)?.stock||0;DB.updProduct(p.id,{stock:Math.max(0,st-S.cart[p.id])});});DB.updUser(S.user.id,{wallet:wal-tot});S.cart={};closeM('m-co');rStore();notif('🎉 Payment successful!','success');},false,{flex:'1'}));br.appendChild(btn(T('cancel'),()=>closeM('m-co'),true,{flex:'1'}));card.appendChild(br);}
-  m.appendChild(card);
-}
 
 // ── SOCIAL ────────────────────────────────────────────────────
 async function rSocial(){const q=t();const c=document.getElementById('page-social');c.innerHTML='';const sc=[{n:"Instagram",h:"@starlivegroup",c:"#E1306C",e:"📸",f:"48.2K"},{n:"Facebook",h:"StarLive Group",c:"#1877F2",e:"📘",f:"31.5K"},{n:"Twitter/X",h:"@StarLiveGrp",c:"#1DA1F2",e:"🐦",f:"22.8K"},{n:"YouTube",h:"StarLive Official",c:"#FF0000",e:"▶️",f:"15.3K"},{n:"TikTok",h:"@starliveofficial",c:"#69C9D0",e:"🎵",f:"67.1K"}];c.appendChild(el('h1',{style:{color:q.ac,fontSize:'24px',fontWeight:'800',marginBottom:'5px'}},T('social')));c.appendChild(el('p',{style:{color:q.tm,marginBottom:'18px',fontSize:'12px'}},T('socialSub')));const grid=el('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(230px,1fr))',gap:'16px'}});sc.forEach(s=>grid.appendChild(gc({padding:'22px',border:`1px solid ${s.c}44`},el('div',{style:{display:'flex',alignItems:'center',gap:'11px',marginBottom:'12px'}},el('div',{style:{fontSize:'28px',width:'48px',height:'48px',display:'flex',alignItems:'center',justifyContent:'center',background:`${s.c}18`,borderRadius:'11px'}},s.e),el('div',{},el('div',{style:{color:s.c,fontWeight:'800',fontSize:'14px'}},s.n),el('div',{style:{color:q.tm,fontSize:'11px'}},s.h))),el('div',{style:{color:q.tx,fontSize:'20px',fontWeight:'900',marginBottom:'3px'}},s.f),el('div',{style:{color:q.tm,fontSize:'10px',marginBottom:'13px'}},'followers'),btn('Follow →',()=>{},false,{width:'100%',borderColor:s.c,color:s.c,background:`${s.c}18`}))));c.appendChild(grid);}
@@ -1143,7 +1150,7 @@ async function rDash(){
   const q=t();const c=document.getElementById('page-dashboard');c.innerHTML='';
   if(!S.isAdmin){c.appendChild(el('div',{style:{textAlign:'center',padding:'70px'}},el('div',{style:{fontSize:'56px',marginBottom:'12px'}},'🔒'),el('div',{style:{color:q.tx,fontSize:'16px',fontWeight:'700'}},'Admin Access Only')));return;}
   c.appendChild(el('h1',{style:{color:q.ac,fontSize:'22px',fontWeight:'800',marginBottom:'14px'}},'📊 Dashboard'));
-  const tabs=[['analytics','📈 Analytics'],['users','👥 Users'],['store','🛒 Store'],['wallet','💳 eWallet'],['challenges','🏆 Challenges'],['log','📋 Log']];
+  const tabs=[['analytics','📈 Analytics'],['users','👥 Users'],['store','🛍️ Merchandise'],['challenges','🏆 Challenges'],['log','📋 Log']];
   const tr=el('div',{style:{display:'flex',gap:'6px',marginBottom:'20px',flexWrap:'wrap'}});
   tabs.forEach(([id,lb])=>tr.appendChild(btn(lb,()=>{S.dtab=id;rDash();},S.dtab!==id,{fontSize:'11px'})));
   c.appendChild(tr);
@@ -1161,19 +1168,18 @@ async function rDash(){
       row1.appendChild(btn('👁',()=>openUserAdmin(u),true,{fontSize:'10px',padding:'3px 7px'}));
       card.appendChild(row1);
       const stats=el('div',{style:{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:'6px'}});
-      [['Friends',(u.friends||[]).length],['Wallet','$'+(u.wallet||0).toFixed(0)],['Badges',(u.badges||[]).length],['Joined',fdate(u.joinDate)]].forEach(([l,v])=>stats.appendChild(el('div',{style:{background:q.sur,borderRadius:'6px',padding:'5px',textAlign:'center'}},el('div',{style:{color:q.ac,fontWeight:'800',fontSize:'12px'}},v),el('div',{style:{color:q.tm,fontSize:'8px'}},l))));
+      [['Friends',(u.friends||[]).length],['Badges',(u.badges||[]).length],['Joined',fdate(u.joinDate)]].forEach(([l,v])=>stats.appendChild(el('div',{style:{background:q.sur,borderRadius:'6px',padding:'5px',textAlign:'center'}},el('div',{style:{color:q.ac,fontWeight:'800',fontSize:'12px'}},v),el('div',{style:{color:q.tm,fontSize:'8px'}},l))));
       card.appendChild(stats);grid.appendChild(card);
     });c.appendChild(grid);
 
-  } else if(S.dtab==='wallet'){
-    const walletC=el('div',{});rWalletAdmin(walletC);c.appendChild(walletC);
 
   } else if(S.dtab==='store'){
-    const orders=await DB.getStoreOrders().sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
-    const topReqs=(await DB.getTopUpReqs()).filter(r=>r.status==='approved');
+    const orders=(await DB.getStoreOrders()).sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+    const topReqs=[];
     const totalRev=orders.reduce((s,o)=>s+o.total,0);
+    const prodsList=await DB.getProducts();
     const row=el('div',{style:{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'10px',marginBottom:'16px'}});
-    [[orders.length,'📦 Total Orders','#4fc3f7'],['$'+totalRev.toFixed(2),'💰 Revenue','#81c784'],[DB.getProducts().filter(p=>p.stock===0).length,'❌ Out of Stock','#f44']].forEach(([v,l,c2])=>row.appendChild(gc({padding:'14px',textAlign:'center',border:`1px solid ${c2}44`},el('div',{style:{fontSize:'20px',fontWeight:'900',color:c2}},v),el('div',{style:{color:q.tm,fontSize:'10px',marginTop:'3px'}},l))));
+    [[orders.length,'📦 Total Orders','#4fc3f7'],['$'+totalRev.toFixed(2),'💰 Revenue','#81c784'],[prodsList.filter(p=>p.stock===0).length,'❌ Out of Stock','#f44']].forEach(([v,l,c2])=>row.appendChild(gc({padding:'14px',textAlign:'center',border:`1px solid ${c2}44`},el('div',{style:{fontSize:'20px',fontWeight:'900',color:c2}},v),el('div',{style:{color:q.tm,fontSize:'10px',marginTop:'3px'}},l))));
     c.appendChild(row);
     c.appendChild(el('div',{style:{color:q.ac,fontSize:'12px',fontWeight:'700',marginBottom:'10px'}},'📋 Recent Orders'));
     if(!orders.length){c.appendChild(el('div',{style:{color:q.tm,fontSize:'12px',textAlign:'center',padding:'20px'}},'No orders yet.'));}
@@ -1182,7 +1188,7 @@ async function rDash(){
     });
 
   } else if(S.dtab==='analytics'){
-    const pv=DB.getPageViews();const today=new Date().toISOString().slice(0,10);
+    const pv=await DB.getPageViews();const today=new Date().toISOString().slice(0,10);
     const days=Object.keys(pv.days||{}).sort().slice(-14);
     const todayData=pv.days?.[today]||{total:0,pages:{}};
     const thisWeek=days.slice(-7).reduce((s,d)=>s+(pv.days[d]?.total||0),0);
@@ -1228,7 +1234,7 @@ async function rDash(){
     
 }
   } else if(S.dtab==='log'){
-    const pv2=DB.getPageViews();const ords2=await DB.getStoreOrders();const rqs2=await DB.getTopUpReqs();const chs3=await DB.getChallenges();
+    const pv2=await DB.getPageViews();const ords2=[];const rqs2=[];const chs3=await DB.getChallenges();
     c.appendChild(el('div',{style:{color:q.ac,fontSize:'12px',fontWeight:'700',marginBottom:'4px'}},'📋 Activity Log & Timeline'));
     c.appendChild(el('div',{style:{color:q.tm,fontSize:'10px',marginBottom:'12px'}},'Menampilkan semua aktivitas termasuk siapa user yang mengakses setiap halaman.'));
     // User access summary for today
@@ -1287,14 +1293,13 @@ async function openUserAdmin(u){
   const avRow=el('div',{style:{display:'flex',alignItems:'flex-end',gap:'12px',marginBottom:'12px'}});avRow.appendChild(avEl(u,56));avRow.appendChild(el('div',{},el('div',{style:{color:q.tx,fontSize:'18px',fontWeight:'800'}},u.username),el('div',{style:{color:u.online?'#64dc64':q.tm,fontSize:'12px'}},u.online?'🟢 Online':'⚫ '+ago(u.lastSeen||new Date().toISOString())),el('div',{style:{color:q.ac,fontSize:'11px',marginTop:'3px'}},u.role==='admin'?'👑 Admin':'👤 User')));card.appendChild(avRow);
   card.appendChild(el('div',{style:{color:q.tm,fontSize:'12px',lineHeight:'1.6',marginBottom:'12px'}},u.bio||'No bio.'));
   const info=el('div',{style:{background:q.sur,borderRadius:'9px',padding:'12px',marginBottom:'12px',border:`1px solid ${q.sb}`}});
-  [['📧 Email',u.email],['🗓️ Joined',fdate(u.joinDate)],['💳 Wallet','$'+(u.wallet||0).toFixed(2)],['👥 Friends',(u.friends||[]).length+' friends'],['🔔 Pending',(u.friendRequests||[]).length+' requests']].forEach(([l,v])=>info.appendChild(el('div',{style:{display:'flex',justifyContent:'space-between',padding:'5px 0',borderBottom:`1px solid ${q.sb}`}},el('span',{style:{color:q.tm,fontSize:'11px'}},l),el('span',{style:{color:q.tx,fontSize:'11px',fontWeight:'600'}},v))));
+  [['📧 Email',u.email],['🗓️ Joined',fdate(u.joinDate)],['👥 Friends',(u.friends||[]).length+' friends'],['🔔 Pending',(u.friendRequests||[]).length+' requests']].forEach(([l,v])=>info.appendChild(el('div',{style:{display:'flex',justifyContent:'space-between',padding:'5px 0',borderBottom:`1px solid ${q.sb}`}},el('span',{style:{color:q.tm,fontSize:'11px'}},l),el('span',{style:{color:q.tx,fontSize:'11px',fontWeight:'600'}},v))));
   card.appendChild(info);
   if(S.user&&u.email!==S.user.email){
     card.appendChild(el('div',{style:{color:q.ac,fontSize:'10px',fontWeight:'700',marginBottom:'8px'}},'⚡ ADMIN ACTIONS'));
     const acts=el('div',{style:{display:'flex',gap:'7px',flexWrap:'wrap'}});
-    acts.appendChild(btn('💳 Adjust Wallet',async ()=>{const amt=parseFloat(prompt('Set wallet to:',u.wallet||0));if(isNaN(amt))return;await DB.updUser(u.email,{wallet:amt});closeM('m-uadmin');rDash();notif('✅ Wallet adjusted!','success');},true,{fontSize:'11px'}));
-    if(u.role!=='admin')acts.appendChild(btn('👑 Make Admin',async ()=>{if(confirm('Make '+u.username+' admin?')){await DB.updUser(u.email,{role:'admin'});closeM('m-uadmin');rDash();notif('✅ Role updated.','success');}},true,{fontSize:'11px'}));
-    else acts.appendChild(btn('👤 Remove Admin',async ()=>{if(confirm('Remove admin from '+u.username+'?')){await DB.updUser(u.email,{role:'user'});closeM('m-uadmin');rDash();notif('✅ Role updated.','success');}},true,{fontSize:'11px'}));
+    if(u.role!=='admin')acts.appendChild(btn('👑 Make Admin',async ()=>{if(confirm('Make '+u.username+' admin?')){await DB.updUser(u.id,{role:'admin'});closeM('m-uadmin');rDash();notif('✅ Role updated.','success');}},true,{fontSize:'11px'}));
+    else acts.appendChild(btn('👤 Remove Admin',async ()=>{if(confirm('Remove admin from '+u.username+'?')){await DB.updUser(u.id,{role:'user'});closeM('m-uadmin');rDash();notif('✅ Role updated.','success');}},true,{fontSize:'11px'}));
     // Badge grant
     const BADGE_DEFS2=[
       {id:'web_contributor',em:'🛠️',name:'Web Contributor'},{id:'news_contributor',em:'📰',name:'News Contributor'},
@@ -1305,12 +1310,12 @@ async function openUserAdmin(u){
     card.appendChild(el('div',{style:{color:q.ac,fontSize:'10px',fontWeight:'700',margin:'12px 0 7px'}},'🏅 GRANT / REVOKE BADGES'));
     const freshU=()=>DB.byEmail(u.email);
     const bdgGrid=el('div',{style:{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:'5px'}});
-    function renderBdg(){
-      bdgGrid.innerHTML='';const cur=freshU();
+    async function renderBdg(){
+      bdgGrid.innerHTML='';const cur=await freshU();
       for(const bd of BADGE_DEFS2){
 
         const has=(cur.badges||[]).includes(bd.id);
-        const bcard2=el('div',{style:{display:'flex',alignItems:'center',gap:'7px',padding:'5px 7px',borderRadius:'7px',border:`1px solid ${has?q.ac:q.sb}`,background:has?q.as:'transparent',cursor:'pointer',transition:'all .15s'},onclick:async ()=>{const nb=has?(cur.badges||[]).filter(x=>x!==bd.id):[...(cur.badges||[]),bd.id];await DB.updUser(u.email,{badges:nb});renderBdg();notif((has?'❌ Removed ':'✅ Granted ')+bd.name,'success');}},el('span',{style:{fontSize:'14px'}},bd.em),el('span',{style:{color:has?q.ac:q.tm,fontSize:'10px',fontWeight:has?'700':'400'}},bd.name),has?el('span',{style:{color:q.ac,fontSize:'9px',marginLeft:'auto'}},'✓'):'');
+        const bcard2=el('div',{style:{display:'flex',alignItems:'center',gap:'7px',padding:'5px 7px',borderRadius:'7px',border:`1px solid ${has?q.ac:q.sb}`,background:has?q.as:'transparent',cursor:'pointer',transition:'all .15s'},onclick:async ()=>{const nb=has?(cur.badges||[]).filter(x=>x!==bd.id):[...(cur.badges||[]),bd.id];await DB.updUser(u.id,{badges:nb});renderBdg();notif((has?'❌ Removed ':'✅ Granted ')+bd.name,'success');}},el('span',{style:{fontSize:'14px'}},bd.em),el('span',{style:{color:has?q.ac:q.tm,fontSize:'10px',fontWeight:has?'700':'400'}},bd.name),has?el('span',{style:{color:q.ac,fontSize:'9px',marginLeft:'auto'}},'✓'):'');
         bdgGrid.appendChild(bcard2);
       
 }
@@ -1321,7 +1326,7 @@ async function openUserAdmin(u){
     card.appendChild(el('div',{style:{color:q.ac,fontSize:'10px',fontWeight:'700',margin:'12px 0 7px'}},'🔱 ASSIGN FRACTION'));
     const frRow2=el('div',{style:{display:'flex',flexDirection:'column',gap:'5px'}});
     for(const fr of FRACTIONS2){
-const fi=FRACTION_INFO2[fr];const active=u.fraction===fr;frRow2.appendChild(el('div',{style:{display:'flex',alignItems:'center',gap:'9px',padding:'7px 10px',borderRadius:'7px',border:`1px solid ${active?fi.color:q.sb}`,background:active?`${fi.color}12`:'rgba(255,255,255,.03)',cursor:'pointer',transition:'all .15s'},onclick:async ()=>{const newFrac=active?null:fr;await DB.updUser(u.email,{fraction:newFrac});notif((newFrac?'✅ Assigned '+newFrac:'❌ Removed fraction'),'success');closeM('m-uadmin');rDash();}},el('div',{style:{fontSize:'18px'}},fi.em),el('div',{style:{color:active?fi.color:q.tx,fontSize:'11px',fontWeight:active?'700':'400',flex:'1'}},fr),active?el('span',{style:{color:fi.color,fontSize:'10px',fontWeight:'700'}},'✓'):null));
+const fi=FRACTION_INFO2[fr];const active=u.fraction===fr;frRow2.appendChild(el('div',{style:{display:'flex',alignItems:'center',gap:'9px',padding:'7px 10px',borderRadius:'7px',border:`1px solid ${active?fi.color:q.sb}`,background:active?`${fi.color}12`:'rgba(255,255,255,.03)',cursor:'pointer',transition:'all .15s'},onclick:async ()=>{const newFrac=active?null:fr;await DB.updUser(u.id,{fraction:newFrac});notif((newFrac?'✅ Assigned '+newFrac:'❌ Removed fraction'),'success');closeM('m-uadmin');rDash();}},el('div',{style:{fontSize:'18px'}},fi.em),el('div',{style:{color:active?fi.color:q.tx,fontSize:'11px',fontWeight:active?'700':'400',flex:'1'}},fr),active?el('span',{style:{color:fi.color,fontSize:'10px',fontWeight:'700'}},'✓'):null));
 }
     card.appendChild(frRow2);
   }
@@ -2188,8 +2193,8 @@ async function rMyAcct(){
   const q=t();const c=document.getElementById('page-myaccount');c.innerHTML='';
   if(!S.loggedIn){c.appendChild(el('div',{style:{textAlign:'center',padding:'70px'}},el('div',{style:{fontSize:'56px',marginBottom:'12px'}},'🔒'),el('div',{style:{color:q.tx,fontSize:'16px',fontWeight:'700',marginBottom:'8px'}},T('loginRequired')),btn('🔐 '+T('login'),openAuthM)));return;}
   const u=await DB.byId(S.user.id);if(!u)return;
-  const friends=(u.friends||[]).map(e=>DB.byEmail(e)).filter(Boolean);
-  const requests=(u.friendRequests||[]).map(e=>DB.byEmail(e)).filter(Boolean);
+  const friends=(await Promise.all((u.friends||[]).map(e=>DB.byId(e)))).filter(Boolean);
+  const requests=(await Promise.all((u.friendRequests||[]).map(e=>DB.byId(e)))).filter(Boolean);
   const allUsers=(await DB.getUsers()).filter(x=>x.email!==u.email);
   // Cover
   const cv=el('div',{class:'cover',style:{marginBottom:'0'}});
@@ -2207,25 +2212,17 @@ async function rMyAcct(){
   const infoRow=el('div',{style:{padding:'0 20px 18px'}});infoRow.appendChild(aWrap);
   const nd=el('div',{style:{display:'flex',alignItems:'center',gap:'7px',marginTop:'10px'}});
   nd.appendChild(el('div',{style:{color:q.tx,fontSize:'20px',fontWeight:'800'}},u.username));
-  nd.appendChild(el('button',{style:{background:'none',border:'none',color:q.ac,cursor:'pointer',fontSize:'13px'},onclick:async ()=>{const nn=prompt('New name:',u.username);if(!nn||nn.trim()===u.username)return;await DB.updUser(u.email,{username:nn.trim()});S.user={...S.user,username:nn.trim()};applyTheme();rMyAcct();notif('✅ Name updated!','success');}},'✏️'));
+  nd.appendChild(el('button',{style:{background:'none',border:'none',color:q.ac,cursor:'pointer',fontSize:'13px'},onclick:async ()=>{const nn=prompt('New name:',u.username);if(!nn||nn.trim()===u.username)return;await DB.updUser(u.id,{username:nn.trim()});S.user={...S.user,username:nn.trim()};applyTheme();rMyAcct();notif('✅ Name updated!','success');}},'✏️'));
   infoRow.appendChild(nd);
   infoRow.appendChild(el('div',{style:{color:S.isAdmin?q.ac:q.tm,fontSize:'11px',marginTop:'2px'}},S.isAdmin?'👑 Admin':'👤 User'));
   const bd=el('div',{style:{display:'flex',alignItems:'flex-start',gap:'6px',marginTop:'7px'}});
   bd.appendChild(el('div',{style:{color:q.tm,fontSize:'12px',lineHeight:'1.6',flex:'1'}},u.bio||'No bio yet.'));
-  bd.appendChild(el('button',{style:{background:'none',border:'none',color:q.ac,cursor:'pointer',fontSize:'11px'},onclick:async ()=>{const nb=prompt('New bio:',u.bio||'');if(nb===null)return;await DB.updUser(u.email,{bio:nb});rMyAcct();notif('✅ Bio updated!','success');}},'✏️'));
+  bd.appendChild(el('button',{style:{background:'none',border:'none',color:q.ac,cursor:'pointer',fontSize:'11px'},onclick:async ()=>{const nb=prompt('New bio:',u.bio||'');if(nb===null)return;await DB.updUser(u.id,{bio:nb});rMyAcct();notif('✅ Bio updated!','success');}},'✏️'));
   infoRow.appendChild(bd);hCard.appendChild(infoRow);c.appendChild(hCard);
-  // Stats row - wallet clickable for topup
+  // Stats row
   const sr=el('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(105px,1fr))',gap:'10px',marginBottom:'16px'}});
-  const walCard=gc({padding:'13px',textAlign:'center',cursor:'pointer',border:`1px solid ${q.sb}`,transition:'border-color .18s'});
-  walCard.onmouseenter=()=>walCard.style.borderColor=q.ac;walCard.onmouseleave=()=>walCard.style.borderColor=q.sb;
-  walCard.appendChild(el('div',{style:{fontSize:'16px',fontWeight:'900',color:q.ac}},'$'+(u.wallet||0).toFixed(2)));
-  walCard.appendChild(el('div',{style:{color:q.tm,fontSize:'9px',marginTop:'2px'}},'💳 Wallet'));
-  const myPending=(await DB.getTopUpReqs()).filter(r=>r.userEmail===u.email&&r.status==='pending');
-  if(myPending.length)walCard.appendChild(el('div',{style:{color:'#ffb74d',fontSize:'8px',marginTop:'2px'}},'⏳ '+myPending.length+' request pending'));
-  else walCard.appendChild(el('div',{style:{color:q.ac,fontSize:'8px',marginTop:'2px'}},'tap to request top-up'));
-  walCard.onclick=()=>openTopUp();
   sr.appendChild(gc({padding:'13px',textAlign:'center'},el('div',{style:{fontSize:'16px',fontWeight:'900',color:q.ac}},friends.length),el('div',{style:{color:q.tm,fontSize:'9px',marginTop:'2px'}},'👥 '+T('friends'))));
-  sr.appendChild(walCard);
+  sr.appendChild(gc({padding:'13px',textAlign:'center'},el('div',{style:{fontSize:'16px',fontWeight:'900',color:q.ac}},(u.badges||[]).length),el('div',{style:{color:q.tm,fontSize:'9px',marginTop:'2px'}},'🏅 Badges')));
   sr.appendChild(gc({padding:'13px',textAlign:'center'},el('div',{style:{fontSize:'14px',fontWeight:'700',color:q.ac}},fdate(u.joinDate)),el('div',{style:{color:q.tm,fontSize:'9px',marginTop:'2px'}},'🗓️ Joined')));
   // Fraction card
   const FRACTIONS=['Singularity Nexus','Protocol Zero','Shadow Syntax'];
@@ -2249,7 +2246,7 @@ async function rMyAcct(){
     frcSection.appendChild(el('div',{style:{color:q.tm,fontSize:'10px',marginBottom:'8px'}},'Assign fraction to yourself:'));
     const frRow=el('div',{style:{display:'flex',flexDirection:'column',gap:'6px'}});
     for(const fr of FRACTIONS){
-const fi2=FRACTION_INFO[fr];const active=u.fraction===fr;frRow.appendChild(el('div',{style:{display:'flex',alignItems:'center',gap:'10px',padding:'9px 11px',borderRadius:'8px',border:`1px solid ${active?fi2.color:q.sb}`,background:active?`${fi2.color}12`:'rgba(255,255,255,.03)',cursor:'pointer',transition:'all .18s'},onclick:async ()=>{await DB.updUser(u.email,{fraction:active?null:fr});S.user={...S.user,fraction:active?null:fr};rMyAcct();notif((active?'❌ Left ':'✅ Joined ')+fr,'success');}},el('div',{style:{fontSize:'22px'}},fi2.em),el('div',{style:{flex:'1'}},el('div',{style:{color:active?fi2.color:q.tx,fontWeight:active?'700':'400',fontSize:'12px'}},fr),el('div',{style:{color:q.tm,fontSize:'10px',marginTop:'1px'}},fi2.desc)),active?el('span',{style:{color:fi2.color,fontSize:'11px',fontWeight:'700'}},'✓'):null));
+const fi2=FRACTION_INFO[fr];const active=u.fraction===fr;frRow.appendChild(el('div',{style:{display:'flex',alignItems:'center',gap:'10px',padding:'9px 11px',borderRadius:'8px',border:`1px solid ${active?fi2.color:q.sb}`,background:active?`${fi2.color}12`:'rgba(255,255,255,.03)',cursor:'pointer',transition:'all .18s'},onclick:async ()=>{await DB.updUser(u.id,{fraction:active?null:fr});S.user={...S.user,fraction:active?null:fr};rMyAcct();notif((active?'❌ Left ':'✅ Joined ')+fr,'success');}},el('div',{style:{fontSize:'22px'}},fi2.em),el('div',{style:{flex:'1'}},el('div',{style:{color:active?fi2.color:q.tx,fontWeight:active?'700':'400',fontSize:'12px'}},fr),el('div',{style:{color:q.tm,fontSize:'10px',marginTop:'1px'}},fi2.desc)),active?el('span',{style:{color:fi2.color,fontSize:'11px',fontWeight:'700'}},'✓'):null));
 }
     frcSection.appendChild(frRow);
   } else {
@@ -2267,7 +2264,7 @@ const fi2=FRACTION_INFO[fr];const active=u.fraction===fr;frRow.appendChild(el('d
   if(requests.length>0){
     const rc=gc({padding:'18px',marginBottom:'14px'});rc.appendChild(el('div',{style:{color:q.ac,fontSize:'11px',fontWeight:'700',marginBottom:'10px'}},'🔔 Friend Requests ('+requests.length+')'));
     for(const fr of requests){
-const row=el('div',{style:{display:'flex',alignItems:'center',gap:'9px',padding:'7px 0',borderBottom:`1px solid ${q.sb}`}});row.appendChild(avEl(fr,33));row.appendChild(el('div',{style:{flex:'1'}},el('div',{style:{color:q.tx,fontSize:'12px',fontWeight:'600'}},fr.username),el('div',{style:{color:q.tm,fontSize:'10px'}},fr.email)));row.appendChild(el('div',{style:{display:'flex',gap:'5px'}},btn('✅',async ()=>{await DB.acceptFR(u.email,fr.email);rMyAcct();notif('✅ '+fr.username+' added!','success');},false,{fontSize:'11px',padding:'3px 9px'}),btn('✕',async ()=>{await DB.rejectFR(u.email,fr.email);rMyAcct();},true,{fontSize:'11px',padding:'3px 7px',borderColor:'#f44',color:'#f88'})));rc.appendChild(row);
+const row=el('div',{style:{display:'flex',alignItems:'center',gap:'9px',padding:'7px 0',borderBottom:`1px solid ${q.sb}`}});row.appendChild(avEl(fr,33));row.appendChild(el('div',{style:{flex:'1'}},el('div',{style:{color:q.tx,fontSize:'12px',fontWeight:'600'}},fr.username),el('div',{style:{color:q.tm,fontSize:'10px'}},fr.email)));row.appendChild(el('div',{style:{display:'flex',gap:'5px'}},btn('✅',async ()=>{await DB.acceptFR(u.id,fr.id);rMyAcct();notif('✅ '+fr.username+' added!','success');},false,{fontSize:'11px',padding:'3px 9px'}),btn('✕',async ()=>{await DB.rejectFR(u.id,fr.id);rMyAcct();},true,{fontSize:'11px',padding:'3px 7px',borderColor:'#f44',color:'#f88'})));rc.appendChild(row);
 }
     c.appendChild(rc);
   }
@@ -2275,7 +2272,7 @@ const row=el('div',{style:{display:'flex',alignItems:'center',gap:'9px',padding:
   const fc=gc({padding:'18px',marginBottom:'14px'});fc.appendChild(el('div',{style:{color:q.ac,fontSize:'11px',fontWeight:'700',marginBottom:'10px'}},'👥 '+T('friends')+' ('+friends.length+')'));
   if(!friends.length)fc.appendChild(el('div',{style:{color:q.tm,fontSize:'12px',textAlign:'center',padding:'14px'}},T('noFriends')));
   for(const f of friends){
-const row=el('div',{style:{display:'flex',alignItems:'center',gap:'9px',padding:'7px 0',borderBottom:`1px solid ${q.sb}`}});row.appendChild(el('div',{style:{position:'relative',flexShrink:'0'}},avEl(f,33),el('div',{class:'dot-s '+(f.online?'on':'off'),style:{position:'absolute',bottom:'0',right:'0',border:`2px solid ${q.cb}`}})));row.appendChild(el('div',{style:{flex:'1'}},el('div',{style:{color:q.tx,fontSize:'12px',fontWeight:'600'}},f.username),el('div',{style:{color:f.online?'#64dc64':q.tm,fontSize:'10px'}},f.online?T('online'):ago(f.lastSeen||new Date().toISOString()))));row.appendChild(el('div',{style:{display:'flex',gap:'4px',flexWrap:'wrap'}},btn('💬',()=>openChatWith(f),false,{fontSize:'11px',padding:'3px 7px'}),btn('👤',()=>{S.usrSel=f;goTo('userprofile');},true,{fontSize:'11px',padding:'3px 7px'}),btn('✕',async ()=>{if(confirm('Remove '+f.username+'?')){await DB.removeFriend(u.email,f.email);rMyAcct();}},true,{fontSize:'11px',padding:'3px 6px',borderColor:'#f44',color:'#f88'})));fc.appendChild(row);
+const row=el('div',{style:{display:'flex',alignItems:'center',gap:'9px',padding:'7px 0',borderBottom:`1px solid ${q.sb}`}});row.appendChild(el('div',{style:{position:'relative',flexShrink:'0'}},avEl(f,33),el('div',{class:'dot-s '+(f.online?'on':'off'),style:{position:'absolute',bottom:'0',right:'0',border:`2px solid ${q.cb}`}})));row.appendChild(el('div',{style:{flex:'1'}},el('div',{style:{color:q.tx,fontSize:'12px',fontWeight:'600'}},f.username),el('div',{style:{color:f.online?'#64dc64':q.tm,fontSize:'10px'}},f.online?T('online'):ago(f.lastSeen||new Date().toISOString()))));row.appendChild(el('div',{style:{display:'flex',gap:'4px',flexWrap:'wrap'}},btn('💬',()=>openChatWith(f),false,{fontSize:'11px',padding:'3px 7px'}),btn('👤',()=>{S.usrSel=f;goTo('userprofile');},true,{fontSize:'11px',padding:'3px 7px'}),btn('✕',async ()=>{if(confirm('Remove '+f.username+'?')){await DB.removeFriend(u.id,f.id);rMyAcct();}},true,{fontSize:'11px',padding:'3px 6px',borderColor:'#f44',color:'#f88'})));fc.appendChild(row);
 }
   c.appendChild(fc);
   // ── BADGE COLLECTION ──────────────────────────────────────────
@@ -2318,9 +2315,9 @@ const row=el('div',{style:{display:'flex',alignItems:'center',gap:'9px',padding:
     if(joinYears>=2)badges.add('member_2y');
     if(joinYears>=5)badges.add('member_5y');
     if(joinYears>=10)badges.add('member_10y');
-    const _chs=await DB.getChallenges();const won=_chs.flatMap(ch=>ch.attempts||[]).filter(a=>a.userEmail===usr.email&&a.passed).length;
+    const _chs=await DB.getChallenges();const won=_chs.flatMap(ch=>ch.attempts||[]).filter(a=>a.user_id===usr.id&&a.passed).length;
     if(won>0)badges.add('challenge_taker');
-    const arr=Array.from(badges);if(JSON.stringify(arr.sort())!==JSON.stringify((usr.badges||[]).sort())){await DB.updUser(usr.email,{badges:arr});}
+    const arr=Array.from(badges);if(JSON.stringify(arr.sort())!==JSON.stringify((usr.badges||[]).sort())){await DB.updUser(usr.id,{badges:arr});}
     return arr;
   }
   const earned=await autoCheckBadges(u);
@@ -2341,7 +2338,7 @@ const row=el('div',{style:{display:'flex',alignItems:'center',gap:'9px',padding:
       bcard.appendChild(el('div',{style:{color:has?bd.color:q.tm,fontSize:'9px',fontWeight:'700',lineHeight:'1.3'}},bd.name));
       bcard.appendChild(el('div',{style:{color:q.tm,fontSize:'8px',marginTop:'2px',lineHeight:'1.4'}},bd.desc));
       if(!has)bcard.appendChild(el('div',{style:{position:'absolute',top:'4px',right:'4px',fontSize:'8px',color:q.tm}},'🔒'));
-      if(has&&S.isAdmin){bcard.appendChild(el('button',{style:{position:'absolute',top:'2px',right:'2px',background:'none',border:'none',color:'#f44',cursor:'pointer',fontSize:'9px'},onclick:async (e)=>{e.stopPropagation();const nb=earned.filter(x=>x!==bd.id);await DB.updUser(u.email,{badges:nb});rMyAcct();}},'✕'));}
+      if(has&&S.isAdmin){bcard.appendChild(el('button',{style:{position:'absolute',top:'2px',right:'2px',background:'none',border:'none',color:'#f44',cursor:'pointer',fontSize:'9px'},onclick:async (e)=>{e.stopPropagation();const nb=earned.filter(x=>x!==bd.id);await DB.updUser(u.id,{badges:nb});rMyAcct();}},'✕'));}
       bgrid.appendChild(bcard);
     
 }
@@ -2357,79 +2354,12 @@ const row=el('div',{style:{display:'flex',alignItems:'center',gap:'9px',padding:
 }
 
 // ── WALLET TOP-UP (Requires Admin Approval) ───────────────────
-async function openTopUp(){
-  const q=t();const m=document.getElementById('m-tu');m.style.display='flex';m.innerHTML='';
-  const u=await DB.byId(S.user.id);let topupAmt='';let topupNote='';
-  const myReqs=(await DB.getTopUpReqs()).filter(r=>r.userEmail===S.user.email).sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt)).slice(0,5);
-  const render=()=>{
-    m.innerHTML='';
-    const card=gc({padding:'28px',width:'380px',maxWidth:'94vw',position:'relative',borderRadius:'18px',maxHeight:'90vh',overflowY:'auto'});
-    card.appendChild(el('button',{style:{position:'absolute',top:'11px',right:'13px',background:'none',border:'none',color:q.tm,fontSize:'18px',cursor:'pointer'},onclick:()=>closeM('m-tu')},'✕'));
-    card.appendChild(el('div',{style:{fontSize:'28px',textAlign:'center',marginBottom:'6px'}},'💳'));
-    card.appendChild(el('h2',{style:{color:q.ac,textAlign:'center',marginBottom:'4px',fontSize:'16px',fontWeight:'800'}},'Request Top-Up'));
-    card.appendChild(el('div',{style:{color:q.tm,fontSize:'11px',textAlign:'center',marginBottom:'5px'}},'Requires Admin approval · Usually processed within 24h'));
-    card.appendChild(el('div',{style:{color:q.ac,fontWeight:'700',fontSize:'14px',textAlign:'center',marginBottom:'14px'}},'Current: $'+(u.wallet||0).toFixed(2)));
-    card.appendChild(el('div',{style:{color:q.tm,fontSize:'10px',fontWeight:'700',marginBottom:'7px'}},'QUICK AMOUNTS'));
-    const qa=el('div',{style:{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'6px',marginBottom:'12px'}});
-    [10,25,50,100,200,500].forEach(amt=>{const a=topupAmt===String(amt);qa.appendChild(el('button',{style:{padding:'8px',borderRadius:'7px',border:`1px solid ${a?q.ac:q.sb}`,background:a?q.as:'rgba(255,255,255,.04)',color:a?q.ac:q.tx,cursor:'pointer',fontSize:'12px',fontWeight:a?'700':'400',transition:'.15s'},onclick:()=>{topupAmt=String(amt);render();}},'$'+amt));});
-    card.appendChild(qa);
-    card.appendChild(el('div',{style:{color:q.tm,fontSize:'10px',fontWeight:'700',marginBottom:'5px'}},'CUSTOM AMOUNT (USD)'));
-    const inp=el('input',{type:'number',placeholder:'Enter amount',class:'inf',style:{background:q.ib,borderColor:q.sb,color:q.tx,fontSize:'14px',textAlign:'center'}});
-    inp.value=topupAmt;inp.oninput=e=>{topupAmt=e.target.value;};card.appendChild(inp);
-    card.appendChild(el('div',{style:{color:q.tm,fontSize:'10px',fontWeight:'700',marginBottom:'5px',marginTop:'10px'}},'NOTE TO ADMIN (optional)'));
-    const noteI=el('input',{type:'text',placeholder:'e.g. Bank transfer ref #1234',class:'inf',style:{background:q.ib,borderColor:q.sb,color:q.tx,fontSize:'12px'}});
-    noteI.value=topupNote;noteI.oninput=e=>{topupNote=e.target.value;};card.appendChild(noteI);
-    const total=parseFloat(topupAmt)||0;
-    if(total>0)card.appendChild(gc({padding:'10px',margin:'10px 0',display:'flex',justifyContent:'space-between',alignItems:'center'},el('span',{style:{color:q.tm,fontSize:'12px'}},'Requesting'),el('span',{style:{color:q.ac,fontWeight:'900',fontSize:'18px'}},'$'+total.toFixed(2))));
-    card.appendChild(btn('📩 Submit Request',async ()=>{
-      const amt=parseFloat(inp.value||topupAmt);
-      if(!amt||amt<=0||amt>100000){notif('Enter valid amount (max $100,000).','error');return;}
-      await DB.addTopUpReq({userEmail:S.user.email,userName:S.user.username,amount:amt,note:noteI.value.trim()});
-      closeM('m-tu');rMyAcct();notif('✅ Top-up request submitted! Awaiting Admin approval.','success');
-    },false,{width:'100%',marginTop:'6px',fontSize:'13px',padding:'10px'}));
-    // Show past requests
-    if(myReqs.length){
-      card.appendChild(el('div',{style:{color:q.tm,fontSize:'10px',fontWeight:'700',marginTop:'16px',marginBottom:'7px'}},'RECENT REQUESTS'));
-      const SC={pending:'#ffb74d',approved:'#64dc64',rejected:'#f44'};
-      myReqs.forEach(r=>{const sc=SC[r.status]||q.ac;card.appendChild(el('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'7px 10px',borderRadius:'7px',marginBottom:'5px',background:q.sur,border:`1px solid ${sc}44`}},el('div',{},el('div',{style:{color:q.tx,fontSize:'11px',fontWeight:'600'}},'$'+r.amount.toFixed(2)+(r.note?' · '+r.note:'')),el('div',{style:{color:q.tm,fontSize:'9px'}},fdate(r.createdAt))),el('span',{style:{background:`${sc}18`,color:sc,borderRadius:'20px',padding:'2px 8px',fontSize:'9px',fontWeight:'700'}},r.status.toUpperCase())));});
-    }
-    card.appendChild(btn('Cancel',()=>closeM('m-tu'),true,{width:'100%',marginTop:'5px',fontSize:'12px'}));
-    m.appendChild(card);setTimeout(()=>inp.focus(),50);
-  };render();
-}
-
-// ── WALLET ADMIN PANEL ────────────────────────────────────────
-async function rWalletAdmin(container){
-  const q=t();const reqs=await DB.getPendingTopUps();
-  const allReqs=await DB.getTopUpReqs().sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
-  container.appendChild(el('div',{style:{color:q.ac,fontSize:'12px',fontWeight:'700',marginBottom:'12px'}},'💳 Top-Up Requests'+(reqs.length?' ('+reqs.length+' pending)':'')));
-  if(!allReqs.length){container.appendChild(el('div',{style:{color:q.tm,fontSize:'12px',textAlign:'center',padding:'20px'}},'No top-up requests yet.'));return;}
-  const SC={pending:'#ffb74d',approved:'#64dc64',rejected:'#f44'};
-  for(const r of allReqs){
-
-    const sc=SC[r.status]||q.ac;const u=await DB.byEmail(r.userEmail);
-    const card=gc({padding:'14px',marginBottom:'9px',border:`1px solid ${sc}44`});
-    const row1=el('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'7px'}});
-    row1.appendChild(el('div',{},el('div',{style:{color:q.tx,fontSize:'13px',fontWeight:'700'}},r.userName+' · $'+r.amount.toFixed(2)),el('div',{style:{color:q.tm,fontSize:'10px'}},fdate(r.createdAt)+(r.note?' · '+r.note:''))));
-    row1.appendChild(el('span',{style:{background:`${sc}18`,color:sc,borderRadius:'20px',padding:'2px 10px',fontSize:'10px',fontWeight:'700'}},r.status.toUpperCase()));
-    card.appendChild(row1);
-    if(r.status==='pending'){
-      const brow=el('div',{style:{display:'flex',gap:'6px'}});
-      brow.appendChild(btn('✅ Approve',async ()=>{const w=(u?.wallet||0)+r.amount;await DB.updUser(r.userEmail,{wallet:w});await DB.updTopUpReq(r.id,{status:'approved',processedBy:'admin'});rWalletAdminPage();notif('✅ $'+r.amount.toFixed(2)+' added to '+r.userName,'success');},false,{fontSize:'11px',padding:'4px 10px'}));
-      brow.appendChild(btn('✕ Reject',async ()=>{await DB.updTopUpReq(r.id,{status:'rejected',processedBy:'admin'});rWalletAdminPage();notif('❌ Request rejected.','error');},true,{fontSize:'11px',padding:'4px 8px',borderColor:'#f44',color:'#f88'}));
-      card.appendChild(brow);
-    }
-    container.appendChild(card);
-  
-}
-}
-async function rWalletAdminPage(){S.dtab='wallet';rDash();}
 // ── USER PROFILE ──────────────────────────────────────────────
 async function rUserProfile(){
   const q=t();const c=document.getElementById('page-userprofile');c.innerHTML='';
   if(!S.usrSel){goTo('myaccount');return;}
-  const u=await DB.byEmail(S.usrSel.email)||S.usrSel;const me=S.loggedIn?DB.byId(S.user.id):null;
-  const isF=me&&(me.friends||[]).includes(u.email);const sentR=(u.friendRequests||[]).includes(me?.email);
+  const u=await DB.byEmail(S.usrSel.email)||S.usrSel;const me=S.loggedIn?await DB.byId(S.user.id):null;
+  const isF=me&&(me.friends||[]).includes(u.id);const sentR=(u.friendRequests||[]).includes(me?.id);
   c.appendChild(btn('← Back',()=>goTo('myaccount'),true,{marginBottom:'18px'}));
   const card=gc({borderRadius:'14px',overflow:'hidden',marginBottom:'16px'});
   const cv=el('div',{class:'cover'});if(u.cover){cv.style.backgroundImage=`url(${u.cover})`;cv.style.backgroundSize='cover';}else{cv.style.background='linear-gradient(135deg,#0d1a30,#1a0d30)';cv.appendChild(el('div',{style:{position:'absolute',inset:'0',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'72px',opacity:'.1'}},'⭐'));}card.appendChild(cv);
@@ -2439,7 +2369,7 @@ async function rUserProfile(){
   else aw.appendChild(el('div',{style:{width:'76px',height:'76px',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'34px',background:q.as,border:`3px solid ${q.ac}`,color:q.ac}},u.username[0].toUpperCase()));
   aw.appendChild(el('div',{style:{position:'absolute',bottom:'2px',right:'2px',width:'14px',height:'14px',borderRadius:'50%',background:u.online?'#64dc64':'#555',border:`2px solid ${q.cb}`}}));
   ir.appendChild(aw);ir.appendChild(el('h1',{style:{color:q.tx,fontSize:'22px',fontWeight:'800',margin:'0 0 3px'}},u.username));ir.appendChild(el('div',{style:{color:u.online?'#64dc64':q.tm,fontSize:'11px',marginBottom:'7px'}},u.online?'🟢 '+T('online'):'⚫ '+ago(u.lastSeen||new Date().toISOString())));ir.appendChild(el('div',{style:{color:q.tm,fontSize:'12px',lineHeight:'1.6',marginBottom:'12px'}},u.bio||'No bio.'));ir.appendChild(el('div',{style:{display:'flex',gap:'18px',marginBottom:'14px'}},el('div',{style:{textAlign:'center'}},el('div',{style:{color:q.ac,fontWeight:'800',fontSize:'16px'}},(u.friends||[]).length),el('div',{style:{color:q.tm,fontSize:'10px'}},T('friends'))),el('div',{style:{textAlign:'center'}},el('div',{style:{color:q.ac,fontWeight:'700',fontSize:'12px'}},fdate(u.joinDate)),el('div',{style:{color:q.tm,fontSize:'10px'}},'Joined'))));
-  if(S.loggedIn&&me){const bd=el('div',{style:{display:'flex',gap:'7px',flexWrap:'wrap'}});if(isF){bd.appendChild(btn('💬 '+T('chat'),()=>openChatWith(u)));bd.appendChild(btn('✅ Friends',null,true,{cursor:'default',opacity:'.7'}));}else if(sentR)bd.appendChild(btn('⏳ Request Sent',null,true,{cursor:'default',opacity:'.7'}));else bd.appendChild(btn('➕ '+T('addFriend'),async ()=>{const ok=await DB.sendFR(me.email,u.email);notif(ok?'✅ Request sent!':'⚠️ Already sent.',ok?'success':'error');rUserProfile();}));ir.appendChild(bd);}
+  if(S.loggedIn&&me){const bd=el('div',{style:{display:'flex',gap:'7px',flexWrap:'wrap'}});if(isF){bd.appendChild(btn('💬 '+T('chat'),()=>openChatWith(u)));bd.appendChild(btn('✅ Friends',null,true,{cursor:'default',opacity:'.7'}));}else if(sentR)bd.appendChild(btn('⏳ Request Sent',null,true,{cursor:'default',opacity:'.7'}));else bd.appendChild(btn('➕ '+T('addFriend'),async ()=>{const ok=await DB.sendFR(me.id,u.id);notif(ok?'✅ Request sent!':'⚠️ Already sent.',ok?'success':'error');rUserProfile();}));ir.appendChild(bd);}
   card.appendChild(ir);c.appendChild(card);
 }
 // ── CHAT SYSTEM ───────────────────────────────────────────────
@@ -2447,16 +2377,16 @@ let chatRefT=null,chatBadgeT=null;
 async function getTotalUnread(){
   if(!S.loggedIn||!S.user)return{total:0,friend:0,service:0};
   const me=await DB.byId(S.user.id);
-  const friends=(me.friends||[]);
+  const friendUsers=(await Promise.all((me.friends||[]).map(fid=>DB.byId(fid)))).filter(Boolean);
   let friend=0;
-  for(const fe of friends){const room=roomId(me.email,fe);const msgs=await DB.getMsgs(room);friend+=msgs.filter(m=>m.from!==me.email&&!m.read).length;}
+  for(const fu of friendUsers){const room=roomId(me.email,fu.email);const msgs=await DB.getMsgs(room);friend+=msgs.filter(m=>m.userEmail!==me.id&&!m.read).length;}
   const adminMsgs=await DB.getAdminMsgs();
-  const service=S.isAdmin?adminMsgs.filter(m=>!m.read).length:adminMsgs.filter(m=>m.from===me.email&&m.reply&&!m.replyRead).length;
+  const service=S.isAdmin?adminMsgs.filter(m=>!m.read).length:adminMsgs.filter(m=>m.from_id===me.id&&m.reply&&!m.replyRead).length;
   return{total:friend+service,friend,service};
 }
-function updChatBadge(){
+async function updChatBadge(){
   const btn2=document.getElementById('cfbtn');if(!btn2)return;
-  const {total,friend,service}=getTotalUnread();
+  const {total,friend,service}=await getTotalUnread();
   let badge=document.getElementById('chat-badge');
   if(total>0){
     if(!badge){badge=el('div',{id:'chat-badge',style:{position:'absolute',top:'-5px',right:'-5px',background:'#f44',color:'#fff',borderRadius:'50%',width:'18px',height:'18px',fontSize:'10px',fontWeight:'700',display:'flex',alignItems:'center',justifyContent:'center',border:'2px solid transparent',zIndex:'10'}});btn2.style.position='relative';btn2.appendChild(badge);}
@@ -2470,7 +2400,7 @@ function toggleC(){
   if(S.cpopen){box.style.display='flex';box.style.flexDirection='column';rChatPanel();}
   else{box.style.display='none';if(chatRefT){clearInterval(chatRefT);chatRefT=null;}}
 }
-function rChatPanel(){
+async function rChatPanel(){
   const q=t();const box=document.getElementById('cpbox');box.innerHTML='';
   box.style.cssText=`display:flex;flex-direction:column;background:${q.cb};backdrop-filter:${q.bl};border:1px solid ${q.sb};border-radius:14px;overflow:hidden;width:330px;height:490px;box-shadow:${q.sh}`;
   if(!S.loggedIn){
@@ -2479,7 +2409,7 @@ function rChatPanel(){
   // Tab header with unread badges
   const hdr=el('div',{style:{padding:'10px 12px 8px',borderBottom:`1px solid ${q.sb}`,flexShrink:'0'}});
   const tabRow=el('div',{style:{display:'flex',gap:'6px'}});
-  const {friend:fUnread,service:sUnread}=getTotalUnread();
+  const {friend:fUnread,service:sUnread}=await getTotalUnread();
   [['friends','👥 '+T('friends'),fUnread],['support','📩 Service',sUnread]].forEach(([id,label,unread])=>{
     const active=S.chatTab===id;
     const tabBtn=el('button',{class:'chat-tab',style:{background:active?q.as:'transparent',borderColor:active?q.ac:q.sb,color:active?q.ac:q.tm,flex:'1',position:'relative',display:'flex',alignItems:'center',justifyContent:'center',gap:'4px'},onclick:()=>{S.chatTab=id;S.chatRoom=null;S.chatTarget=null;rChatPanel();}},label);
@@ -2490,20 +2420,21 @@ function rChatPanel(){
   const topRow=el('div',{style:{display:'flex',alignItems:'center',gap:'6px'}});topRow.appendChild(tabRow);topRow.appendChild(closeX);
   hdr.appendChild(topRow);box.appendChild(hdr);
   if(S.chatTab==='friends')rChatFriends(box,q);
-  else{DB.markAdminRead(S.user.email,S.isAdmin);rChatSupport(box,q);}
+  else{rChatSupport(box,q);}
   updChatBadge();
 }
 
 async function rChatFriends(box,q){
-  const me=await DB.byId(S.user.id);const friends=(me.friends||[]).map(e=>DB.byEmail(e)).filter(Boolean);
+  const me=await DB.byId(S.user.id);
+  const friends=(await Promise.all((me.friends||[]).map(e=>DB.byId(e)))).filter(Boolean);
   if(!S.chatRoom){
     if(!friends.length){box.appendChild(el('div',{style:{flex:'1',display:'flex',alignItems:'center',justifyContent:'center',color:q.tm,fontSize:'11px',textAlign:'center',padding:'18px',lineHeight:'1.7'}},'No friends yet.\nAdd friends in My Account to start chatting.'));return;}
     const list=el('div',{style:{flex:'1',overflowY:'auto',padding:'7px'}});
     for(const f of friends){
 
       const room=roomId(me.email,f.email);const msgs=await DB.getMsgs(room);const last=msgs.length?msgs[msgs.length-1]:null;
-      const unread=msgs.filter(mm=>mm.from!==me.email&&!mm.read).length;
-      const row=el('div',{style:{display:'flex',alignItems:'center',gap:'9px',padding:'9px',borderRadius:'9px',cursor:'pointer',transition:'.18s',marginBottom:'2px'},onclick:async ()=>{S.chatRoom=room;S.chatTarget=f;const m2=await DB.getMsgs(room);m2.forEach(mm=>{if(mm.from!==me.email)mm.read=true;});DB.saveMsgs(room,m2);rChatPanel();}});
+      const unread=msgs.filter(mm=>mm.userEmail!==me.id&&!mm.read).length;
+      const row=el('div',{style:{display:'flex',alignItems:'center',gap:'9px',padding:'9px',borderRadius:'9px',cursor:'pointer',transition:'.18s',marginBottom:'2px'},onclick:async ()=>{S.chatRoom=room;S.chatTarget=f;await DB.markMsgsRead(room,me.id);rChatPanel();}});
       row.onmouseenter=()=>row.style.background=q.sur;row.onmouseleave=()=>row.style.background='transparent';
       row.appendChild(el('div',{style:{position:'relative',flexShrink:'0'}},avEl(f,36),el('div',{class:'dot-s '+(f.online?'on':'off'),style:{position:'absolute',bottom:'0',right:'0',border:`2px solid ${q.cb}`}})));
       row.appendChild(el('div',{style:{flex:'1',minWidth:'0'}},el('div',{style:{color:q.tx,fontSize:'12px',fontWeight:'600',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}},f.username),el('div',{style:{color:q.tm,fontSize:'10px',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}},last?(last.img?'📷 Photo':last.text.slice(0,28)+'...'):T('startChat'))));
@@ -2524,7 +2455,7 @@ async function rChatFriends(box,q){
     const md=el('div',{style:{flex:'1',overflowY:'auto',padding:'11px',display:'flex',flexDirection:'column',gap:'3px'}});
     if(!msgs.length)md.appendChild(el('div',{style:{textAlign:'center',color:q.tm,fontSize:'11px',marginTop:'18px'}},T('startChat')+' with '+f.username));
     msgs.forEach(msg=>{
-      const isMe=msg.from===me.email;
+      const isMe=msg.userEmail===me.id;
       const bbl=el('div',{class:`cmsg ${isMe?'me':''}`});
       if(!isMe)bbl.appendChild(avEl(f,24));
       const ct=el('div',{class:'cbubble',style:{background:isMe?q.mm:q.mo,color:q.tx,borderRadius:isMe?'11px 11px 2px 11px':'11px 11px 11px 2px'}});
@@ -2550,7 +2481,7 @@ async function rChatFriends(box,q){
 async function rChatSupport(box,q){
   const me=await DB.byId(S.user.id);const isAdmin=S.isAdmin;
   const msgs=await DB.getAdminMsgs();
-  const myMsgs=isAdmin?msgs:msgs.filter(m=>m.from===me.email);
+  const myMsgs=isAdmin?msgs:msgs.filter(m=>m.from_id===me.id);
   const hdr2=el('div',{style:{padding:'8px 12px',borderBottom:`1px solid ${q.sb}`,flexShrink:'0'}});
   hdr2.appendChild(el('div',{style:{color:q.ac,fontSize:'11px',fontWeight:'700'}},isAdmin?'📬 All User Messages':'📩 '+T('directMsg')));
   hdr2.appendChild(el('div',{style:{color:q.tm,fontSize:'9px',marginTop:'2px'}},(isAdmin?'Review & reply to user messages':'Send message directly to Admin — no friendship needed')));
@@ -2560,11 +2491,11 @@ async function rChatSupport(box,q){
   if(!myMsgs.length)ml.appendChild(el('div',{style:{textAlign:'center',color:q.tm,fontSize:'11px',padding:'20px',lineHeight:'1.7'}},'No messages yet.'+(isAdmin?'':'\nUse the form below to contact Admin.')));
   for(const msg of [...myMsgs].reverse()){
 
-    const sender=await DB.byEmail(msg.from);const tc=TC[msg.msgType]||q.ac;
+    const sender=isAdmin?await DB.byId(msg.from_id):me;const tc=TC[msg.type]||q.ac;
     const card=el('div',{style:{background:q.sur,borderRadius:'9px',padding:'10px',marginBottom:'7px',border:`1px solid ${tc}44`}});
     const topR=el('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'6px'}});
-    topR.appendChild(el('div',{style:{display:'flex',alignItems:'center',gap:'7px'}},avEl(sender||{username:msg.fromName||'User'},26),el('div',{},el('div',{style:{color:q.tx,fontSize:'11px',fontWeight:'700'}},msg.fromName||'Unknown'),el('div',{style:{color:q.tm,fontSize:'9px'}},ago(msg.time)))));
-    topR.appendChild(el('span',{style:{background:`${tc}18`,color:tc,borderRadius:'20px',padding:'1px 8px',fontSize:'9px',fontWeight:'700'}},(msg.msgType||'msg').toUpperCase()));
+    topR.appendChild(el('div',{style:{display:'flex',alignItems:'center',gap:'7px'}},avEl(sender||{username:msg.fromUsername||'User'},26),el('div',{},el('div',{style:{color:q.tx,fontSize:'11px',fontWeight:'700'}},msg.fromUsername||sender?.username||'Unknown'),el('div',{style:{color:q.tm,fontSize:'9px'}},ago(msg.time||msg.created_at)))));
+    topR.appendChild(el('span',{style:{background:`${tc}18`,color:tc,borderRadius:'20px',padding:'1px 8px',fontSize:'9px',fontWeight:'700'}},(msg.type||'msg').toUpperCase()));
     card.appendChild(topR);
     card.appendChild(el('div',{style:{color:q.tx,fontSize:'11px',lineHeight:'1.5',marginBottom:'6px'}},msg.text));
     if(isAdmin&&!msg.replied){
@@ -2583,7 +2514,7 @@ async function rChatSupport(box,q){
     ['complaint','suggestion','partnership','inquiry'].forEach(ty=>{const o=el('option',{value:ty},ty.charAt(0).toUpperCase()+ty.slice(1));sel.appendChild(o);});
     const ta=el('textarea',{rows:'3',placeholder:'Write your message to Admin...',style:{width:'100%',padding:'7px 10px',borderRadius:'7px',background:q.ib,border:`1px solid ${q.sb}`,color:q.tx,fontSize:'11px',outline:'none',resize:'none',marginBottom:'6px'}});
     frm.appendChild(sel);frm.appendChild(ta);
-    frm.appendChild(btn('📩 '+T('send'),()=>{const txt=ta.value.trim();if(!txt){notif('Please write a message.','error');return;}DB.addAdminMsg({id:'M'+Date.now(),from:me.email,fromName:me.username,msgType:sel.value,text:txt,time:new Date().toISOString(),replied:false,reply:null});ta.value='';rChatPanel();notif('✅ Message sent to Admin!','success');},false,{width:'100%',fontSize:'11px'}));
+    frm.appendChild(btn('📩 '+T('send'),async ()=>{const txt=ta.value.trim();if(!txt){notif('Please write a message.','error');return;}await DB.addAdminMsg({type:sel.value,text:txt});ta.value='';rChatPanel();notif('✅ Message sent to Admin!','success');},false,{width:'100%',fontSize:'11px'}));
     box.appendChild(frm);
   }
 }
@@ -2597,7 +2528,7 @@ async function sendMsg(){
 async function onFiCimg(e){const f=e.target.files[0];if(!f||!S.chatRoom)return;const d=await rf(f);await DB.addMsg(S.chatRoom,{from:S.user.email,img:d,text:'',time:new Date().toISOString(),read:false});rChatPanel();e.target.value='';}
 async function openChatWith(user){
   if(!S.loggedIn){openAuthM();return;}
-  const me=await DB.byId(S.user.id);if(!(me.friends||[]).includes(user.email)){notif('⚠️ Can only chat with friends.','error');return;}
+  const me=await DB.byId(S.user.id);if(!(me.friends||[]).includes(user.id)){notif('⚠️ Can only chat with friends.','error');return;}
   S.chatRoom=roomId(me.email,user.email);S.chatTarget=user;S.chatTab='friends';S.cpopen=true;S.spopen=false;
   document.getElementById('spbox').style.display='none';
   const box=document.getElementById('cpbox');box.style.display='flex';rChatPanel();
@@ -2749,7 +2680,7 @@ async function onFiCp(e){
 }
 
 // ── IMAGE CROP MODAL ──────────────────────────────────────────
-function openCropModal(file,target){
+function openCropModal(file,target,onApply){
   const q=t();
   let cropX=0,cropY=0,cropW=0,cropH=0,dragging=false,resizing=false;
   let dragSX=0,dragSY=0,resSide='',isDrawing=false,drawStartX=0,drawStartY=0;
@@ -2880,7 +2811,11 @@ function openCropModal(file,target){
     if(isAvatar){ctx.beginPath();ctx.arc(outW/2,outH/2,outW/2,0,Math.PI*2);ctx.clip();}
     ctx.drawImage(imgEl,cropX*sx,cropY*sy,cropW*sx,cropH*sy,0,0,outW,outH);
     const dataUrl=canvas.toDataURL('image/jpeg',.88);
-    if(target==='avatar'){await DB.updUser(S.user.id,{avatar:dataUrl});S.user={...S.user,avatar:dataUrl};applyTheme();rMyAcct();notif('✅ Foto profil diperbarui!','success');}
+    if(onApply){
+      const blob=await new Promise(res=>canvas.toBlob(res,'image/jpeg',.88));
+      const croppedFile=new File([blob],'cropped.jpg',{type:'image/jpeg'});
+      await onApply(dataUrl,croppedFile);
+    } else if(target==='avatar'){await DB.updUser(S.user.id,{avatar:dataUrl});S.user={...S.user,avatar:dataUrl};applyTheme();rMyAcct();notif('✅ Foto profil diperbarui!','success');}
     else{await DB.updUser(S.user.id,{cover:dataUrl});rMyAcct();notif('✅ Foto cover diperbarui! (rasio 3:1)','success');}
     cleanup();
   },false,{fontSize:'11px'}));
@@ -2909,116 +2844,297 @@ async function rFraction(){
   const q=t();const c=document.getElementById('page-fraction');c.innerHTML='';
   if(!S.loggedIn){c.appendChild(el('div',{style:{textAlign:'center',padding:'70px'}},el('div',{style:{fontSize:'56px',marginBottom:'12px'}},'🔱'),el('div',{style:{color:q.tx,fontSize:'16px',fontWeight:'700',marginBottom:'8px'}},T('loginRequired')),btn('🔐 '+T('login'),openAuthM)));return;}
   const u=await DB.byId(S.user.id);
-  c.appendChild(el('h1',{style:{color:q.ac,fontSize:'22px',fontWeight:'800',marginBottom:'4px'}},'🔱 Fraction'));
-  // Tabs: Info | Chat Global
   const hasFraction=!!(u.fraction&&FRACTION_DATA[u.fraction]);
   const fracTab=S.fracPageTab||'info';
-  const tabRow=el('div',{style:{display:'flex',gap:'7px',marginBottom:'18px'}});
-  tabRow.appendChild(btn('🔱 Info Fraksi',()=>{S.fracPageTab='info';rFraction();},fracTab!=='info',{fontSize:'11px'}));
-  if(hasFraction){
-    tabRow.appendChild(btn('💬 Chat Global',()=>{S.fracPageTab='chat';rFraction();},fracTab!=='chat',{fontSize:'11px'}));
-  } else {
-    const disabledChat=el('button',{style:{padding:'5px 12px',borderRadius:'7px',border:`1px solid ${q.sb}`,background:'rgba(255,255,255,.03)',color:q.tm,fontSize:'11px',cursor:'not-allowed',opacity:'0.5'},title:'Bergabunglah ke Fraksi untuk mengakses Chat Global'},'💬 Chat Global 🔒');
-    tabRow.appendChild(disabledChat);
-  }
+
+  // ── HEADER ──
+  const hdr=el('div',{style:{marginBottom:'16px'}});
+  hdr.appendChild(el('h1',{style:{color:q.ac,fontSize:'22px',fontWeight:'800',marginBottom:'3px'}},'🔱 Fraction'));
+  hdr.appendChild(el('p',{style:{color:q.tm,fontSize:'12px',marginBottom:'12px'}},'Komunitas fraksi StarLive — Chat, Challenge, dan kolaborasi antar fraksi.'));
+  c.appendChild(hdr);
+
+  // ── TABS ──
+  const TABS=[
+    {id:'info',lb:'🔱 Info Fraksi'},
+    {id:'chat',lb:'💬 Global Chat',locked:!hasFraction},
+    {id:'challenge',lb:'🏆 Challenge'},
+  ];
+  const tabRow=el('div',{style:{display:'flex',gap:'7px',marginBottom:'20px',flexWrap:'wrap'}});
+  TABS.forEach(tab=>{
+    const active=fracTab===tab.id;
+    const b=el('button',{
+      style:{padding:'7px 14px',borderRadius:'9px',border:`1px solid ${active?q.ac:tab.locked?q.sb+'88':q.sb}`,
+        background:active?q.as:'rgba(255,255,255,.03)',color:active?q.ac:tab.locked?q.tm:q.tx,
+        cursor:tab.locked?'not-allowed':'pointer',fontSize:'12px',fontWeight:active?'700':'400',
+        transition:'all .18s',opacity:tab.locked?'0.55':'1'},
+      title:tab.locked?'Bergabunglah ke Fraksi untuk mengakses':'',
+      onclick:()=>{if(!tab.locked){S.fracPageTab=tab.id;rFraction();}else notif('🔒 Bergabunglah ke Fraksi terlebih dahulu.','error');}
+    },(tab.locked?'🔒 ':'')+tab.lb);
+    tabRow.appendChild(b);
+  });
   c.appendChild(tabRow);
 
-  if(fracTab==='chat'&&hasFraction){
-    // ── FRACTION GLOBAL CHAT ──
-    const fi=FRACTION_DATA[u.fraction];
-    const chatWrap=gc({padding:'0',display:'flex',flexDirection:'column',height:'68vh',minHeight:'400px'});
-    // Header
-    const chatHdr=el('div',{style:{padding:'12px 16px',borderBottom:`1px solid ${q.sb}`,display:'flex',alignItems:'center',gap:'10px',flexShrink:'0'}});
-    chatHdr.appendChild(el('div',{style:{fontSize:'24px'}},fi.em));
-    chatHdr.appendChild(el('div',{},el('div',{style:{color:q.tx,fontSize:'13px',fontWeight:'700'}},'Chat Global Fraksi'),el('div',{style:{color:fi.color,fontSize:'10px',fontWeight:'600'}},u.fraction+' & semua fraksi lainnya')));
-    chatWrap.appendChild(chatHdr);
-    // Messages
-    const msgArea=el('div',{style:{flex:'1',overflowY:'auto',padding:'14px',display:'flex',flexDirection:'column',gap:'8px'}});
-    const allMsgs=await DB.getGlobalFracChat();
-    if(!allMsgs.length){msgArea.appendChild(el('div',{style:{color:q.tm,fontSize:'12px',textAlign:'center',padding:'30px'}},'Belum ada pesan. Jadilah yang pertama!'));}
-    for(const msg of allMsgs){
-
-      const isMe=msg.userEmail===u.email;
-      const senderU=await DB.byEmail(msg.userEmail);
-      const senderFrac=senderU?.fraction&&FRACTION_DATA[senderU.fraction];
-      const row=el('div',{style:{display:'flex',gap:'7px',alignItems:'flex-end',flexDirection:isMe?'row-reverse':'row'}});
-      // Avatar
-      if(!isMe){const av=avEl(senderU||{username:msg.username},28);row.appendChild(av);}
-      const bubble=el('div',{style:{maxWidth:'72%'}});
-      if(!isMe){
-        const nameRow=el('div',{style:{display:'flex',alignItems:'center',gap:'5px',marginBottom:'3px',flexWrap:'wrap'}});
-        nameRow.appendChild(el('span',{style:{color:q.tx,fontSize:'10px',fontWeight:'700'}},msg.username));
-        if(senderFrac)nameRow.appendChild(el('span',{style:{fontSize:'13px',cursor:'default'},title:senderU.fraction},senderFrac.em));
-        nameRow.appendChild(el('span',{style:{color:q.tm,fontSize:'8px'}},ago(msg.time)));
-        bubble.appendChild(nameRow);
+  // ═══════════════════════════════════
+  // TAB: INFO
+  // ═══════════════════════════════════
+  if(fracTab==='info'){
+    if(hasFraction){
+      const fi=FRACTION_DATA[u.fraction];
+      const fcard=gc({padding:'22px',marginBottom:'18px',border:`2px solid ${fi.color}`,borderRadius:'16px',background:`${fi.color}10`});
+      fcard.appendChild(el('div',{style:{display:'flex',alignItems:'center',gap:'14px',marginBottom:'12px'}},
+        el('div',{style:{fontSize:'46px'}},fi.em),
+        el('div',{},el('div',{style:{color:fi.color,fontSize:'20px',fontWeight:'900'}},u.fraction),el('div',{style:{color:q.tm,fontSize:'11px',marginTop:'3px'}},fi.desc))));
+      fcard.appendChild(el('div',{style:{color:q.ac,fontSize:'10px',fontWeight:'700',marginBottom:'7px'}},'✨ PERKS'));
+      fi.perks.forEach(p=>fcard.appendChild(el('div',{style:{color:q.tx,fontSize:'11px',padding:'4px 0',borderBottom:`1px solid ${fi.color}22`,display:'flex',alignItems:'center',gap:'6px'}},el('span',{style:{color:fi.color}},'►'),p)));
+      fcard.appendChild(el('div',{style:{color:q.ac,fontSize:'10px',fontWeight:'700',margin:'12px 0 7px'}},'📋 QUESTS'));
+      fi.quests.forEach(qs=>fcard.appendChild(el('div',{style:{color:q.tm,fontSize:'11px',padding:'4px 0',display:'flex',alignItems:'center',gap:'6px'}},el('span',{style:{color:fi.color}},'○'),qs)));
+      fcard.appendChild(el('div',{style:{marginTop:'14px',display:'flex',gap:'8px'}},
+        btn('💬 Chat Global',()=>{S.fracPageTab='chat';rFraction();},false,{fontSize:'11px'}),
+        btn('🏆 Challenge',()=>{S.fracPageTab='challenge';rFraction();},true,{fontSize:'11px'})));
+      c.appendChild(fcard);
+      c.appendChild(el('div',{style:{color:q.tm,fontSize:'10px',textAlign:'center',marginBottom:'14px'}},'Fraksi hanya bisa diubah oleh Admin.'));
+    } else {
+      const examDone=u.fracExamDone;
+      if(examDone){
+        c.appendChild(gc({padding:'22px',textAlign:'center',marginBottom:'16px'},
+          el('div',{style:{fontSize:'46px',marginBottom:'8px'}},'⏳'),
+          el('div',{style:{color:q.ac,fontSize:'14px',fontWeight:'700',marginBottom:'5px'}},'Exam submitted!'),
+          el('div',{style:{color:q.tm,fontSize:'11px'}},'Hasil: '+(u.fracResult?el('span',{style:{color:FRACTION_DATA[u.fracResult]?.color||q.ac,fontWeight:'700'}},FRACTION_DATA[u.fracResult]?.em+' '+u.fracResult).outerHTML:'Pending')),
+          el('div',{style:{color:q.tm,fontSize:'10px',marginTop:'7px'}},'Admin akan meninjau dan menetapkan Fraksi segera.')));
+      } else {
+        const row=el('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))',gap:'12px',marginBottom:'18px'}});
+        Object.entries(FRACTION_DATA).forEach(([name,fi])=>{
+          const card=gc({padding:'16px',border:`1px solid ${fi.color}44`,borderRadius:'12px',textAlign:'center'});
+          card.appendChild(el('div',{style:{fontSize:'32px',marginBottom:'6px'}},fi.em));
+          card.appendChild(el('div',{style:{color:fi.color,fontSize:'14px',fontWeight:'700',marginBottom:'5px'}},name));
+          card.appendChild(el('div',{style:{color:q.tm,fontSize:'10px',lineHeight:'1.6'}},fi.desc));
+          row.appendChild(card);
+        });
+        c.appendChild(row);
+        const startCard=gc({padding:'22px',textAlign:'center',marginBottom:'16px'});
+        startCard.appendChild(el('div',{style:{fontSize:'40px',marginBottom:'8px'}},'📝'));
+        startCard.appendChild(el('div',{style:{color:q.ac,fontSize:'15px',fontWeight:'800',marginBottom:'5px'}},'Take the Fraction Exam'));
+        startCard.appendChild(el('div',{style:{color:q.tm,fontSize:'11px',marginBottom:'14px'}},'5 questions · Hasilnya dikirim ke Admin untuk disetujui.'));
+        startCard.appendChild(btn('🔱 Start Exam',()=>openFractionExam(),false,{fontSize:'13px',padding:'10px 24px'}));
+        c.appendChild(startCard);
       }
-      const btext=el('div',{style:{background:isMe?q.as:q.sur,border:`1px solid ${isMe?q.ac:q.sb}`,borderRadius:isMe?'14px 14px 4px 14px':'14px 14px 14px 4px',padding:'8px 12px',color:q.tx,fontSize:'12px',lineHeight:'1.5'}},msg.text);
-      bubble.appendChild(btext);
-      if(isMe)bubble.appendChild(el('div',{style:{color:q.tm,fontSize:'8px',textAlign:'right',marginTop:'2px'}},ago(msg.time)));
-      row.appendChild(bubble);
-      msgArea.appendChild(row);
-    
-}
-    chatWrap.appendChild(msgArea);
-    // Input
-    const inputRow=el('div',{style:{display:'flex',gap:'8px',padding:'10px 14px',borderTop:`1px solid ${q.sb}`,flexShrink:'0',alignItems:'flex-end'}});
-    const inp=el('textarea',{class:'inf',rows:'2',placeholder:'Tulis pesan... (semua fraksi bisa melihat)',style:{background:q.ib,borderColor:q.sb,color:q.tx,flex:'1',resize:'none',marginBottom:'0',fontSize:'12px',lineHeight:'1.5'}});
-    inp.onkeydown=e2=>{if(e2.key==='Enter'&&!e2.shiftKey){e2.preventDefault();sendFracMsg();}};
-    inputRow.appendChild(inp);
-    inputRow.appendChild(btn('Kirim',sendFracMsg,false,{fontSize:'11px',padding:'7px 14px',flexShrink:'0'}));
-    chatWrap.appendChild(inputRow);
-    c.appendChild(chatWrap);
-    // Scroll to bottom
-    setTimeout(()=>{msgArea.scrollTop=msgArea.scrollHeight;inp.focus();},80);
-    async function sendFracMsg(){
-      const txt=inp.value.trim();if(!txt)return;
-      await DB.addFracChatMsg({userEmail:u.email,username:u.username,fraction:u.fraction,text:txt,time:new Date().toISOString()});
-      inp.value='';S.fracPageTab='chat';rFraction();
     }
+    // All fractions overview
+    c.appendChild(el('div',{style:{color:q.ac,fontSize:'11px',fontWeight:'700',marginBottom:'10px'}},'🔱 SEMUA FRAKSI'));
+    const allRow=el('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:'10px'}});
+    const _allUsersForFrac=await DB.getUsers();
+    for(const [name,fi] of Object.entries(FRACTION_DATA)){
+      const count=_allUsersForFrac.filter(x=>x.fraction===name).length;
+      const card=gc({padding:'14px',border:`1px solid ${fi.color}33`});
+      card.appendChild(el('div',{style:{display:'flex',alignItems:'center',gap:'8px',marginBottom:'7px'}},el('div',{style:{fontSize:'24px'}},fi.em),el('div',{style:{color:fi.color,fontSize:'13px',fontWeight:'700'}},name)));
+      card.appendChild(el('div',{style:{color:q.tm,fontSize:'10px',lineHeight:'1.5',marginBottom:'6px'}},fi.desc));
+      card.appendChild(el('div',{style:{color:q.ac,fontSize:'10px',fontWeight:'700'}},count+' member'+(count!==1?'s':'')));
+      allRow.appendChild(card);
+    }
+    c.appendChild(allRow);
     return;
   }
 
-  // ── INFO TAB (original content) ──
-  c.appendChild(el('p',{style:{color:q.tm,fontSize:'12px',marginBottom:'20px'}},'Join a Fraction to unlock exclusive chat channels, vouchers, quests, and more.'));
-  if(hasFraction){
+  // ═══════════════════════════════════
+  // TAB: GLOBAL CHAT (Discord-style)
+  // ═══════════════════════════════════
+  if(fracTab==='chat'&&hasFraction){
     const fi=FRACTION_DATA[u.fraction];
-    const fcard=gc({padding:'20px',marginBottom:'18px',border:`2px solid ${fi.color}`,borderRadius:'16px',background:`${fi.color}10`});
-    fcard.appendChild(el('div',{style:{display:'flex',alignItems:'center',gap:'14px',marginBottom:'12px'}},el('div',{style:{fontSize:'46px'}},fi.em),el('div',{},el('div',{style:{color:fi.color,fontSize:'20px',fontWeight:'900'}},u.fraction),el('div',{style:{color:q.tm,fontSize:'11px',marginTop:'3px'}},fi.desc))));
-    fcard.appendChild(el('div',{style:{color:q.ac,fontSize:'10px',fontWeight:'700',marginBottom:'7px'}},'✨ PERKS'));
-    fi.perks.forEach(p=>fcard.appendChild(el('div',{style:{color:q.tx,fontSize:'11px',padding:'4px 0',borderBottom:`1px solid ${fi.color}22`,display:'flex',alignItems:'center',gap:'6px'}},el('span',{style:{color:fi.color}},'►'),p)));
-    fcard.appendChild(el('div',{style:{color:q.ac,fontSize:'10px',fontWeight:'700',margin:'12px 0 7px'}},'📋 QUESTS'));
-    fi.quests.forEach(qs=>fcard.appendChild(el('div',{style:{color:q.tm,fontSize:'11px',padding:'4px 0',display:'flex',alignItems:'center',gap:'6px'}},el('span',{style:{color:fi.color}},'○'),qs)));
-    fcard.appendChild(el('div',{style:{marginTop:'14px',display:'flex',gap:'8px'}},btn('💬 Chat Global',()=>{S.fracPageTab='chat';rFraction();},false,{fontSize:'11px'}),btn('🏆 Challenges',()=>goTo('challenge'),true,{fontSize:'11px'})));
-    c.appendChild(fcard);
-    c.appendChild(el('div',{style:{color:q.tm,fontSize:'10px',textAlign:'center',marginBottom:'14px'}},'Fraksi hanya bisa diubah oleh Admin.'));
-  } else {
-    const examDone=u.fracExamDone;
-    if(examDone){
-      c.appendChild(gc({padding:'22px',textAlign:'center',marginBottom:'16px'},el('div',{style:{fontSize:'46px',marginBottom:'8px'}},'⏳'),el('div',{style:{color:q.ac,fontSize:'14px',fontWeight:'700',marginBottom:'5px'}},'Exam submitted!'),el('div',{style:{color:q.tm,fontSize:'11px'}},'Hasil: '+(u.fracResult?el('span',{style:{color:FRACTION_DATA[u.fracResult]?.color||q.ac,fontWeight:'700'}},FRACTION_DATA[u.fracResult]?.em+' '+u.fracResult).outerHTML:'Pending')),el('div',{style:{color:q.tm,fontSize:'10px',marginTop:'7px'}},'Admin akan meninjau dan menetapkan Fraksi segera.')));
-    } else {
-      const row=el('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(200px,1fr))',gap:'12px',marginBottom:'18px'}});
-      Object.entries(FRACTION_DATA).forEach(([name,fi])=>{const card=gc({padding:'16px',border:`1px solid ${fi.color}44`,borderRadius:'12px',textAlign:'center'});card.appendChild(el('div',{style:{fontSize:'32px',marginBottom:'6px'}},fi.em));card.appendChild(el('div',{style:{color:fi.color,fontSize:'14px',fontWeight:'700',marginBottom:'5px'}},name));card.appendChild(el('div',{style:{color:q.tm,fontSize:'10px',lineHeight:'1.6'}},fi.desc));row.appendChild(card);});
-      c.appendChild(row);
-      const startCard=gc({padding:'22px',textAlign:'center',marginBottom:'16px'});
-      startCard.appendChild(el('div',{style:{fontSize:'40px',marginBottom:'8px'}},'📝'));
-      startCard.appendChild(el('div',{style:{color:q.ac,fontSize:'15px',fontWeight:'800',marginBottom:'5px'}},'Take the Fraction Exam'));
-      startCard.appendChild(el('div',{style:{color:q.tm,fontSize:'11px',marginBottom:'14px'}},'5 questions · Hasilnya dikirim ke Admin untuk disetujui.'));
-      startCard.appendChild(btn('🔱 Start Exam',()=>openFractionExam(),false,{fontSize:'13px',padding:'10px 24px'}));
-      c.appendChild(startCard);
+    // Sidebar with fraction channels + direct area
+    const chatLayout=el('div',{style:{display:'flex',gap:'0',height:'72vh',minHeight:'420px',borderRadius:'14px',overflow:'hidden',border:`1px solid ${q.sb}`}});
+
+    // ── Left sidebar: channels ──
+    const chanSB=el('div',{style:{width:'180px',flexShrink:'0',background:'rgba(0,0,0,.22)',borderRight:`1px solid ${q.sb}`,display:'flex',flexDirection:'column',overflowY:'auto'}});
+    chanSB.appendChild(el('div',{style:{padding:'12px 12px 8px',color:q.tm,fontSize:'9px',fontWeight:'800',letterSpacing:'.1em'}},'CHANNELS'));
+    const channels=[
+      {id:'global',lb:'# global',desc:'Semua fraksi — ruang umum'},
+      {id:'fraction',lb:'# '+u.fraction.toLowerCase().replace(/ /g,'-'),desc:'Chat khusus fraksimu'},
+      {id:'announcements',lb:'📢 pengumuman',desc:'Info dari Admin'},
+    ];
+    const activeChan=S._fracChan||'global';
+    channels.forEach(ch=>{
+      const active=activeChan===ch.id;
+      const cb=el('div',{style:{padding:'7px 12px',cursor:'pointer',borderRadius:'6px',margin:'1px 5px',background:active?q.as:'transparent',color:active?q.ac:q.tm,fontSize:'12px',fontWeight:active?'700':'400',transition:'all .15s'},
+        title:ch.desc,
+        onclick:()=>{S._fracChan=ch.id;rFraction();}},ch.lb);
+      cb.onmouseenter=()=>{if(!active)cb.style.background='rgba(255,255,255,.05)';cb.style.color=q.tx;};
+      cb.onmouseleave=()=>{if(!active){cb.style.background='transparent';cb.style.color=q.tm;}};
+      chanSB.appendChild(cb);
+    });
+    chanSB.appendChild(el('div',{style:{padding:'12px 12px 6px',color:q.tm,fontSize:'9px',fontWeight:'800',letterSpacing:'.1em',marginTop:'10px'}},'FRAKSI LAIN'));
+    for(const [name,ffi] of Object.entries(FRACTION_DATA)){
+      const isMe=name===u.fraction;
+      const fb=el('div',{style:{padding:'6px 12px',color:isMe?ffi.color:q.tm,fontSize:'11px',display:'flex',alignItems:'center',gap:'5px'}},el('span',{},ffi.em),el('span',{},name));
+      chanSB.appendChild(fb);
     }
+    chatLayout.appendChild(chanSB);
+
+    // ── Main chat area ──
+    const chatMain=el('div',{style:{flex:'1',display:'flex',flexDirection:'column',minWidth:'0'}});
+    // Channel header
+    const chanInfo=channels.find(x=>x.id===activeChan)||channels[0];
+    const chatHdr=el('div',{style:{padding:'11px 16px',borderBottom:`1px solid ${q.sb}`,display:'flex',alignItems:'center',gap:'10px',flexShrink:'0',background:'rgba(0,0,0,.1)'}});
+    chatHdr.appendChild(el('div',{style:{fontSize:'18px'}},activeChan==='global'?'🌐':activeChan==='fraction'?fi.em:'📢'));
+    chatHdr.appendChild(el('div',{},el('div',{style:{color:q.tx,fontSize:'13px',fontWeight:'700'}},chanInfo.lb),el('div',{style:{color:q.tm,fontSize:'9px'}},chanInfo.desc)));
+    chatMain.appendChild(chatHdr);
+
+    // Messages
+    const msgArea=el('div',{style:{flex:'1',overflowY:'auto',padding:'14px',display:'flex',flexDirection:'column',gap:'9px'}});
+    let allMsgs=[];
+    if(activeChan==='global'||activeChan==='fraction'){
+      if(activeChan==='fraction'){
+        const fracRoom='fraction_'+(u.fraction||'').replace(/ /g,'_').toLowerCase();
+        allMsgs=await DB.getGlobalFracChat(200, fracRoom);
+      } else {
+        allMsgs=await DB.getGlobalFracChat(200, 'global_fraction');
+      }
+    } else if(activeChan==='announcements'){
+      // Use static announcements
+      allMsgs=[{username:'⭐ Admin',fraction:'System',text:'Selamat datang di channel pengumuman StarLive Group! Update terbaru akan diposting di sini.',time:new Date(Date.now()-3600000).toISOString(),isSystem:true},{username:'⭐ Admin',fraction:'System',text:'Fraksi baru telah dibuka — ikuti exam dan bergabunglah sekarang!',time:new Date(Date.now()-7200000).toISOString(),isSystem:true}];
+    }
+    if(!allMsgs.length){
+      msgArea.appendChild(el('div',{style:{color:q.tm,fontSize:'12px',textAlign:'center',padding:'40px',lineHeight:'1.7'}},
+        el('div',{style:{fontSize:'32px',marginBottom:'8px'}},'💬'),
+        el('div',{},'Belum ada pesan di channel ini.'),
+        el('div',{style:{fontSize:'10px',marginTop:'5px'}},'Jadilah yang pertama memulai percakapan!')));
+    }
+    for(const msg of allMsgs){
+      const isMe=msg.userEmail===u.id;
+      const senderU=msg.isSystem?null:await DB.byId(msg.userEmail);
+      const senderFrac=senderU?.fraction&&FRACTION_DATA[senderU.fraction];
+      const row=el('div',{style:{display:'flex',gap:'9px',alignItems:'flex-start'}});
+      // Avatar
+      const av=msg.isSystem?
+        el('div',{style:{width:'32px',height:'32px',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'15px',background:q.as,border:`2px solid ${q.ac}`,flexShrink:'0'}},'⭐'):
+        avEl(senderU||{username:msg.username},32);
+      row.appendChild(av);
+      const bubble=el('div',{style:{flex:'1',minWidth:'0'}});
+      const nameRow=el('div',{style:{display:'flex',alignItems:'center',gap:'5px',marginBottom:'3px',flexWrap:'wrap'}});
+      nameRow.appendChild(el('span',{style:{color:isMe?q.ac:msg.isSystem?'#FAB715':q.tx,fontSize:'12px',fontWeight:'700'}},msg.username));
+      if(senderFrac)nameRow.appendChild(el('span',{style:{background:`${senderFrac.color}18`,color:senderFrac.color,borderRadius:'10px',padding:'1px 7px',fontSize:'9px',fontWeight:'700'}},senderFrac.em+' '+senderU.fraction));
+      else if(msg.fraction)nameRow.appendChild(el('span',{style:{background:q.as,color:q.tm,borderRadius:'10px',padding:'1px 7px',fontSize:'9px'}},msg.fraction));
+      nameRow.appendChild(el('span',{style:{color:q.tm,fontSize:'9px'}},ago(msg.time)));
+      bubble.appendChild(nameRow);
+      const btext=el('div',{style:{color:q.tx,fontSize:'12px',lineHeight:'1.6',wordBreak:'break-word',background:isMe?`${q.ac}12`:msg.isSystem?'rgba(250,183,21,.06)':'rgba(255,255,255,.03)',borderRadius:'8px',padding:'7px 11px',border:`1px solid ${isMe?q.ac+'33':q.sb}`}},msg.text);
+      bubble.appendChild(btext);
+      row.appendChild(bubble);
+      msgArea.appendChild(row);
+    }
+    chatMain.appendChild(msgArea);
+
+    // Input (disabled for announcements)
+    if(activeChan!=='announcements'){
+      const inputRow=el('div',{style:{display:'flex',gap:'8px',padding:'10px 14px',borderTop:`1px solid ${q.sb}`,flexShrink:'0',alignItems:'flex-end',background:'rgba(0,0,0,.08)'}});
+      const inp=el('textarea',{class:'inf',rows:'2',placeholder:'Tulis pesan... (Enter untuk kirim, Shift+Enter baris baru)',style:{background:q.ib,borderColor:q.sb,color:q.tx,flex:'1',resize:'none',marginBottom:'0',fontSize:'12px',lineHeight:'1.5'}});
+      inp.onkeydown=async e2=>{
+        if(e2.key==='Enter'&&!e2.shiftKey){e2.preventDefault();
+          const txt=inp.value.trim();if(!txt)return;
+          await DB.addFracChatMsg({userEmail:u.id,username:u.username,fraction:u.fraction,channel:activeChan,text:SEC.strip(txt).substring(0,500),time:new Date().toISOString()});
+          inp.value='';rFraction();
+        }
+      };
+      inputRow.appendChild(inp);
+      inputRow.appendChild(btn('Kirim →',async ()=>{
+        const txt=inp.value.trim();if(!txt)return;
+        await DB.addFracChatMsg({userEmail:u.id,username:u.username,fraction:u.fraction,channel:activeChan,text:SEC.strip(txt).substring(0,500),time:new Date().toISOString()});
+        inp.value='';rFraction();
+      },false,{fontSize:'11px',padding:'7px 14px',flexShrink:'0'}));
+      chatMain.appendChild(inputRow);
+    } else {
+      chatMain.appendChild(el('div',{style:{padding:'10px 16px',borderTop:`1px solid ${q.sb}`,color:q.tm,fontSize:'11px',textAlign:'center',background:'rgba(0,0,0,.08)'}},'📢 Channel pengumuman hanya dapat ditulis oleh Admin.'));
+    }
+    chatLayout.appendChild(chatMain);
+    c.appendChild(chatLayout);
+    setTimeout(()=>{msgArea.scrollTop=msgArea.scrollHeight;},100);
+    return;
   }
-  c.appendChild(el('div',{style:{color:q.ac,fontSize:'11px',fontWeight:'700',marginBottom:'10px'}},'🔱 SEMUA FRAKSI'));
-  const allRow=el('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:'10px'}});
-  const _allUsersForFrac=await DB.getUsers();
-  for(const [name,fi] of Object.entries(FRACTION_DATA)){
-    const count=_allUsersForFrac.filter(x=>x.fraction===name).length;
-    const card=gc({padding:'14px',border:`1px solid ${fi.color}33`});
-    card.appendChild(el('div',{style:{display:'flex',alignItems:'center',gap:'8px',marginBottom:'7px'}},el('div',{style:{fontSize:'24px'}},fi.em),el('div',{style:{color:fi.color,fontSize:'13px',fontWeight:'700'}},name)));
-    card.appendChild(el('div',{style:{color:q.tm,fontSize:'10px',lineHeight:'1.5',marginBottom:'6px'}},fi.desc));
-    card.appendChild(el('div',{style:{color:q.ac,fontSize:'10px',fontWeight:'700'}},count+' member'+(count!==1?'s':'')));
-    allRow.appendChild(card);
+
+  // ═══════════════════════════════════
+  // TAB: CHALLENGE (embedded)
+  // ═══════════════════════════════════
+  if(fracTab==='challenge'){
+    c.appendChild(el('p',{style:{color:q.tm,fontSize:'12px',marginBottom:'16px'}},'Selesaikan quiz untuk mendapatkan badge. Pengguna bisa berkontribusi challenge (perlu persetujuan Admin).'));
+    const tabs2=el('div',{style:{display:'flex',gap:'6px',marginBottom:'16px',flexWrap:'wrap'}});
+    const challTabs=[['browse','🔍 Browse'],['mine','📋 Percobaan Saya'],['create','➕ Kontribusi']];
+    challTabs.forEach(([id,lb])=>tabs2.appendChild(btn(lb,()=>{S.challTab=id;rFraction();},S.challTab!==id,{fontSize:'11px'})));
+    c.appendChild(tabs2);
+
+    if(S.challTab==='browse'){
+      const approved=(await DB.getChallenges()).filter(x=>x.status==='approved');
+      if(!approved.length){c.appendChild(el('div',{style:{textAlign:'center',padding:'40px',color:q.tm,lineHeight:'1.8'}},el('div',{style:{fontSize:'32px'}},'🏆'),el('div',{},'Belum ada challenge. Jadilah yang pertama berkontribusi!')));return;}
+      const grid=el('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(240px,1fr))',gap:'12px'}});
+      for(const ch of approved){
+        const u2=await DB.byId(S.user.id);const myAttempt=(ch.attempts||[]).find(a=>a.user_id===u2.id);
+        const TC={Knowledge:'#4fc3f7',Creative:'#f06292',Technical:'#81c784',General:'#ffb74d'};const tc=TC[ch.type]||q.ac;
+        const card=gc({padding:'18px',border:`1px solid ${tc}33`,cursor:'pointer',transition:'border-color .2s'});
+        card.onmouseenter=()=>card.style.borderColor=tc;card.onmouseleave=()=>card.style.borderColor=`${tc}33`;
+        card.appendChild(el('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:'8px'}},
+          el('span',{style:{background:`${tc}22`,color:tc,borderRadius:'20px',padding:'2px 9px',fontSize:'9px',fontWeight:'700'}},ch.type),
+          myAttempt?el('span',{style:{color:myAttempt.passed?'#64dc64':'#ffb74d',fontSize:'9px',fontWeight:'700'}},myAttempt.passed?'✅ Lulus':'📊 '+(myAttempt.score||0)+'%'):''));
+        card.appendChild(el('div',{style:{color:q.tx,fontSize:'14px',fontWeight:'700',marginBottom:'4px'}},ch.title));
+        card.appendChild(el('div',{style:{color:q.tm,fontSize:'10px',marginBottom:'9px'}},ch.questions.length+' soal · oleh '+ch.createdByName));
+        if(ch.reward)card.appendChild(el('div',{style:{color:'#ffb74d',fontSize:'10px',fontWeight:'700',marginBottom:'9px'}},'🎁 Hadiah: '+ch.reward));
+        card.appendChild(el('div',{style:{display:'flex',gap:'6px'}},btn(myAttempt?'🔁 Coba Lagi':'▶️ Mulai',()=>openQuiz(ch),false,{fontSize:'11px',padding:'5px 12px'})));
+        grid.appendChild(card);
+      }
+      c.appendChild(grid);
+    } else if(S.challTab==='mine'){
+      const allCh=await DB.getChallenges();const me=S.user.id;
+      const myAttempts=allCh.flatMap(ch=>(ch.attempts||[]).filter(a=>a.user_id===me).map(a=>({...a,chTitle:ch.title,chId:ch.id})));
+      myAttempts.sort((a,b)=>new Date(b.date)-new Date(a.date));
+      if(!myAttempts.length){c.appendChild(el('div',{style:{textAlign:'center',padding:'40px',color:q.tm,lineHeight:'1.8'}},el('div',{style:{fontSize:'32px'}},'📋'),el('div',{},'Belum ada percobaan. Mulai challenge pertamamu!')));return;}
+      const list=el('div',{style:{display:'flex',flexDirection:'column',gap:'8px'}});
+      myAttempts.forEach(a=>{list.appendChild(gc({padding:'14px'},el('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center'}},el('div',{},el('div',{style:{color:q.tx,fontSize:'13px',fontWeight:'700'}},a.chTitle),el('div',{style:{color:q.tm,fontSize:'10px'}},fdate(a.date)+' · Skor: '+a.score+'%'+(a.passed?' · ✅ Lulus':' · ❌ Belum lulus'))),el('span',{style:{color:a.passed?'#64dc64':'#ffb74d',fontWeight:'700',fontSize:'12px'}},a.passed?'LULUS':'GAGAL'))));});
+      c.appendChild(list);
+    } else if(S.challTab==='create'){
+      const mySubmissions=(await DB.getChallenges()).filter(x=>x.createdBy===S.user.id);
+      if(mySubmissions.length){
+        c.appendChild(el('div',{style:{color:q.ac,fontSize:'11px',fontWeight:'700',marginBottom:'5px'}},'📋 Submisi Saya ('+mySubmissions.length+')'));
+        mySubmissions.forEach(ch=>{const SC2={pending:'#ffb74d',approved:'#64dc64',rejected:'#f44'};const sc=SC2[ch.status]||'#aaa';c.appendChild(gc({padding:'11px',marginBottom:'6px',border:`1px solid ${sc}33`},el('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center'}},el('div',{style:{color:q.tx,fontSize:'12px',fontWeight:'700'}},ch.title),el('span',{style:{background:`${sc}18`,color:sc,borderRadius:'20px',padding:'2px 8px',fontSize:'9px',fontWeight:'700'}},ch.status.toUpperCase()))));});
+      }
+      c.appendChild(el('div',{style:{color:q.ac,fontSize:'11px',fontWeight:'700',marginTop:'14px',marginBottom:'10px'}},'➕ BUAT CHALLENGE BARU'));
+      const form={title:'',type:'Knowledge',reward:'',questions:[]};
+      const formCard=gc({padding:'20px'});
+      const is={background:q.ib,borderColor:q.sb,color:q.tx};
+      const lb2=tx=>el('div',{style:{color:q.tm,fontSize:'10px',fontWeight:'700',marginBottom:'3px'}},tx);
+      formCard.appendChild(lb2('JUDUL'));const ti2=el('input',{class:'inf',placeholder:'Judul challenge',style:is});ti2.oninput=e=>form.title=e.target.value;formCard.appendChild(ti2);
+      formCard.appendChild(lb2('TIPE'));const sel2=el('select',{class:'inf',style:{...is,cursor:'pointer'}});['Knowledge','Creative','Technical','General'].forEach(tp=>{sel2.appendChild(el('option',{value:tp},tp));});sel2.onchange=e=>form.type=e.target.value;formCard.appendChild(sel2);
+      formCard.appendChild(lb2('HADIAH (badge atau deskripsi voucher)'));const ri=el('input',{class:'inf',placeholder:'contoh: 🏅 Challenger Badge',style:is});ri.oninput=e=>form.reward=e.target.value;formCard.appendChild(ri);
+      formCard.appendChild(lb2('PERTANYAAN'));
+      const qlist=el('div',{style:{display:'flex',flexDirection:'column',gap:'8px',marginBottom:'10px'}});
+      function addQuestionRow(){
+        const qn=qlist.children.length+1;
+        const qcard=el('div',{style:{padding:'12px',border:`1px solid ${q.sb}`,borderRadius:'9px',background:'rgba(255,255,255,.03)'}});
+        qcard.appendChild(el('div',{style:{color:q.ac,fontSize:'10px',fontWeight:'700',marginBottom:'6px'}},'Q'+qn));
+        const qinp=el('input',{class:'inf',placeholder:'Teks pertanyaan',style:{...is,marginBottom:'5px'}});qcard.appendChild(qinp);
+        const optsDiv=el('div',{style:{display:'flex',flexDirection:'column',gap:'4px'}});
+        for(let i=0;i<4;i++){const oi2=el('input',{class:'inf',placeholder:'Pilihan '+(i+1),style:{...is,fontSize:'11px',marginBottom:'0'}});optsDiv.appendChild(oi2);}
+        qcard.appendChild(optsDiv);
+        const answL=el('div',{style:{color:q.tm,fontSize:'10px',marginTop:'6px',marginBottom:'2px'}},'Jawaban benar (1-4):');qcard.appendChild(answL);
+        const ainp=el('input',{class:'inf',type:'number',min:'1',max:'4',placeholder:'1',style:{...is,width:'60px',marginBottom:'0',display:'inline-block'}});qcard.appendChild(ainp);
+        qcard.appendChild(btn('✕ Hapus',()=>{qcard.remove();},true,{fontSize:'9px',padding:'2px 7px',marginLeft:'7px',borderColor:'#f44',color:'#f88'}));
+        qlist.appendChild(qcard);
+      }
+      addQuestionRow();formCard.appendChild(qlist);
+      formCard.appendChild(btn('➕ Tambah Pertanyaan',()=>addQuestionRow(),true,{fontSize:'11px',marginBottom:'10px'}));
+      formCard.appendChild(btn('📩 Submit untuk Disetujui',async ()=>{
+        const questions=[];let valid=true;
+        Array.from(qlist.children).forEach(qcard=>{
+          const inputs=qcard.querySelectorAll('input');const qtext=inputs[0].value.trim();
+          const opts2=[inputs[1].value,inputs[2].value,inputs[3].value,inputs[4].value].map(x=>x.trim());
+          const correct=parseInt(inputs[5]?.value||'1')-1;
+          if(!qtext||opts2.some(o=>!o)){valid=false;return;}
+          questions.push({q:SEC.strip(qtext),opts:opts2.map(o=>SEC.strip(o)),correct});
+        });
+        if(!form.title){notif('Judul wajib diisi!','error');return;}
+        if(!valid||!questions.length){notif('Isi semua field pertanyaan (teks + 4 pilihan)','error');return;}
+        await DB.addChallenge({title:SEC.strip(form.title),type:form.type,reward:SEC.strip(form.reward),questions,createdBy:S.user.id,createdByName:S.user.username});
+        notif('✅ Submitted! Menunggu persetujuan Admin.','success');S.challTab='mine';rFraction();
+      },false,{fontSize:'12px',padding:'9px 18px'}));
+      c.appendChild(formCard);
+    }
+    return;
   }
-  c.appendChild(allRow);
 }
 
 function openFractionExam(){
@@ -3056,92 +3172,13 @@ function openFractionExam(){
   };render();
 }
 
-// ── CHALLENGE PAGE ────────────────────────────────────────────
+// ── CHALLENGE PAGE (redirects to Fraction tab) ──────────────
 async function rChallenge(){
-  const q=t();const c=document.getElementById('page-challenge');c.innerHTML='';
-  if(!S.loggedIn){c.appendChild(el('div',{style:{textAlign:'center',padding:'70px'}},el('div',{style:{fontSize:'56px',marginBottom:'12px'}},'🏆'),el('div',{style:{color:q.tx,fontSize:'16px',fontWeight:'700',marginBottom:'8px'}},T('loginRequired')),btn('🔐 '+T('login'),openAuthM)));return;}
-  c.appendChild(el('h1',{style:{color:q.ac,fontSize:'22px',fontWeight:'800',marginBottom:'4px'}},'🏆 Challenge'));
-  c.appendChild(el('p',{style:{color:q.tm,fontSize:'12px',marginBottom:'16px'}},'Complete quizzes to earn badges and vouchers. Users can contribute challenges (Admin approval required).'));
-  const tabs2=el('div',{style:{display:'flex',gap:'6px',marginBottom:'16px',flexWrap:'wrap'}});
-  const challTabs=[['browse','🔍 Browse'],['mine','📋 My Attempts'],['create','➕ Contribute']];
-  challTabs.forEach(([id,lb])=>tabs2.appendChild(btn(lb,()=>{S.challTab=id;rChallenge();},S.challTab!==id,{fontSize:'11px'})));
-  c.appendChild(tabs2);
-
-  if(S.challTab==='browse'){
-    const approved=(await DB.getChallenges()).filter(x=>x.status==='approved');
-    if(!approved.length){c.appendChild(el('div',{style:{textAlign:'center',padding:'40px',color:q.tm}},'No challenges available yet. Be the first to contribute one!'));return;}
-    const grid=el('div',{style:{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(240px,1fr))',gap:'12px'}});
-    for(const ch of approved){
-
-      const u2=await DB.byId(S.user.id);const myAttempt=(ch.attempts||[]).find(a=>a.userEmail===u2.email);
-      const TC={Knowledge:'#4fc3f7',Creative:'#f06292',Technical:'#81c784',General:'#ffb74d'};const tc=TC[ch.type]||q.ac;
-      const card=gc({padding:'18px',border:`1px solid ${tc}33`,cursor:'pointer',transition:'border-color .2s'});
-      card.onmouseenter=()=>card.style.borderColor=tc;card.onmouseleave=()=>card.style.borderColor=`${tc}33`;
-      card.appendChild(el('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:'8px'}},el('span',{style:{background:`${tc}22`,color:tc,borderRadius:'20px',padding:'2px 9px',fontSize:'9px',fontWeight:'700'}},ch.type),myAttempt?el('span',{style:{color:myAttempt.passed?'#64dc64':'#ffb74d',fontSize:'9px',fontWeight:'700'}},myAttempt.passed?'✅ Passed':'📊 '+(myAttempt.score||0)+'%'):''));
-      card.appendChild(el('div',{style:{color:q.tx,fontSize:'14px',fontWeight:'700',marginBottom:'4px'}},ch.title));
-      card.appendChild(el('div',{style:{color:q.tm,fontSize:'10px',marginBottom:'9px'}},ch.questions.length+' questions · by '+ch.createdByName));
-      if(ch.reward)card.appendChild(el('div',{style:{color:'#ffb74d',fontSize:'10px',fontWeight:'700',marginBottom:'9px'}},'🎁 Reward: '+ch.reward));
-      card.appendChild(el('div',{style:{display:'flex',gap:'6px'}},btn(myAttempt?'🔁 Retry':'▶️ Start',()=>openQuiz(ch),false,{fontSize:'11px',padding:'5px 12px'})));
-      grid.appendChild(card);
-    
-}c.appendChild(grid);
-
-  } else if(S.challTab==='mine'){
-    const allCh=await DB.getChallenges();const me=S.user.email;
-    const myAttempts=allCh.flatMap(ch=>(ch.attempts||[]).filter(a=>a.userEmail===me).map(a=>({...a,chTitle:ch.title,chId:ch.id})));
-    myAttempts.sort((a,b)=>new Date(b.date)-new Date(a.date));
-    if(!myAttempts.length){c.appendChild(el('div',{style:{textAlign:'center',padding:'40px',color:q.tm}},'No attempts yet. Browse and start a challenge!'));return;}
-    const list=el('div',{style:{display:'flex',flexDirection:'column',gap:'8px'}});
-    myAttempts.forEach(a=>{list.appendChild(gc({padding:'14px'},el('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center'}},el('div',{},el('div',{style:{color:q.tx,fontSize:'13px',fontWeight:'700'}},a.chTitle),el('div',{style:{color:q.tm,fontSize:'10px'}},fdate(a.date)+' · Score: '+a.score+'%'+(a.passed?' · ✅ Passed':' · ❌ Not passed'))),el('span',{style:{color:a.passed?'#64dc64':'#ffb74d',fontWeight:'700',fontSize:'12px'}},a.passed?'PASS':'FAIL'))));});
-    c.appendChild(list);
-
-  } else if(S.challTab==='create'){
-    // Challenge creation form
-    const mySubmissions=(await DB.getChallenges()).filter(x=>x.createdBy===S.user.email);
-    c.appendChild(el('div',{style:{color:q.ac,fontSize:'11px',fontWeight:'700',marginBottom:'5px'}},'📋 Your Submissions ('+mySubmissions.length+')'));
-    mySubmissions.forEach(ch=>{const SC2={pending:'#ffb74d',approved:'#64dc64',rejected:'#f44'};const sc=SC2[ch.status]||'#aaa';c.appendChild(gc({padding:'11px',marginBottom:'6px',border:`1px solid ${sc}33`},el('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center'}},el('div',{style:{color:q.tx,fontSize:'12px',fontWeight:'700'}},ch.title),el('span',{style:{background:`${sc}18`,color:sc,borderRadius:'20px',padding:'2px 8px',fontSize:'9px',fontWeight:'700'}},ch.status.toUpperCase()))));});
-    c.appendChild(el('div',{style:{color:q.ac,fontSize:'11px',fontWeight:'700',marginTop:'14px',marginBottom:'10px'}},'➕ NEW CHALLENGE'));
-    const form={title:'',type:'Knowledge',reward:'',questions:[]};
-    const formCard=gc({padding:'20px'});
-    const is={background:q.ib,borderColor:q.sb,color:q.tx};
-    const lb2=tx=>el('div',{style:{color:q.tm,fontSize:'10px',fontWeight:'700',marginBottom:'3px'}},tx);
-    formCard.appendChild(lb2('TITLE'));const ti2=el('input',{class:'inf',placeholder:'Challenge title',style:is});ti2.oninput=e=>form.title=e.target.value;formCard.appendChild(ti2);
-    formCard.appendChild(lb2('TYPE'));const sel2=el('select',{class:'inf',style:{...is,cursor:'pointer'}});['Knowledge','Creative','Technical','General'].forEach(tp=>{sel2.appendChild(el('option',{value:tp},tp));});sel2.onchange=e=>form.type=e.target.value;formCard.appendChild(sel2);
-    formCard.appendChild(lb2('REWARD (badge or voucher description)'));const ri=el('input',{class:'inf',placeholder:'e.g. 🏅 Challenger Badge + 10% voucher',style:is});ri.oninput=e=>form.reward=e.target.value;formCard.appendChild(ri);
-    formCard.appendChild(lb2('QUESTIONS'));
-    const qlist=el('div',{id:'q-list',style:{display:'flex',flexDirection:'column',gap:'8px',marginBottom:'10px'}});
-    function addQuestionRow(qData=null){
-      const qn=qlist.children.length+1;
-      const qcard=el('div',{style:{padding:'12px',border:`1px solid ${q.sb}`,borderRadius:'9px',background:'rgba(255,255,255,.03)'}});
-      qcard.appendChild(el('div',{style:{color:q.ac,fontSize:'10px',fontWeight:'700',marginBottom:'6px'}},'Q'+qn));
-      const qinp=el('input',{class:'inf',placeholder:'Question text',style:{...is,marginBottom:'5px'}});if(qData)qinp.value=qData.q;qcard.appendChild(qinp);
-      const optsDiv=el('div',{style:{display:'flex',flexDirection:'column',gap:'4px'}});
-      for(let i=0;i<4;i++){const oi2=el('input',{class:'inf',placeholder:'Option '+(i+1),style:{...is,fontSize:'11px',marginBottom:'0'}});if(qData)oi2.value=qData.opts[i]||'';optsDiv.appendChild(oi2);}
-      qcard.appendChild(optsDiv);
-      const answL=el('div',{style:{color:q.tm,fontSize:'10px',marginTop:'6px',marginBottom:'2px'}},'Correct answer (1-4):');qcard.appendChild(answL);
-      const ainp=el('input',{class:'inf',type:'number',min:'1',max:'4',placeholder:'1',style:{...is,width:'60px',marginBottom:'0',display:'inline-block'}});if(qData)ainp.value=qData.correct;qcard.appendChild(ainp);
-      qcard.appendChild(btn('✕ Remove',()=>{qcard.remove();},true,{fontSize:'9px',padding:'2px 7px',marginLeft:'7px',borderColor:'#f44',color:'#f88'}));
-      qcard.dataset.qidx=qlist.children.length;qlist.appendChild(qcard);
-    }
-    addQuestionRow();formCard.appendChild(qlist);
-    formCard.appendChild(btn('➕ Add Question',()=>addQuestionRow(),true,{fontSize:'11px',marginBottom:'10px'}));
-    formCard.appendChild(btn('📩 Submit for Approval',async ()=>{
-      const questions=[];let valid=true;
-      Array.from(qlist.children).forEach(qcard=>{
-        const inputs=qcard.querySelectorAll('input');const qtext=inputs[0].value.trim();
-        const opts2=[inputs[1].value,inputs[2].value,inputs[3].value,inputs[4].value].map(x=>x.trim());
-        const correct=parseInt(inputs[5]?.value||inputs[4+1]?.value||'1')-1;
-        if(!qtext||opts2.some(o=>!o)){valid=false;return;}
-        questions.push({q:qtext,opts:opts2,correct});
-      });
-      if(!form.title){notif('Title required!','error');return;}
-      if(!valid||!questions.length){notif('Fill all question fields (text + 4 options)','error');return;}
-      await DB.addChallenge({title:form.title,type:form.type,reward:form.reward,questions,createdBy:S.user.email,createdByName:S.user.username});
-      notif('✅ Submitted for Admin approval!','success');rChallenge();
-    },false,{fontSize:'12px',padding:'9px 18px'}));
-    c.appendChild(formCard);
-  }
+  // Challenge is now embedded in the Fraction page
+  S.fracPageTab='challenge';
+  goTo('fraction');
 }
+
 async function openQuiz(ch){
   const q=t();const m=document.getElementById('m-quiz');m.style.display='flex';m.innerHTML='';
   let step2=0;let score2=0;const total=ch.questions.length;
