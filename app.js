@@ -10,7 +10,6 @@ const LANGS={
 };
 
 // ── THEMES ────────────────────────────────────────────────────
-// ── THEMES ────────────────────────────────────────────────────
 const TH={
   cyber:{name:"Cyber Serenity",bg:"linear-gradient(135deg,#1a1208,#0d1a14,#0a1520)",sb:"rgba(0,255,200,0.15)",ac:"#00ffc8",as:"rgba(0,255,200,0.12)",tx:"#f0e8d8",tm:"#a89878",cb:"rgba(20,30,25,0.76)",bl:"blur(14px)",nab:"rgba(0,255,200,0.12)",nat:"#00ffc8",bb:"rgba(0,255,200,0.15)",bc:"#00ffc8",bt:"#00ffc8",ib:"rgba(0,255,200,0.06)",sh:"0 4px 22px rgba(0,255,200,0.07)",tb:"rgba(0,255,200,0.1)",tt:"#00ffc8",sur:"rgba(0,255,200,0.04)",mm:"rgba(0,255,200,0.18)",mo:"rgba(255,255,255,0.07)"},
   inst:{name:"Institutional Future",bg:"linear-gradient(135deg,#001830,#002a5a,#001020)",sb:"rgba(250,183,21,0.26)",ac:"#FAB715",as:"rgba(250,183,21,0.12)",tx:"#e8f0ff",tm:"#7a9cc8",cb:"rgba(0,20,50,0.78)",bl:"blur(12px)",nab:"rgba(250,183,21,0.12)",nat:"#FAB715",bb:"rgba(250,183,21,0.14)",bc:"#FAB715",bt:"#FAB715",ib:"rgba(0,95,172,0.12)",sh:"0 4px 22px rgba(0,95,172,0.14)",tb:"rgba(250,183,21,0.1)",tt:"#FAB715",sur:"rgba(250,183,21,0.04)",mm:"rgba(250,183,21,0.18)",mo:"rgba(255,255,255,0.06)"},
@@ -22,11 +21,11 @@ const S={theme:'cyber',season:'Autumn',lang:'English',bgP:0,fx:false,loggedIn:fa
 
 // ── STATIC DATA ───────────────────────────────────────────────
 const CDEF=[
-  {id:1,name:"Aiden Voss",role:"Lead Developer",hobby:"Cyberpunk & synthwave",bio:"Full-stack architect with 8 years building scalable systems.",education:"B.Sc Computer Science — MIT (2015)\nM.Sc Software Engineering — Stanford (2017)",fraction:"Zenith Prime Labs",achievements:"🏆 Best Developer Award 2023\n🥇 Hackathon Champion — DevFest Asia\n📜 Google Cloud Certified",images:["👨‍💻"],tags:["React","Node.js","Rust"],photo:null,cvUrl:null,email:"aiden@starlive.com",phone:"+62 812 0001"},
-  {id:2,name:"Yuki Tanaka",role:"UI/UX Designer",hobby:"Watercolor & tea ceremony",bio:"Visual storyteller blending Japanese aesthetics with futuristic design.",education:"B.A Design — Kyoto University (2018)\nExchange — Parsons NYC (2019)",fraction:"Nova Creative Studio",achievements:"🎨 Red Dot Design Award 2023\n✨ UX Pioneer — Figma Community",images:["👩‍🎨"],tags:["Figma","Motion","3D"],photo:null,cvUrl:null,email:"yuki@starlive.com",phone:"+62 812 0002"},
-  {id:3,name:"Marcus Chen",role:"Backend Engineer",hobby:"Chess & astrophotography",bio:"Systems thinker who loves elegant algorithms.",education:"B.Sc IT — NUS (2016)\nM.Sc Data Science — HKUST (2018)",fraction:"Zenith Prime Labs",achievements:"♟️ National Chess Champion U-25\n🔭 Astrophotography Award",images:["👨‍🔬"],tags:["Python","Go","PostgreSQL"],photo:null,cvUrl:null,email:"marcus@starlive.com",phone:"+62 812 0003"},
-  {id:4,name:"Sora Kim",role:"Creative Director",hobby:"K-drama & digital illustration",bio:"Bridges the gap between art and strategy.",education:"B.F.A — Hongik University (2017)\nMBA — Seoul National University (2020)",fraction:"Nova Creative Studio",achievements:"🎬 Best Creative Director — MediaAsia 2023\n🌠 Cannes Lions 2022",images:["👩‍💼"],tags:["Branding","Art Direction","Video"],photo:null,cvUrl:null,email:"sora@starlive.com",phone:"+62 812 0004"},
-  {id:5,name:"Lena Richter",role:"Data Scientist",hobby:"Hiking & piano",bio:"Turns raw data into actionable insights.",education:"B.Sc Statistics — TU Munich (2017)\nPh.D ML — ETH Zurich (2021)",fraction:"Zenith Prime Labs",achievements:"🤖 Best ML Paper — NeurIPS 2022\n📊 Kaggle Winner ×3",images:["👩‍🔬"],tags:["Python","TensorFlow","D3.js"],photo:null,cvUrl:null,email:"lena@starlive.com",phone:"+62 812 0005"},
+  {id:1,name:"Danny Aulia",role:"Lead Developer",hobby:"Cyberpunk & synthwave",bio:"Full-stack architect with 8 years building scalable systems.",education:"B.Sc Computer Science — MIT (2015)\nM.Sc Software Engineering — Stanford (2017)",fraction:"Zenith Prime Labs",achievements:"🏆 Best Developer Award 2023\n🥇 Hackathon Champion — DevFest Asia\n📜 Google Cloud Certified",images:["👨‍💻"],tags:["React","Node.js","Rust"],photo:null,cvUrl:null,email:"aiden@starlive.com",phone:"+62 812 0001"},
+  {id:2,name:"Said Hasan Hanafiah",role:"UI/UX Designer",hobby:"Watercolor & tea ceremony",bio:"Visual storyteller blending Japanese aesthetics with futuristic design.",education:"B.A Design — Kyoto University (2018)\nExchange — Parsons NYC (2019)",fraction:"Nova Creative Studio",achievements:"🎨 Red Dot Design Award 2023\n✨ UX Pioneer — Figma Community",images:["👩‍🎨"],tags:["Figma","Motion","3D"],photo:null,cvUrl:null,email:"yuki@starlive.com",phone:"+62 812 0002"},
+  {id:3,name:"Noah Von Nobelius",role:"Backend Engineer",hobby:"Chess & astrophotography",bio:"Systems thinker who loves elegant algorithms.",education:"B.Sc IT — NUS (2016)\nM.Sc Data Science — HKUST (2018)",fraction:"Zenith Prime Labs",achievements:"♟️ National Chess Champion U-25\n🔭 Astrophotography Award",images:["👨‍🔬"],tags:["Python","Go","PostgreSQL"],photo:null,cvUrl:null,email:"marcus@starlive.com",phone:"+62 812 0003"},
+  {id:4,name:"Lumina Stellaris",role:"Creative Director",hobby:"K-drama & digital illustration",bio:"Bridges the gap between art and strategy.",education:"B.F.A — Hongik University (2017)\nMBA — Seoul National University (2020)",fraction:"Nova Creative Studio",achievements:"🎬 Best Creative Director — MediaAsia 2023\n🌠 Cannes Lions 2022",images:["👩‍💼"],tags:["Branding","Art Direction","Video"],photo:null,cvUrl:null,email:"sora@starlive.com",phone:"+62 812 0004"},
+  {id:5,name:"Arvian Raveindra Pradana",role:"Data Scientist",hobby:"Hiking & piano",bio:"Turns raw data into actionable insights.",education:"B.Sc Statistics — TU Munich (2017)\nPh.D ML — ETH Zurich (2021)",fraction:"Zenith Prime Labs",achievements:"🤖 Best ML Paper — NeurIPS 2022\n📊 Kaggle Winner ×3",images:["👩‍🔬"],tags:["Python","TensorFlow","D3.js"],photo:null,cvUrl:null,email:"lena@starlive.com",phone:"+62 812 0005"},
 ];
 const PDEF=[
   {id:1,name:"Project Aurora",desc:"Next-gen streaming infrastructure for real-time content delivery.",team:["Aiden Voss","Marcus Chen"],progress:78,budget:450000,status:"Active",tags:["Streaming","SE Asia"],image:null},
@@ -45,7 +44,7 @@ const GALDEF=[
 const PRODDEF=[
   {id:1,name:"StarLive Hoodie",price:85,e:"👕",cat:"Apparel",desc:"Premium cyber-aesthetic hoodie",stock:50,image:null},
   {id:2,name:"Creator Pack",price:149,e:"📦",cat:"Bundle",desc:"Complete digital creator toolkit",stock:30,image:null},
-  {id:3,name:"Neon Mug",price:28,e:"☕",cat:"Accessories",desc:"Heat-reactive constellation mug",stock:100,image:null},
+  {id:3,name:"Glow Mug",price:28,e:"☕",cat:"Accessories",desc:"Heat-reactive constellation mug",stock:100,image:null},
   {id:4,name:"StarPad Pro",price:220,e:"🖱️",cat:"Hardware",desc:"XL desk pad with wireless charging",stock:20,image:null},
   {id:5,name:"Digital Zine Vol.1",price:12,e:"📕",cat:"Digital",desc:"Behind-the-scenes digital magazine",stock:999,image:null},
   {id:6,name:"Galaxy Pin Set",price:35,e:"📌",cat:"Accessories",desc:"Set of 5 enamel affiliate pins",stock:75,image:null},
@@ -230,12 +229,31 @@ async function uploadVaultFile(file, code) {
 }
 
 // ── DB (Supabase) ──────────────────────────────────────────────
+// ── SIMPLE DATA CACHE ─────────────────────────────────────────
+// Avoids re-hitting Supabase on every page navigation for data that
+// rarely changes. Cache is invalidated automatically by the relevant
+// add/update/delete calls, and also expires after CACHE_TTL as a safety net.
+const CACHE_TTL = 30000; // 30s
+const _cache = {};
+function cacheGet(key) {
+  const hit = _cache[key];
+  if (!hit) return undefined;
+  if (Date.now() - hit.t > CACHE_TTL) { delete _cache[key]; return undefined; }
+  return hit.v;
+}
+function cacheSet(key, v) { _cache[key] = { v, t: Date.now() }; }
+function cacheClear(key) { delete _cache[key]; }
+
 const DB = {
   // ── USERS / PROFILES ──────────────────────────────────────
   async getUsers() {
     if (!supa) return [];
+    const cached = cacheGet('users');
+    if (cached) return cached;
     const { data } = await supa.from('profiles').select('*');
-    return (data||[]).map(u=>({...u, friendRequests: u.friend_reqs||[], avatar: u.avatar_url, cover: u.cover_url}));
+    const out = (data||[]).map(u=>({...u, friendRequests: u.friend_reqs||[], avatar: u.avatar_url, cover: u.cover_url}));
+    cacheSet('users', out);
+    return out;
   },
   async byId(id) {
     if (!supa) return null;
@@ -270,6 +288,7 @@ const DB = {
     });
     const { error } = await supa.from('profiles').update(mapped).eq('id', id);
     if (error) console.error('updUser:', error);
+    cacheClear('users');
     // Refresh S.user if updating self
     if (S.user && S.user.id === id) {
       Object.assign(S.user, updates);
@@ -281,8 +300,12 @@ const DB = {
   // ── CREATORS ──────────────────────────────────────────────
   async getCreators() {
     if (!supa) return JSON.parse(JSON.stringify(CDEF));
+    const cached = cacheGet('creators');
+    if (cached) return cached;
     const { data } = await supa.from('creators').select('*').order('name');
-    return (data && data.length) ? data.map(c=>({...c,photo:c.photo_url,cover:c.cover_url})) : JSON.parse(JSON.stringify(CDEF));
+    const out = (data && data.length) ? data.map(c=>({...c,photo:c.photo_url,cover:c.cover_url})) : JSON.parse(JSON.stringify(CDEF));
+    cacheSet('creators', out);
+    return out;
   },
   async updCreator(id, updates) {
     if (!supa) return;
@@ -290,74 +313,96 @@ const DB = {
     if (updates.photo) mapped.photo_url = updates.photo;
     if (updates.cover) mapped.cover_url = updates.cover;
     await supa.from('creators').update(mapped).eq('id', id);
+    cacheClear('creators');
   },
   async addCreator(creator) {
     if (!supa) return;
     const mapped = {...creator, photo_url: creator.photo, cover_url: creator.cover};
     delete mapped.photo; delete mapped.cover;
     const { data } = await supa.from('creators').insert(mapped).select().single();
+    cacheClear('creators');
     return data;
   },
   async delCreator(id) {
     if (!supa) return;
     await supa.from('creators').delete().eq('id', id);
+    cacheClear('creators');
   },
 
   // ── PROJECTS ──────────────────────────────────────────────
   async getProjects() {
     if (!supa) return JSON.parse(JSON.stringify(PDEF));
+    const cached = cacheGet('projects');
+    if (cached) return cached;
     const { data } = await supa.from('projects').select('*').order('created_at', {ascending:false});
-    return (data && data.length) ? data : JSON.parse(JSON.stringify(PDEF));
+    const out = (data && data.length) ? data : JSON.parse(JSON.stringify(PDEF));
+    cacheSet('projects', out);
+    return out;
   },
   async updProject(id, updates) {
     if (!supa) return;
     await supa.from('projects').update(updates).eq('id', id);
+    cacheClear('projects');
   },
   async addProject(proj) {
     if (!supa) return;
     const { data } = await supa.from('projects').insert(proj).select().single();
+    cacheClear('projects');
     return data;
   },
 
   // ── GALLERY ───────────────────────────────────────────────
   async getGallery() {
     if (!supa) return JSON.parse(JSON.stringify(GALDEF));
+    const cached = cacheGet('gallery');
+    if (cached) return cached;
     const { data } = await supa.from('gallery').select('*').order('created_at',{ascending:false});
-    return (data && data.length) ? data.map(g=>({...g,mediaUrl:g.url,type:g.type||'image',title:g.caption||'',cat:g.category||'Event'})) : JSON.parse(JSON.stringify(GALDEF));
+    const out = (data && data.length) ? data.map(g=>({...g,mediaUrl:g.url,type:g.type||'image',title:g.caption||'',cat:g.category||'Event'})) : JSON.parse(JSON.stringify(GALDEF));
+    cacheSet('gallery', out);
+    return out;
   },
   async addGallery(item) {
     if (!supa) return;
     const row = {url:item.mediaUrl||item.url, type:item.type||'image', caption:item.title||item.caption||'', category:item.cat||'Event', uploader_id:S.user?.id};
     const { data } = await supa.from('gallery').insert(row).select().single();
+    cacheClear('gallery');
     return data;
   },
   async deleteGallery(id) {
     if (!supa) return;
     await supa.from('gallery').delete().eq('id', id);
+    cacheClear('gallery');
   },
   saveGallery(){}, // no-op (compatibility)
 
   // ── PRODUCTS ──────────────────────────────────────────────
   async getProducts() {
     if (!supa) return JSON.parse(JSON.stringify(PRODDEF));
+    const cached = cacheGet('products');
+    if (cached) return cached;
     const { data } = await supa.from('products').select('*').order('name');
-    return (data && data.length) ? data.map(p=>({...p,image:p.image_url,desc:p.desc||p.description||''})) : JSON.parse(JSON.stringify(PRODDEF));
+    const out = (data && data.length) ? data.map(p=>({...p,image:p.image_url,desc:p.desc||p.description||''})) : JSON.parse(JSON.stringify(PRODDEF));
+    cacheSet('products', out);
+    return out;
   },
   async updProduct(id, updates) {
     if (!supa) return;
     const mapped = {...updates};
     if (updates.image) mapped.image_url = updates.image;
     await supa.from('products').update(mapped).eq('id', id);
+    cacheClear('products');
   },
   async addProduct(prod) {
     if (!supa) return;
     const row = {name:prod.name, price:prod.price, stock:prod.stock, category:prod.cat||prod.category, desc:prod.desc, image_url:prod.image||prod.imageUrl};
     const { data } = await supa.from('products').insert(row).select().single();
+    cacheClear('products');
     return data;
   },
   async deleteProduct(id) {
     if (!supa) return;
     await supa.from('products').delete().eq('id', id);
+    cacheClear('products');
   },
   saveProducts(){}, // no-op
 
@@ -440,24 +485,32 @@ const DB = {
   // ── CHALLENGES ────────────────────────────────────────────
   async getChallenges() {
     if (!supa) return [];
+    const cached = cacheGet('challenges');
+    if (cached) return cached;
     const { data } = await supa.from('challenges').select('*, attempts:challenge_attempts(*), creator:profiles(username)').order('created_at',{ascending:false});
-    return (data||[]).map(c=>({...c, questions:c.questions||[], attempts:c.attempts||[], createdByName:c.creator?.username||'', createdBy:c.created_by}));
+    const out = (data||[]).map(c=>({...c, questions:c.questions||[], attempts:c.attempts||[], createdByName:c.creator?.username||'', createdBy:c.created_by}));
+    cacheSet('challenges', out);
+    return out;
   },
   async addChallenge(c) {
     if (!supa) return;
     await supa.from('challenges').insert({title:c.title, type:c.type||'General', reward:c.reward||'', questions:c.questions, status:c.status||'pending', created_by:S.user.id, desc:c.desc||''});
+    cacheClear('challenges');
   },
   async updChallenge(id, updates) {
     if (!supa) return;
     await supa.from('challenges').update(updates).eq('id', id);
+    cacheClear('challenges');
   },
   async delChallenge(id) {
     if (!supa) return;
     await supa.from('challenges').delete().eq('id', id);
+    cacheClear('challenges');
   },
   async addAttempt(chId, attempt) {
     if (!supa) return;
     await supa.from('challenge_attempts').insert({challenge_id:chId, user_id:S.user.id, score:attempt.score, passed:attempt.passed});
+    cacheClear('challenges');
   },
 
   // ── FRIENDS ───────────────────────────────────────────────
@@ -467,6 +520,7 @@ const DB = {
     if (!target) return false;
     const reqs = [...new Set([...(target.friend_reqs||[]), fromId])];
     await supa.from('profiles').update({friend_reqs:reqs}).eq('id', toId);
+    cacheClear('users');
     return true;
   },
   async acceptFR(meId, fromId) {
@@ -482,12 +536,14 @@ const DB = {
       supa.from('profiles').update({friends:myFriends, friend_reqs:myReqs}).eq('id', meId),
       supa.from('profiles').update({friends:theirFriends}).eq('id', fromId),
     ]);
+    cacheClear('users');
   },
   async rejectFR(meId, fromId) {
     if (!supa) return;
     const { data: me } = await supa.from('profiles').select('friend_reqs').eq('id', meId).single();
     const reqs = (me?.friend_reqs||[]).filter(x => x !== fromId);
     await supa.from('profiles').update({friend_reqs:reqs}).eq('id', meId);
+    cacheClear('users');
   },
   async removeFriend(meId, friendId) {
     if (!supa) return;
@@ -499,6 +555,7 @@ const DB = {
       supa.from('profiles').update({friends:(me?.friends||[]).filter(x=>x!==friendId)}).eq('id', meId),
       supa.from('profiles').update({friends:(fr?.friends||[]).filter(x=>x!==meId)}).eq('id', friendId),
     ]);
+    cacheClear('users');
   },
 
   // ── STORE ORDERS ──────────────────────────────────────────
@@ -837,7 +894,8 @@ async function checkSession(){
       S.loggedIn=true;
       S.user={...profile,email:session.user.email,id:session.user.id,avatar:profile.avatar_url,cover:profile.cover_url};
       S.isAdmin=profile.role==='admin';
-      await supa.from('profiles').update({online:true}).eq('id',session.user.id);
+      // Fire-and-forget — don't block initial render on this write
+      supa.from('profiles').update({online:true}).eq('id',session.user.id).then(()=>{}).catch(()=>{});
     }
   }
 }
@@ -1174,10 +1232,10 @@ async function rDash(){
 
 
   } else if(S.dtab==='store'){
-    const orders=(await DB.getStoreOrders()).sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+    const [ordersRaw,prodsList]=await Promise.all([DB.getStoreOrders(),DB.getProducts()]);
+    const orders=ordersRaw.sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
     const topReqs=[];
     const totalRev=orders.reduce((s,o)=>s+o.total,0);
-    const prodsList=await DB.getProducts();
     const row=el('div',{style:{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'10px',marginBottom:'16px'}});
     [[orders.length,'📦 Total Orders','#4fc3f7'],['$'+totalRev.toFixed(2),'💰 Revenue','#81c784'],[prodsList.filter(p=>p.stock===0).length,'❌ Out of Stock','#f44']].forEach(([v,l,c2])=>row.appendChild(gc({padding:'14px',textAlign:'center',border:`1px solid ${c2}44`},el('div',{style:{fontSize:'20px',fontWeight:'900',color:c2}},v),el('div',{style:{color:q.tm,fontSize:'10px',marginTop:'3px'}},l))));
     c.appendChild(row);
@@ -1234,7 +1292,8 @@ async function rDash(){
     
 }
   } else if(S.dtab==='log'){
-    const pv2=await DB.getPageViews();const ords2=[];const rqs2=[];const chs3=await DB.getChallenges();
+    const [pv2,chs3,usersForLog]=await Promise.all([DB.getPageViews(),DB.getChallenges(),DB.getUsers()]);
+    const ords2=[];const rqs2=[];
     c.appendChild(el('div',{style:{color:q.ac,fontSize:'12px',fontWeight:'700',marginBottom:'4px'}},'📋 Activity Log & Timeline'));
     c.appendChild(el('div',{style:{color:q.tm,fontSize:'10px',marginBottom:'12px'}},'Menampilkan semua aktivitas termasuk siapa user yang mengakses setiap halaman.'));
     // User access summary for today
@@ -1262,7 +1321,7 @@ async function rDash(){
     ords2.forEach(o=>evs.push({time:o.createdAt,type:'order',msg:`${o.userName} beli ${o.items} item — $${o.total.toFixed(2)}`,icon:'🛒'}));
     rqs2.forEach(r=>{evs.push({time:r.createdAt,type:'topup',msg:`${r.userName} request top-up $${r.amount.toFixed(2)}`,icon:'💳'});if(r.updatedAt)evs.push({time:r.updatedAt,type:'tupd',msg:`Top-up ${r.userName} → ${r.status.toUpperCase()}`,icon:r.status==='approved'?'✅':'❌'});});
     chs3.forEach(ch=>{evs.push({time:ch.createdAt,type:'chal',msg:`${ch.createdByName} submit Challenge "${ch.title}" [${ch.status.toUpperCase()}]`,icon:'🏆'});(ch.attempts||[]).forEach(a=>evs.push({time:a.date,type:'att',msg:`${a.userName} attempt "${ch.title}" — ${a.score}% ${a.passed?'✅':'❌'}`,icon:'📝'}));});
-    (await DB.getUsers()).forEach(u2=>{if(u2.joinDate)evs.push({time:u2.joinDate,type:'reg',msg:`${u2.username} mendaftar`,icon:'👤'});});
+    (usersForLog).forEach(u2=>{if(u2.joinDate)evs.push({time:u2.joinDate,type:'reg',msg:`${u2.username} mendaftar`,icon:'👤'});});
     evs.sort((a,b)=>new Date(b.time)-new Date(a.time));
     c.appendChild(el('div',{style:{color:q.ac,fontSize:'10px',fontWeight:'700',marginBottom:'9px'}},'⏱️ Timeline Lengkap'));
     const TC2={pv:'#4fc3f7',order:'#81c784',topup:'#ffb74d',tupd:'#ffb74d',chal:'#FAB715',att:'#ce93d8',reg:'#64dc64'};
