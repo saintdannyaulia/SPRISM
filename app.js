@@ -28,10 +28,10 @@ const CDEF=[
   {id:5,name:"Arvian Raveindra Pradana",role:"Data Scientist",hobby:"Hiking & piano",bio:"Turns raw data into actionable insights.",education:"B.Sc Statistics — TU Munich (2017)\nPh.D ML — ETH Zurich (2021)",fraction:"Zenith Prime Labs",achievements:"🤖 Best ML Paper — NeurIPS 2022\n📊 Kaggle Winner ×3",images:["👩‍🔬"],tags:["Python","TensorFlow","D3.js"],photo:null,cvUrl:null,email:"lena@starlive.com",phone:"+62 812 0005"},
 ];
 const PDEF=[
-  {id:1,name:"SRAPID 25",desc:"Next-gen streaming infrastructure for real-time content delivery.",team:["Aiden Voss","Marcus Chen"],progress:78,budget:450000,status:"Active",tags:["Streaming","SE Asia"],image:null},
-  {id:2,name:"SCVAL 25",desc:"AI-powered creative suite for digital artists.",team:["Yuki Tanaka","Sora Kim"],progress:55,budget:280000,status:"In Development",tags:["AI","Creative"],image:null},
-  {id:3,name:"SCRPS 26",desc:"Unified analytics aggregating social media performance.",team:["Lena Richter","Marcus Chen"],progress:92,budget:180000,status:"Testing",tags:["Analytics","Data"],image:null},
-  {id:4,name:"SLENS 25",desc:"E-commerce backbone powering StarLive Store.",team:["Aiden Voss","Yuki Tanaka"],progress:40,budget:320000,status:"Planning",tags:["E-commerce","AR"],image:null},
+  {id:1,name:"SCRPS 26",desc:"Next-gen streaming infrastructure for real-time content delivery.",team:["Danny Aulia","Marcus Chen"],progress:78,budget:450000,status:"Active",tags:["Streaming","SE Asia"],image:null},
+  {id:2,name:"SCVAL 25",desc:"AI-powered creative suite for digital artists.",team:["Danny Aulia","Sora Kim"],progress:55,budget:280000,status:"In Development",tags:["AI","Creative"],image:null},
+  {id:3,name:"SRAPID 25",desc:"Unified analytics aggregating social media performance.",team:["Danny Aulia","Marcus Chen"],progress:92,budget:180000,status:"Testing",tags:["Analytics","Data"],image:null},
+  {id:4,name:"SLENS 25",desc:"E-commerce backbone powering StarLive Store.",team:["Danny Aulia","Yuki Tanaka"],progress:40,budget:320000,status:"Planning",tags:["E-commerce","AR"],image:null},
 ];
 const GALDEF=[
   {id:1,type:"image",emoji:"🌌",title:"AI Basic Course 2026",cat:"Event",mediaUrl:null},
