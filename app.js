@@ -28,33 +28,33 @@ const CDEF=[
   {id:5,name:"Arvian Raveindra Pradana",role:"Data Scientist",hobby:"Hiking & piano",bio:"Turns raw data into actionable insights.",education:"B.Sc Statistics — TU Munich (2017)\nPh.D ML — ETH Zurich (2021)",fraction:"Zenith Prime Labs",achievements:"🤖 Best ML Paper — NeurIPS 2022\n📊 Kaggle Winner ×3",images:["👩‍🔬"],tags:["Python","TensorFlow","D3.js"],photo:null,cvUrl:null,email:"lena@starlive.com",phone:"+62 812 0005"},
 ];
 const PDEF=[
-  {id:1,name:"Project Aurora",desc:"Next-gen streaming infrastructure for real-time content delivery.",team:["Aiden Voss","Marcus Chen"],progress:78,budget:450000,status:"Active",tags:["Streaming","SE Asia"],image:null},
-  {id:2,name:"NeoCanvas",desc:"AI-powered creative suite for digital artists.",team:["Yuki Tanaka","Sora Kim"],progress:55,budget:280000,status:"In Development",tags:["AI","Creative"],image:null},
-  {id:3,name:"StarGrid Analytics",desc:"Unified analytics aggregating social media performance.",team:["Lena Richter","Marcus Chen"],progress:92,budget:180000,status:"Testing",tags:["Analytics","Data"],image:null},
-  {id:4,name:"Orbital Commerce",desc:"E-commerce backbone powering StarLive Store.",team:["Aiden Voss","Yuki Tanaka"],progress:40,budget:320000,status:"Planning",tags:["E-commerce","AR"],image:null},
+  {id:1,name:"SRAPID 25",desc:"Next-gen streaming infrastructure for real-time content delivery.",team:["Aiden Voss","Marcus Chen"],progress:78,budget:450000,status:"Active",tags:["Streaming","SE Asia"],image:null},
+  {id:2,name:"SCVAL 25",desc:"AI-powered creative suite for digital artists.",team:["Yuki Tanaka","Sora Kim"],progress:55,budget:280000,status:"In Development",tags:["AI","Creative"],image:null},
+  {id:3,name:"SCRPS 26",desc:"Unified analytics aggregating social media performance.",team:["Lena Richter","Marcus Chen"],progress:92,budget:180000,status:"Testing",tags:["Analytics","Data"],image:null},
+  {id:4,name:"SLENS 25",desc:"E-commerce backbone powering StarLive Store.",team:["Aiden Voss","Yuki Tanaka"],progress:40,budget:320000,status:"Planning",tags:["E-commerce","AR"],image:null},
 ];
 const GALDEF=[
-  {id:1,type:"image",emoji:"🌌",title:"Nebula Conference 2025",cat:"Event",mediaUrl:null},
-  {id:2,type:"image",emoji:"🎨",title:"NeoCanvas Launch",cat:"Product",mediaUrl:null},
-  {id:3,type:"video",emoji:"🎬",title:"StarLive Documentary",cat:"Media",mediaUrl:null},
+  {id:1,type:"image",emoji:"🌌",title:"AI Basic Course 2026",cat:"Event",mediaUrl:null},
+  {id:2,type:"image",emoji:"🎨",title:"OSINT Basic Course 2026",cat:"Product",mediaUrl:null},
+  {id:3,type:"video",emoji:"🎬",title:"SRAPID 26",cat:"Media",mediaUrl:null},
   {id:4,type:"image",emoji:"🏙️",title:"Cyber Office Tour",cat:"BTS",mediaUrl:null},
   {id:5,type:"image",emoji:"🌸",title:"Spring Festival 2025",cat:"Event",mediaUrl:null},
   {id:6,type:"video",emoji:"🎵",title:"Creator Showcase Reel",cat:"Media",mediaUrl:null},
 ];
 const PRODDEF=[
-  {id:1,name:"StarLive Hoodie",price:85,e:"👕",cat:"Apparel",desc:"Premium cyber-aesthetic hoodie",stock:50,image:null},
+  {id:1,name:"StarLight Hoodie",price:85,e:"👕",cat:"Apparel",desc:"Premium cyber-aesthetic hoodie",stock:50,image:null},
   {id:2,name:"Creator Pack",price:149,e:"📦",cat:"Bundle",desc:"Complete digital creator toolkit",stock:30,image:null},
   {id:3,name:"Glow Mug",price:28,e:"☕",cat:"Accessories",desc:"Heat-reactive constellation mug",stock:100,image:null},
   {id:4,name:"StarPad Pro",price:220,e:"🖱️",cat:"Hardware",desc:"XL desk pad with wireless charging",stock:20,image:null},
-  {id:5,name:"Digital Zine Vol.1",price:12,e:"📕",cat:"Digital",desc:"Behind-the-scenes digital magazine",stock:999,image:null},
+  {id:5,name:"Digitalent Handbook",price:12,e:"📕",cat:"Digital",desc:"Behind-the-scenes digital magazine",stock:999,image:null},
   {id:6,name:"Galaxy Pin Set",price:35,e:"📌",cat:"Accessories",desc:"Set of 5 enamel affiliate pins",stock:75,image:null},
 ];
 const AFFIL=[
   {id:1,n:"Polaris Academy",ic:"⭐",d:"Elite training hub for creative professionals.",c:"#4fc3f7",url:"https://example.com/polaris"},
   {id:2,n:"Zenith Prime Labs",ic:"🧪",d:"R&D wing focused on next-gen technology.",c:"#81c784",url:"https://example.com/zenith"},
   {id:3,n:"Solstice Media Info",ic:"📡",d:"Media broadcasting and information platform.",c:"#ffb74d",url:"https://example.com/solstice"},
-  {id:4,n:"Nova Creative Studio",ic:"🎨",d:"Powerhouse for visual design and multimedia.",c:"#f06292",url:"https://example.com/nova"},
-  {id:5,n:"Stellaris Lounge",ic:"🛋️",d:"Community hub for collaboration.",c:"#ce93d8",url:"https://example.com/stellaris"},
+  {id:4,n:"Nova Creative Studio",ic:"🎨",d:"Creative visual design and multimedia.",c:"#f06292",url:"https://example.com/nova"},
+  {id:5,n:"Stellaris Lounge",ic:"🛋️",d:"Business for Community Hub.",c:"#ce93d8",url:"https://example.com/stellaris"},
 ];
 const SLIDES=[{e:"🌌",l:"Nebula Conference 2025",bg:"linear-gradient(135deg,#0d0020,#1a0040)"},{e:"🎨",l:"NeoCanvas Launch",bg:"linear-gradient(135deg,#200010,#400030)"},{e:"🏙️",l:"StarLive Cyber HQ",bg:"linear-gradient(135deg,#001a20,#003040)"},{e:"🌸",l:"Spring Creator Festival",bg:"linear-gradient(135deg,#200a00,#402000)"},{e:"🤖",l:"AI Lab Grand Opening",bg:"linear-gradient(135deg,#001020,#002040)"},{e:"✨",l:"Awards Gala Night 2024",bg:"linear-gradient(135deg,#1a1000,#302000)"}];
 const NAV=[{id:"home",lk:"home",i:"🏠"},{id:"affiliation",lk:"affiliation",i:"🤝"},{id:"creator",lk:"creator",i:"👨‍💻"},{id:"project",lk:"project",i:"🚀"},{id:"gallery",lk:"gallery",i:"🖼️"},{id:"social",lk:"social",i:"🌐"},{id:"store",lk:"store",i:"🛍️",locked:true},{id:"fraction",lk:"fraction",i:"🔱",locked:true},{id:"challenge",lk:"challenge",i:"🏆",locked:true},{id:"dashboard",lk:"dashboard",i:"📊",admin:true},{id:"vault",lk:"vault",i:"🔐",admin:true}];
@@ -98,7 +98,6 @@ function updateSBAcct(){
 }
 function handleMyAcct(){if(!S.loggedIn){openAuthM();return;}goTo('myaccount');}
 
-// ── NOTIF ─────────────────────────────────────────────────────
 // ── NOTIF ─────────────────────────────────────────────────────
 function notif(msg,type='info'){const q=t();const bar=document.getElementById('notifbar');const c={info:{bg:q.as,bc:q.ac,cl:q.ac},error:{bg:'rgba(255,60,60,.12)',bc:'#f44',cl:'#f88'},success:{bg:'rgba(80,220,80,.1)',bc:'#64dc64',cl:'#64dc64'}}[type]||{bg:q.as,bc:q.ac,cl:q.ac};const item=el('div',{class:'nitem',style:{background:c.bg,borderColor:c.bc,color:c.cl,backdropFilter:q.bl}},msg);bar.appendChild(item);setTimeout(()=>{item.style.opacity='0';item.style.transition='opacity .4s';setTimeout(()=>item.remove(),400);},3200);}
 
